@@ -109,12 +109,4 @@ protected:
 	
 	// 执行移动逻辑
 	void ProcessGridMovement(float DeltaTime);
-
-public:
-	// 血条组件
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|UI")
-	class UWidgetComponent* HealthBarComponent;
-
-	// 更新血条UI
-	void UpdateHealthBar();
 };

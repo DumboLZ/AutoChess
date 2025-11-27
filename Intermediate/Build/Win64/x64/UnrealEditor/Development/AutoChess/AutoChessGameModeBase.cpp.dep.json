@@ -24,7 +24,15 @@
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\dialoguetypes.generated.h",
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystaticstypes.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystaticstypes.generated.h",
-            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystatics.generated.h"
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystatics.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\spectatorpawn.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\defaultpawn.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\defaultpawn.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\spectatorpawn.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscamerapawn.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochesscamerapawn.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\enginesettings\\classes\\gamemapssettings.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\enginesettings\\uht\\gamemapssettings.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

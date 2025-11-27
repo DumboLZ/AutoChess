@@ -14,6 +14,7 @@ AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessPlayerController();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessPlayerController_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitWidget_NoRegister();
 COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 ENGINE_API UClass* Z_Construct_UClass_APlayerController();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
@@ -260,9 +261,77 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ "ToolTip", "\xe5\xbd\x93\xe5\x89\x8d\xe9\x80\x89\xe4\xb8\xad\xe7\x9a\x84\xe5\x8d\x95\xe4\xbd\x8d (\xe7\x94\xa8\xe4\xba\x8e\xe7\xa7\xbb\xe5\x8a\xa8\xe6\x88\x96\xe5\x87\xba\xe5\x94\xae)" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitHealthBarClass_MetaData[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// --- UI \xe9\x80\xbb\xe8\xbe\x91 ---\n// \xe8\xa1\x80\xe6\x9d\xa1 Widget \xe7\xb1\xbb\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "--- UI \xe9\x80\xbb\xe8\xbe\x91 ---\n\xe8\xa1\x80\xe6\x9d\xa1 Widget \xe7\xb1\xbb" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitHealthBars_MetaData[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\xae\xa1\xe7\x90\x86\xe6\x89\x80\xe6\x9c\x89\xe5\x8d\x95\xe4\xbd\x8d\xe7\x9a\x84\xe8\xa1\x80\xe6\x9d\xa1 Widget\n" },
+#endif
+		{ "EditInline", "true" },
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\xae\xa1\xe7\x90\x86\xe6\x89\x80\xe6\x9c\x89\xe5\x8d\x95\xe4\xbd\x8d\xe7\x9a\x84\xe8\xa1\x80\xe6\x9d\xa1 Widget" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HealthBarZOffset_MetaData[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\xa1\x80\xe6\x9d\xa1\xe5\x9e\x82\xe7\x9b\xb4\xe5\x81\x8f\xe7\xa7\xbb\xe9\x87\x8f\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\xa1\x80\xe6\x9d\xa1\xe5\x9e\x82\xe7\x9b\xb4\xe5\x81\x8f\xe7\xa7\xbb\xe9\x87\x8f" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HealthBarRefDistance_MetaData[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\xa1\x80\xe6\x9d\xa1\xe7\xbc\xa9\xe6\x94\xbe\xe5\x8f\x82\xe8\x80\x83\xe8\xb7\x9d\xe7\xa6\xbb (\xe5\x9c\xa8\xe8\xbf\x99\xe4\xb8\xaa\xe8\xb7\x9d\xe7\xa6\xbb\xe4\xb8\x8b\xe7\xbc\xa9\xe6\x94\xbe\xe4\xb8\xba 1.0)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\xa1\x80\xe6\x9d\xa1\xe7\xbc\xa9\xe6\x94\xbe\xe5\x8f\x82\xe8\x80\x83\xe8\xb7\x9d\xe7\xa6\xbb (\xe5\x9c\xa8\xe8\xbf\x99\xe4\xb8\xaa\xe8\xb7\x9d\xe7\xa6\xbb\xe4\xb8\x8b\xe7\xbc\xa9\xe6\x94\xbe\xe4\xb8\xba 1.0)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HealthBarMinScale_MetaData[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\xa1\x80\xe6\x9d\xa1\xe6\x9c\x80\xe5\xb0\x8f\xe7\xbc\xa9\xe6\x94\xbe\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\xa1\x80\xe6\x9d\xa1\xe6\x9c\x80\xe5\xb0\x8f\xe7\xbc\xa9\xe6\x94\xbe" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HealthBarMaxScale_MetaData[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\xa1\x80\xe6\x9d\xa1\xe6\x9c\x80\xe5\xa4\xa7\xe7\xbc\xa9\xe6\x94\xbe\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\xa1\x80\xe6\x9d\xa1\xe6\x9c\x80\xe5\xa4\xa7\xe7\xbc\xa9\xe6\x94\xbe" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FClassPropertyParams NewProp_SelectedCardClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SelectedUnit;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_UnitHealthBarClass;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitHealthBars_ValueProp;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitHealthBars_Key_KeyProp;
+	static const UECodeGen_Private::FMapPropertyParams NewProp_UnitHealthBars;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_HealthBarZOffset;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_HealthBarRefDistance;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_HealthBarMinScale;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_HealthBarMaxScale;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -279,9 +348,25 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass = { "SelectedCardClass", nullptr, (EPropertyFlags)0x0014000000000004, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, SelectedCardClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SelectedCardClass_MetaData), NewProp_SelectedCardClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedUnit = { "SelectedUnit", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, SelectedUnit), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SelectedUnit_MetaData), NewProp_SelectedUnit_MetaData) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBarClass = { "UnitHealthBarClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, UnitHealthBarClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessUnitWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitHealthBarClass_MetaData), NewProp_UnitHealthBarClass_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_ValueProp = { "UnitHealthBars", nullptr, (EPropertyFlags)0x0000000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 1, Z_Construct_UClass_UAutoChessUnitWidget_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_Key_KeyProp = { "UnitHealthBars_Key", nullptr, (EPropertyFlags)0x0000000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FMapPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars = { "UnitHealthBars", nullptr, (EPropertyFlags)0x0020088000000008, UECodeGen_Private::EPropertyGenFlags::Map, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, UnitHealthBars), EMapPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitHealthBars_MetaData), NewProp_UnitHealthBars_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarZOffset = { "HealthBarZOffset", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HealthBarZOffset), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HealthBarZOffset_MetaData), NewProp_HealthBarZOffset_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarRefDistance = { "HealthBarRefDistance", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HealthBarRefDistance), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HealthBarRefDistance_MetaData), NewProp_HealthBarRefDistance_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarMinScale = { "HealthBarMinScale", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HealthBarMinScale), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HealthBarMinScale_MetaData), NewProp_HealthBarMinScale_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarMaxScale = { "HealthBarMaxScale", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HealthBarMaxScale), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HealthBarMaxScale_MetaData), NewProp_HealthBarMaxScale_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessPlayerController_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedUnit,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBarClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_ValueProp,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_Key_KeyProp,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarZOffset,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarRefDistance,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarMinScale,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HealthBarMaxScale,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessPlayerController_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessPlayerController_Statics::DependentSingletons[])() = {
@@ -324,10 +409,10 @@ AAutoChessPlayerController::~AAutoChessPlayerController() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 4008684654U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 925673521U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_1745831477(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_1454722172(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

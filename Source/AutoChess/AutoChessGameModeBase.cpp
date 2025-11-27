@@ -1,6 +1,11 @@
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
+#include "AutoChessGameState.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/SpectatorPawn.h"
+#include "AutoChessCameraPawn.h"
+#include "Engine/GameViewportClient.h"
+#include "GameMapsSettings.h"
 
 AAutoChessGameModeBase::AAutoChessGameModeBase()
 {
@@ -10,11 +15,51 @@ AAutoChessGameModeBase::AAutoChessGameModeBase()
 	PhaseTimer = 0.0f;
 	PreparationDuration = 30.0f;
 	MaxBattleDuration = 60.0f;
+
+	// 使用 SpectatorPawn，避免 DefaultPawn 消耗鼠标点击进行移动
+	DefaultPawnClass = ASpectatorPawn::StaticClass();
 }
 
 void AAutoChessGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 创建玩家2
+	UGameplayStatics::CreatePlayer(this, 1, true);
+
+	// 设置分屏模式 (垂直分屏)
+	if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
+	{
+		Viewport->SetForceDisableSplitscreen(false);
+	}
+	
+	// 修改全局分屏设置
+	if (UGameMapsSettings* Settings = GetMutableDefault<UGameMapsSettings>())
+	{
+		Settings->TwoPlayerSplitscreenLayout = ETwoPlayerSplitScreenType::Vertical;
+	}
+
+	// 为两个玩家生成并分配相机 Pawn
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		APlayerController* PC = Iterator->Get();
+		if (PC)
+		{
+			int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PC);
+			
+			// 生成 CameraPawn
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			AAutoChessCameraPawn* CameraPawn = GetWorld()->SpawnActor<AAutoChessCameraPawn>(AAutoChessCameraPawn::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+			
+			if (CameraPawn)
+			{
+				CameraPawn->SetupCameraForPlayer(PlayerIndex);
+				PC->Possess(CameraPawn);
+			}
+		}
+	}
+
 	SwitchPhase(EAutoChessPhase::Preparation);
 }
 

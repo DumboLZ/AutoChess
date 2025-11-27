@@ -28,14 +28,8 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 	AutoPossessAI = EAutoPossessAI::Disabled;
 
 	// 禁用单位间碰撞，防止移动时互相卡住
+	// 禁用单位间碰撞，防止移动时互相卡住
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-
-	// 初始化血条组件
-	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComponent"));
-	HealthBarComponent->SetupAttachment(RootComponent);
-	HealthBarComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间，始终朝向摄像机
-	HealthBarComponent->SetDrawAtDesiredSize(true);
-	HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f)); // 位于头顶
 }
 
 void AAutoChessUnitBase::BeginPlay()
@@ -51,10 +45,19 @@ void AAutoChessUnitBase::BeginPlay()
 	}
 
 	// 初始化位置对齐
+	// 第一次生成时，需要根据世界坐标计算 Grid 坐标
+	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
+	{
+		if (AAutoChessGrid* Grid = GS->GameGrid)
+		{
+			int32 X, Y;
+			if (Grid->WorldToGrid(GetActorLocation(), X, Y))
+			{
+				CurrentGridPos = FIntPoint(X, Y);
+			}
+		}
+	}
 	SnapToGrid();
-
-	// 初始化血条
-	UpdateHealthBar();
 }
 
 void AAutoChessUnitBase::SnapToGrid()
@@ -64,21 +67,13 @@ void AAutoChessUnitBase::SnapToGrid()
 	{
 		if (AAutoChessGrid* Grid = GS->GameGrid)
 		{
-			int32 X, Y;
-			if (Grid->WorldToGrid(GetActorLocation(), X, Y))
-			{
-				CurrentGridPos = FIntPoint(X, Y);
-				// 强制对齐中心
-				FVector NewLoc = Grid->GridToWorld(X, Y);
-				// 保持当前的 Z 高度 (或者根据 Grid 高度调整)
-				NewLoc.Z = GetActorLocation().Z; 
-				SetActorLocation(NewLoc);
-			}
-			else
-			{
-				// 如果不在棋盘上，可以销毁或者打印警告
-				// UE_LOG(LogTemp, Warning, TEXT("Unit %s is not on the grid!"), *GetName());
-			}
+			// 直接使用 CurrentGridPos 计算世界坐标，而不是反过来
+			// 这样我们可以先修改 CurrentGridPos，再调用 SnapToGrid 来移动单位
+			FVector NewLoc = Grid->GridToWorld(CurrentGridPos.X, CurrentGridPos.Y);
+			
+			// 保持当前的 Z 高度 (或者根据 Grid 高度调整)
+			NewLoc.Z = GetActorLocation().Z; 
+			SetActorLocation(NewLoc);
 		}
 	}
 }
@@ -248,7 +243,6 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
 {
 	Health -= DamageAmount;
-	UpdateHealthBar(); // 更新血条
 	
 	if (Health <= 0.0f)
 	{
@@ -293,16 +287,4 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 		}
 	}
 	return NearestEnemy;
-}
-
-void AAutoChessUnitBase::UpdateHealthBar()
-{
-	if (HealthBarComponent)
-	{
-		if (UAutoChessUnitWidget* Widget = Cast<UAutoChessUnitWidget>(HealthBarComponent->GetUserWidgetObject()))
-		{
-			Widget->UpdateHealth(Health, MaxHealth);
-			Widget->SetTeamColor(TeamID);
-		}
-	}
 }

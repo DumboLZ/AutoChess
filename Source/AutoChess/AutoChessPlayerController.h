@@ -49,4 +49,40 @@ protected:
 	
 	// 鼠标点击处理
 	void HandleClick();
+
+	// --- 拖拽逻辑 ---
+	bool bIsDragging;
+	AAutoChessUnitBase* DraggedUnit;
+	FVector DragOffset; // 鼠标点击位置相对于单位中心的偏移
+
+	void HandleDragStart();
+	void HandleDragging();
+	void HandleDragEnd();
+
+	// --- UI 逻辑 ---
+	// 血条 Widget 类
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	TSubclassOf<class UAutoChessUnitWidget> UnitHealthBarClass;
+
+	// 管理所有单位的血条 Widget
+	UPROPERTY()
+	TMap<AAutoChessUnitBase*, class UAutoChessUnitWidget*> UnitHealthBars;
+
+	// 血条垂直偏移量
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	float HealthBarZOffset = 150.0f;
+
+	// 血条缩放参考距离 (在这个距离下缩放为 1.0)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	float HealthBarRefDistance = 1000.0f;
+
+	// 血条最小缩放
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	float HealthBarMinScale = 0.5f;
+
+	// 血条最大缩放
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	float HealthBarMaxScale = 1.5f;
+
+	void UpdateHealthBars();
 };
