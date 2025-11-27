@@ -1,0 +1,15 @@
+# 编译生成的二进制文件和中间文件
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+Build/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.suo
+
+# 调试和日志文件
+*.log
+*.pdb
+*.ilk
