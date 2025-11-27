@@ -4,6 +4,8 @@
 #include "AutoChessGrid.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
+#include "AutoChessUnitWidget.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
@@ -27,6 +29,13 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 
 	// 禁用单位间碰撞，防止移动时互相卡住
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+	// 初始化血条组件
+	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComponent"));
+	HealthBarComponent->SetupAttachment(RootComponent);
+	HealthBarComponent->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间，始终朝向摄像机
+	HealthBarComponent->SetDrawAtDesiredSize(true);
+	HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f)); // 位于头顶
 }
 
 void AAutoChessUnitBase::BeginPlay()
@@ -43,6 +52,9 @@ void AAutoChessUnitBase::BeginPlay()
 
 	// 初始化位置对齐
 	SnapToGrid();
+
+	// 初始化血条
+	UpdateHealthBar();
 }
 
 void AAutoChessUnitBase::SnapToGrid()
@@ -236,6 +248,8 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
 {
 	Health -= DamageAmount;
+	UpdateHealthBar(); // 更新血条
+	
 	if (Health <= 0.0f)
 	{
 		OnDeath();
@@ -279,4 +293,16 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 		}
 	}
 	return NearestEnemy;
+}
+
+void AAutoChessUnitBase::UpdateHealthBar()
+{
+	if (HealthBarComponent)
+	{
+		if (UAutoChessUnitWidget* Widget = Cast<UAutoChessUnitWidget>(HealthBarComponent->GetUserWidgetObject()))
+		{
+			Widget->UpdateHealth(Health, MaxHealth);
+			Widget->SetTeamColor(TeamID);
+		}
+	}
 }
