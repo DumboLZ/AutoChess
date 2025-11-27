@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\AutoChess.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\AutoChess.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\AutoChessEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.gitattributes" />
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\.vsconfig" />
+    <None Include="..\..\README.md" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\AutoChess">
+      <UniqueIdentifier>{23B83743-3116-3270-AEB2-CE3B66DF87E4}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\AutoChess\AutoChess.Build.cs">
+      <Filter>Source\AutoChess</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChess.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChess.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessCardBase.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessCardBase.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessGameModeBase.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessGameModeBase.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessGameState.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessGameState.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessGrid.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessGrid.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessPlayerController.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessPlayerController.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessUnitBase.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessUnitBase.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessUnitWidget.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessUnitWidget.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
