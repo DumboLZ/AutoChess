@@ -59,6 +59,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	EAutoChessCardTargetType TargetType = EAutoChessCardTargetType::Enemy;
 
+	// 作用范围半径 (0: 单体, 1: 3x3, 2: 5x5)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	int32 AOERadius;
+
 	// --- 卡牌效果 ---
 
 	// 当卡牌被打出时调用 (蓝图实现具体效果)

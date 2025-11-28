@@ -465,6 +465,97 @@ void AAutoChessPlayerController::DrawCard()
 	}
 }
 
+bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card, const FVector2D& ScreenPosition)
+{
+	FHitResult HitResult;
+	if (GetHitResultAtScreenPosition(ScreenPosition, ECC_Visibility, true, HitResult))
+	{
+		AActor* HitActor = HitResult.GetActor();
+		return PlayCard(Card, HitActor);
+	}
+	// 如果没有点到任何东西（比如点到虚空），也可以尝试 PlayCard(Card, nullptr)
+	return PlayCard(Card, nullptr);
+}
+
+void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, const FVector2D& ScreenPosition)
+{
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS || !GS->GameGrid) return;
+
+	if (!Card)
+	{
+		GS->GameGrid->ClearHighlights();
+		return;
+	}
+
+	FHitResult HitResult;
+	if (GetHitResultAtScreenPosition(ScreenPosition, ECC_Visibility, true, HitResult))
+	{
+		AActor* HitActor = HitResult.GetActor();
+		UE_LOG(LogTemp, Log, TEXT("Drag Hit: %s"), *HitActor->GetName());
+		
+		// 尝试获取格子坐标
+		int32 CenterX = -1;
+		int32 CenterY = -1;
+
+		if (AAutoChessGrid* Grid = Cast<AAutoChessGrid>(HitActor))
+		{
+			// 点到了格子本身
+			Grid->WorldToGrid(HitResult.Location, CenterX, CenterY);
+		}
+		else if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(HitActor))
+		{
+			// 点到了单位
+			CenterX = Unit->CurrentGridPos.X;
+			CenterY = Unit->CurrentGridPos.Y;
+		}
+		else
+		{
+			// 点到了地板或其他物体 (Floor)，尝试用 GameGrid 计算坐标
+			// 只要是在 Grid 范围内的地板，也应该算作有效
+			if (GS->GameGrid)
+			{
+				GS->GameGrid->WorldToGrid(HitResult.Location, CenterX, CenterY);
+			}
+		}
+
+		if (CenterX != -1 && CenterY != -1)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Highlight Center: %d, %d"), CenterX, CenterY);
+
+			// 计算 AOE 范围
+			TArray<FIntPoint> HighlightPoints;
+			int32 Radius = Card->AOERadius;
+
+			for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
+			{
+				for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
+				{
+					if (GS->GameGrid->IsValidGridPosition(x, y))
+					{
+						HighlightPoints.Add(FIntPoint(x, y));
+					}
+				}
+			}
+
+			if (HighlightPoints.Num() > 0)
+			{
+				GS->GameGrid->HighlightTiles(HighlightPoints);
+				UE_LOG(LogTemp, Log, TEXT("Highlighting %d tiles"), HighlightPoints.Num());
+			}
+		}
+		else
+		{
+			GS->GameGrid->ClearHighlights();
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Drag Raycast Failed"));
+		GS->GameGrid->ClearHighlights();
+	}
+}
+
 bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target)
 {
 	if (!Card || !HandCards.Contains(Card)) return false;

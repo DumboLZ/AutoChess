@@ -58,6 +58,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Visuals")
 	UInstancedStaticMeshComponent* TileISM_Black;
 
+	// 高亮格子 ISM
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Visuals")
+	UInstancedStaticMeshComponent* TileISM_Highlight;
+
 	// 格子模型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals")
 	UStaticMesh* TileMesh;
@@ -70,9 +74,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals")
 	UMaterialInterface* MaterialBlack;
 
+	// 高亮材质
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals")
+	UMaterialInterface* MaterialHighlight;
+
 	// 生成棋盘模型
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "AutoChess|Grid")
 	void GenerateGrid();
+
+	// 高亮指定格子
+	UFUNCTION(BlueprintCallable, Category = "Grid")
+	void HighlightTiles(const TArray<FIntPoint>& GridPositions);
+
+	// 清除高亮
+	UFUNCTION(BlueprintCallable, Category = "Grid")
+	void ClearHighlights();
 
 	// --- 核心逻辑 ---
 

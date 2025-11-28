@@ -5,7 +5,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Components/WidgetComponent.h"
 #include "AutoChessUnitWidget.h"
+#include "AutoChessProjectile.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
@@ -254,7 +256,28 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 {
 	if (Target)
 	{
-		Target->ReceiveDamage(AttackDamage, this);
+		if (ProjectileClass)
+		{
+			// 远程攻击：生成投射物
+			FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 50.0f; // 稍微靠前一点
+			FRotator SpawnRotation = (Target->GetActorLocation() - SpawnLocation).Rotation();
+
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = this;
+
+			AAutoChessProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+			if (Projectile)
+			{
+				Projectile->InitProjectile(Target, AttackDamage, this);
+			}
+		}
+		else
+		{
+			// 近战攻击：直接造成伤害
+			Target->ReceiveDamage(AttackDamage, this);
+		}
+
 		// 增加法力值
 		Mana = FMath::Clamp(Mana + 10.0f, 0.0f, MaxMana);
 		if (Mana >= MaxMana)

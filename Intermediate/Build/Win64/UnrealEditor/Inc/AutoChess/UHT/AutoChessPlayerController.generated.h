@@ -27,6 +27,8 @@ AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execDrawCard); \
+	DECLARE_FUNCTION(execUpdateDragHighlight); \
+	DECLARE_FUNCTION(execTryPlayCardAtPosition); \
 	DECLARE_FUNCTION(execPlayCard); \
 	DECLARE_FUNCTION(execSellUnit); \
 	DECLARE_FUNCTION(execPlaceUnit); \

@@ -38,6 +38,58 @@ AAutoChessGrid::AAutoChessGrid()
 	TileISM_Black->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	TileISM_Black->SetCollisionResponseToAllChannels(ECR_Ignore);
 	TileISM_Black->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	TileISM_Highlight = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("TileISM_Highlight"));
+	TileISM_Highlight->SetupAttachment(RootComponent);
+	TileISM_Highlight->SetSimulatePhysics(false);
+	TileISM_Highlight->SetCollisionProfileName(TEXT("NoCollision"));
+	TileISM_Highlight->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+
+
+void AAutoChessGrid::HighlightTiles(const TArray<FIntPoint>& GridPositions)
+{
+	TileISM_Highlight->ClearInstances();
+
+	if (MaterialHighlight)
+	{
+		TileISM_Highlight->SetMaterial(0, MaterialHighlight);
+	}
+
+	if (!TileMesh) return;
+
+	// 计算缩放 (复用 GenerateGrid 的逻辑)
+	FVector InstanceScale(1.0f, 1.0f, 1.0f);
+	float ZOffset = 0.0f;
+	FBoxSphereBounds Bounds = TileMesh->GetBounds();
+	FVector BoxSize = Bounds.BoxExtent * 2.0f;
+	if (BoxSize.X > 0.0f) InstanceScale.X = (TileSize / BoxSize.X) * ScalePadding;
+	if (BoxSize.Y > 0.0f) InstanceScale.Y = (TileSize / BoxSize.Y) * ScalePadding;
+	if (BoxSize.Z > 0.0f) InstanceScale.Z = (TileHeight / BoxSize.Z);
+	ZOffset = TileHeight * 0.5f;
+
+	// 稍微抬高一点，避免 Z-Fighting，或者作为覆盖层
+	ZOffset += 1.0f; 
+
+	for (const FIntPoint& Pos : GridPositions)
+	{
+		if (IsValidGridPosition(Pos.X, Pos.Y))
+		{
+			float XPos = (Pos.X * TileSize) + (TileSize * 0.5f);
+			float YPos = (Pos.Y * TileSize) + (TileSize * 0.5f);
+			FVector Location(XPos, YPos, ZOffset);
+			Location += VisualOffset;
+
+			FTransform InstanceTransform(FRotator::ZeroRotator, Location, InstanceScale);
+			TileISM_Highlight->AddInstance(InstanceTransform);
+		}
+	}
+}
+
+void AAutoChessGrid::ClearHighlights()
+{
+	TileISM_Highlight->ClearInstances();
 }
 
 void AAutoChessGrid::BeginPlay()

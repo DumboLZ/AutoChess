@@ -19,6 +19,8 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	DECLARE_FUNCTION(execIsValidGridPosition); \
 	DECLARE_FUNCTION(execGridToWorld); \
 	DECLARE_FUNCTION(execWorldToGrid); \
+	DECLARE_FUNCTION(execClearHighlights); \
+	DECLARE_FUNCTION(execHighlightTiles); \
 	DECLARE_FUNCTION(execGenerateGrid);
 
 

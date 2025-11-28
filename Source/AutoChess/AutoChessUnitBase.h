@@ -61,6 +61,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	float Mana;
 
+	// 投射物类 (如果为空则为近战)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
+	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
+
 	// 当前攻击目标
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
 	AAutoChessUnitBase* CurrentTarget;

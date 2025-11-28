@@ -137,6 +137,14 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
 	bool PlayCard(UAutoChessCardBase* Card, AActor* Target);
 
+	// 尝试在指定屏幕位置打出卡牌 (用于拖拽释放)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	bool TryPlayCardAtPosition(UAutoChessCardBase* Card, const FVector2D& ScreenPosition);
+
+	// 更新拖拽高亮 (用于拖拽过程中显示范围)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	void UpdateDragHighlight(UAutoChessCardBase* Card, const FVector2D& ScreenPosition);
+
 	// 抽一张牌
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
 	void DrawCard();
