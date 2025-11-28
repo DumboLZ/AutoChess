@@ -5,6 +5,17 @@
 #include "AutoChessCardBase.generated.h"
 
 class AAutoChessUnitBase;
+class AAutoChessPlayerController;
+
+UENUM(BlueprintType)
+enum class EAutoChessCardTargetType : uint8
+{
+	None		UMETA(DisplayName = "None"),
+	Enemy		UMETA(DisplayName = "Enemy Unit"),
+	Ally		UMETA(DisplayName = "Ally Unit"),
+	Self		UMETA(DisplayName = "Self (Player)"),
+	AnyUnit		UMETA(DisplayName = "Any Unit")
+};
 
 /**
  * 自动走棋卡牌数据类
@@ -40,12 +51,20 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	int32 Rarity;
 
+	// 关联的 Gameplay Ability (打出时激活)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	TSubclassOf<class UGameplayAbility> CardAbilityClass;
+
+	// 目标类型限制
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	EAutoChessCardTargetType TargetType = EAutoChessCardTargetType::Enemy;
+
 	// --- 卡牌效果 ---
 
 	// 当卡牌被打出时调用 (蓝图实现具体效果)
 	// Controller: 谁打出的
 	// Target: 目标 (可能是单位、地块或空)
 	UFUNCTION(BlueprintNativeEvent, Category = "Card Effect")
-	void OnPlayed(AAutoChessPlayerController* Controller, AActor* Target);
-	virtual void OnPlayed_Implementation(AAutoChessPlayerController* Controller, AActor* Target);
+	void OnPlayed(APlayerController* Controller, AActor* Target);
+	virtual void OnPlayed_Implementation(APlayerController* Controller, AActor* Target);
 };

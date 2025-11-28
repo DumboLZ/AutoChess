@@ -42,6 +42,12 @@
     <ClInclude Include="..\..\Source\AutoChess\AutoChess.h">
       <Filter>Source\AutoChess</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessAttributeSet.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessAttributeSet.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\AutoChess\AutoChessCameraPawn.cpp">
       <Filter>Source\AutoChess</Filter>
     </ClCompile>

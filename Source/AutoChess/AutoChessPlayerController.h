@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
 #include "AutoChessPlayerController.generated.h"
 
 class AAutoChessUnitBase;
@@ -16,12 +18,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHandUpdate, const TArray<UAutoChe
  * 处理玩家输入、卡牌购买、单位放置
  */
 UCLASS()
-class AUTOCHESS_API AAutoChessPlayerController : public APlayerController
+class AUTOCHESS_API AAutoChessPlayerController : public APlayerController, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 	
 public:
 	AAutoChessPlayerController();
+
+	// --- GAS 组件 ---
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
+	class UAbilitySystemComponent* AbilitySystemComponent;
+
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	// 当前选中的卡牌类 (准备放置)
 	UPROPERTY(BlueprintReadWrite, Category = "AutoChess|Input")

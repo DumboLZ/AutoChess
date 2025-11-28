@@ -16,6 +16,16 @@ AAutoChessPlayerController::AAutoChessPlayerController()
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
+
+	// 初始化 GAS 组件
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+}
+
+UAbilitySystemComponent* AAutoChessPlayerController::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 void AAutoChessPlayerController::BeginPlay()
@@ -27,6 +37,12 @@ void AAutoChessPlayerController::BeginPlay()
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
+
+	// 初始化 GAS
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
 
 	// 初始化法力值
 	Mana = 0.0f;
@@ -453,7 +469,23 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 {
 	if (!Card || !HandCards.Contains(Card)) return false;
 
-	// 检查费用
+	// 1. 验证目标类型
+	if (Card->TargetType != EAutoChessCardTargetType::None && Card->TargetType != EAutoChessCardTargetType::Self)
+	{
+		AAutoChessUnitBase* TargetUnit = Cast<AAutoChessUnitBase>(Target);
+		if (!TargetUnit) return false; // 需要单位但没点到单位
+
+		// 获取我的 TeamID (假设 PlayerController 有 TeamID 或者根据 PlayerState)
+		// 这里简单假设 Player1 = 0, Player2 = 1。可以通过 Controller ID 判断
+		int32 MyTeamID = 0; // 临时写死，后续应从 PlayerState 获取
+
+		bool bIsEnemy = (TargetUnit->TeamID != MyTeamID);
+
+		if (Card->TargetType == EAutoChessCardTargetType::Enemy && !bIsEnemy) return false;
+		if (Card->TargetType == EAutoChessCardTargetType::Ally && bIsEnemy) return false;
+	}
+
+	// 2. 检查费用
 	if (Mana >= Card->Cost)
 	{
 		// 扣费

@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+#include "AutoChessAttributeSet.h"
 #include "AutoChessUnitBase.generated.h"
 
 /**
@@ -9,12 +12,22 @@
  * 包含战斗属性、攻击逻辑、技能接口
  */
 UCLASS()
-class AUTOCHESS_API AAutoChessUnitBase : public ACharacter
+class AUTOCHESS_API AAutoChessUnitBase : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	AAutoChessUnitBase();
+
+	// --- GAS 组件 ---
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
+	class UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
+	class UAutoChessAttributeSet* AttributeSet;
+
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	// 队伍ID (0: 玩家1, 1: 玩家2)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")

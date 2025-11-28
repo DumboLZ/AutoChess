@@ -30,13 +30,38 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 	// 禁用单位间碰撞，防止移动时互相卡住
 	// 禁用单位间碰撞，防止移动时互相卡住
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+	// 初始化 GAS 组件
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+
+	AttributeSet = CreateDefaultSubobject<UAutoChessAttributeSet>(TEXT("AttributeSet"));
+}
+
+UAbilitySystemComponent* AAutoChessUnitBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 void AAutoChessUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
-	Health = MaxHealth;
-	Mana = 0.0f;
+
+	// 初始化 GAS 属性
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		
+		if (AttributeSet)
+		{
+			AttributeSet->InitHealth(MaxHealth);
+			AttributeSet->InitMaxHealth(MaxHealth);
+			AttributeSet->InitMana(Mana);
+			AttributeSet->InitMaxMana(MaxMana);
+			AttributeSet->InitAttackDamage(AttackDamage);
+		}
+	}
 
 	// 注册到 GameState
 	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
