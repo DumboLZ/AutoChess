@@ -32,22 +32,24 @@ void AAutoChessPlayerController::BeginPlay()
 	Mana = 0.0f;
 	DrawCardTimer = 0.0f;
 
-	// 创建主 HUD (分屏独立 UI)
-	if (IsLocalController() && MainHUDClass)
-	{
-		MainHUDWidget = CreateWidget<UUserWidget>(this, MainHUDClass);
-		if (MainHUDWidget)
-		{
-			// 关键：使用 AddToPlayerScreen 而不是 AddToViewport
-			// 这样 UI 只会显示在当前玩家的分屏区域内
-			MainHUDWidget->AddToPlayerScreen();
-		}
-	}
 }
 
 void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+
+	// 延迟创建 HUD，确保 Player 已经附加
+	if (!MainHUDWidget && IsLocalController() && MainHUDClass)
+	{
+		if (GetLocalPlayer())
+		{
+			MainHUDWidget = CreateWidget<UUserWidget>(this, MainHUDClass);
+			if (MainHUDWidget)
+			{
+				MainHUDWidget->AddToPlayerScreen();
+			}
+		}
+	}
 
 	// 简单的 Debug UI 显示
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
@@ -410,6 +412,8 @@ void AAutoChessPlayerController::RegenerateMana(float DeltaTime)
 		{
 			Mana = MaxMana;
 		}
+		// 广播法力更新
+		OnManaUpdated.Broadcast(Mana, MaxMana);
 	}
 }
 
@@ -438,6 +442,8 @@ void AAutoChessPlayerController::DrawCard()
 		if (NewCard)
 		{
 			HandCards.Add(NewCard);
+			// 广播手牌更新
+			OnHandUpdated.Broadcast(HandCards);
 			// 可以在这里播放抽牌音效或UI动画
 		}
 	}
@@ -452,12 +458,14 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 	{
 		// 扣费
 		Mana -= Card->Cost;
+		OnManaUpdated.Broadcast(Mana, MaxMana);
 
 		// 触发效果
 		Card->OnPlayed(this, Target);
 
 		// 移除手牌
 		HandCards.Remove(Card);
+		OnHandUpdated.Broadcast(HandCards);
 		
 		return true;
 	}

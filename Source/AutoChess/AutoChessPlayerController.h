@@ -7,6 +7,10 @@
 class AAutoChessUnitBase;
 class UAutoChessCardBase;
 
+// 定义 UI 更新委托
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnManaUpdate, float, CurrentMana, float, MaxMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHandUpdate, const TArray<UAutoChessCardBase*>&, HandCards);
+
 /**
  * 自动走棋玩家控制器
  * 处理玩家输入、卡牌购买、单位放置
@@ -138,4 +142,15 @@ protected:
 
 	// 处理自动抽牌
 	void ProcessAutoDraw(float DeltaTime);
+
+public:
+	// --- UI 事件 ---
+	
+	// 法力值更新事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnManaUpdate OnManaUpdated;
+
+	// 手牌更新事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnHandUpdate OnHandUpdated;
 };

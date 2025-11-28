@@ -17,7 +17,15 @@ class UAutoChessCardBase;
 #endif
 #define AUTOCHESS_AutoChessPlayerController_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_11_DELEGATE \
+AUTOCHESS_API void FOnManaUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnManaUpdate, float CurrentMana, float MaxMana);
+
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_12_DELEGATE \
+AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnHandUpdate, TArray<UAutoChessCardBase*> const& HandCards);
+
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execDrawCard); \
 	DECLARE_FUNCTION(execPlayCard); \
 	DECLARE_FUNCTION(execSellUnit); \
@@ -25,8 +33,8 @@ class UAutoChessCardBase;
 	DECLARE_FUNCTION(execBuyCard);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessPlayerController(); \
 	friend struct Z_Construct_UClass_AAutoChessPlayerController_Statics; \
@@ -35,7 +43,7 @@ public: \
 	DECLARE_SERIALIZER(AAutoChessPlayerController)
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessPlayerController(AAutoChessPlayerController&&); \
@@ -47,14 +55,14 @@ public: \
 	NO_API virtual ~AAutoChessPlayerController();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_14_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_18_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_17_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_21_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
