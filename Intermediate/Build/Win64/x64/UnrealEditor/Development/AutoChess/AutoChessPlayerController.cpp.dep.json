@@ -46,7 +46,6 @@
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystaticstypes.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystaticstypes.generated.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystatics.generated.h",
-            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessunitwidget.h",
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\blueprint\\userwidget.h",
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\blueprint\\widgetchild.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\widgetchild.generated.h",
@@ -75,6 +74,7 @@
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\animation\\widgetanimationevents.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\widgetanimationevents.generated.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\userwidget.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessunitwidget.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitwidget.generated.h"
         ],
         "ImportedModules": [],

@@ -8,6 +8,7 @@
 /NODEFAULTLIB
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\AutoChessEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChess.init.gen.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessCameraPawn.gen.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessCardBase.gen.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessGameModeBase.gen.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessGameState.gen.cpp.obj"
@@ -20,6 +21,7 @@
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessGameState.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessGrid.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessUnitWidget.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessCameraPawn.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessGameModeBase.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessPlayerController.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\AutoChessUnitBase.cpp.obj"

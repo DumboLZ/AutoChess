@@ -9,11 +9,18 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class AActor;
+class AAutoChessPlayerController;
 #ifdef AUTOCHESS_AutoChessCardBase_generated_h
 #error "AutoChessCardBase.generated.h already included, missing '#pragma once' in AutoChessCardBase.h"
 #endif
 #define AUTOCHESS_AutoChessCardBase_generated_h
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execOnPlayed);
+
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_CALLBACK_WRAPPERS
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUAutoChessCardBase(); \
@@ -41,6 +48,8 @@ public: \
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_CALLBACK_WRAPPERS \
 	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_INCLASS_NO_PURE_DECLS \
 	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_16_ENHANCED_CONSTRUCTORS \
 private: \
