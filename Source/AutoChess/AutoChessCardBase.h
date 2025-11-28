@@ -39,4 +39,13 @@ public:
 	// 稀有度 (1-5)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	int32 Rarity;
+
+	// --- 卡牌效果 ---
+
+	// 当卡牌被打出时调用 (蓝图实现具体效果)
+	// Controller: 谁打出的
+	// Target: 目标 (可能是单位、地块或空)
+	UFUNCTION(BlueprintNativeEvent, Category = "Card Effect")
+	void OnPlayed(AAutoChessPlayerController* Controller, AActor* Target);
+	virtual void OnPlayed_Implementation(AAutoChessPlayerController* Controller, AActor* Target);
 };

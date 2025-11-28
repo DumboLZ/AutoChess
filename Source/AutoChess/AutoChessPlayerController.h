@@ -60,6 +60,15 @@ protected:
 	void HandleDragEnd();
 
 	// --- UI 逻辑 ---
+	
+	// 主 HUD 类 (玩家手牌、法力值等)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	TSubclassOf<class UUserWidget> MainHUDClass;
+
+	// 主 HUD 实例
+	UPROPERTY(BlueprintReadOnly, Category = "AutoChess|UI")
+	class UUserWidget* MainHUDWidget;
+
 	// 血条 Widget 类
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
 	TSubclassOf<class UAutoChessUnitWidget> UnitHealthBarClass;
@@ -85,4 +94,48 @@ protected:
 	float HealthBarMaxScale = 1.5f;
 
 	void UpdateHealthBars();
+
+	// --- 实时卡牌战斗系统 ---
+
+	// 当前法力值
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
+	float Mana;
+
+	// 最大法力值
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
+	float MaxMana = 10.0f;
+
+	// 法力回复速度 (每秒)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
+	float ManaRegenRate = 1.0f;
+
+	// 牌库配置 (卡牌类列表)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
+	TArray<TSubclassOf<UAutoChessCardBase>> DeckConfig;
+
+	// 当前手牌 (实例化后的卡牌对象)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Battle")
+	TArray<UAutoChessCardBase*> HandCards;
+
+	// 抽牌间隔 (秒)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
+	float DrawCardInterval = 5.0f;
+
+	// 尝试打出卡牌
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	bool PlayCard(UAutoChessCardBase* Card, AActor* Target);
+
+	// 抽一张牌
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	void DrawCard();
+
+protected:
+	// 内部计时器
+	float DrawCardTimer;
+
+	// 回复法力
+	void RegenerateMana(float DeltaTime);
+
+	// 处理自动抽牌
+	void ProcessAutoDraw(float DeltaTime);
 };

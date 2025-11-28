@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h" // For GEngine
+#include "Engine/Engine.h" // For GEngine
+#include "Blueprint/UserWidget.h"
 #include "AutoChessUnitWidget.h"
 
 AAutoChessPlayerController::AAutoChessPlayerController()
@@ -25,6 +27,22 @@ void AAutoChessPlayerController::BeginPlay()
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
+
+	// 初始化法力值
+	Mana = 0.0f;
+	DrawCardTimer = 0.0f;
+
+	// 创建主 HUD (分屏独立 UI)
+	if (IsLocalController() && MainHUDClass)
+	{
+		MainHUDWidget = CreateWidget<UUserWidget>(this, MainHUDClass);
+		if (MainHUDWidget)
+		{
+			// 关键：使用 AddToPlayerScreen 而不是 AddToViewport
+			// 这样 UI 只会显示在当前玩家的分屏区域内
+			MainHUDWidget->AddToPlayerScreen();
+		}
+	}
 }
 
 void AAutoChessPlayerController::PlayerTick(float DeltaTime)
@@ -76,6 +94,16 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 
 	// 更新血条 UI
 	UpdateHealthBars();
+
+	// 战斗阶段逻辑：回蓝和抽牌
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		if (GM->CurrentPhase == EAutoChessPhase::Battle)
+		{
+			RegenerateMana(DeltaTime);
+			ProcessAutoDraw(DeltaTime);
+		}
+	}
 }
 
 void AAutoChessPlayerController::HandleClick()
@@ -371,6 +399,70 @@ void AAutoChessPlayerController::UpdateHealthBars()
 			}
 		}
 	}
+}
+
+void AAutoChessPlayerController::RegenerateMana(float DeltaTime)
+{
+	if (Mana < MaxMana)
+	{
+		Mana += ManaRegenRate * DeltaTime;
+		if (Mana > MaxMana)
+		{
+			Mana = MaxMana;
+		}
+	}
+}
+
+void AAutoChessPlayerController::ProcessAutoDraw(float DeltaTime)
+{
+	DrawCardTimer += DeltaTime;
+	if (DrawCardTimer >= DrawCardInterval)
+	{
+		DrawCardTimer = 0.0f;
+		DrawCard();
+	}
+}
+
+void AAutoChessPlayerController::DrawCard()
+{
+	if (DeckConfig.Num() == 0) return;
+
+	// 随机抽一张
+	int32 Index = FMath::RandRange(0, DeckConfig.Num() - 1);
+	TSubclassOf<UAutoChessCardBase> CardClass = DeckConfig[Index];
+
+	if (CardClass)
+	{
+		// 实例化卡牌对象
+		UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, CardClass);
+		if (NewCard)
+		{
+			HandCards.Add(NewCard);
+			// 可以在这里播放抽牌音效或UI动画
+		}
+	}
+}
+
+bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target)
+{
+	if (!Card || !HandCards.Contains(Card)) return false;
+
+	// 检查费用
+	if (Mana >= Card->Cost)
+	{
+		// 扣费
+		Mana -= Card->Cost;
+
+		// 触发效果
+		Card->OnPlayed(this, Target);
+
+		// 移除手牌
+		HandCards.Remove(Card);
+		
+		return true;
+	}
+
+	return false;
 }
 
 
