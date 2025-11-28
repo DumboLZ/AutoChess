@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscamerapawn.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\autochesseditor\\debuggame\\unrealed\\sharedpch.unrealed.project.nonoptimized.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\unrealeditor\\debuggame\\autochess\\definitions.autochess.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscamerapawn.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochesscamerapawn.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\springarmcomponent.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\springarmcomponent.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\camera\\cameracomponent.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\cameracomponent.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
