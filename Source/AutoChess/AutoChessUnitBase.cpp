@@ -307,11 +307,55 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 
 void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
 {
-	Health -= DamageAmount;
-	
-	if (Health <= 0.0f)
+	// 改用 GAS 系统应用伤害
+	if (AbilitySystemComponent && AttributeSet)
 	{
-		OnDeath();
+		// 创建即时 Gameplay Effect 来应用伤害
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(Attacker);
+
+		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(
+			UGameplayEffect::StaticClass(), 1.0f, EffectContext);
+
+		if (SpecHandle.IsValid())
+		{
+			// 设置即时伤害修改器
+			FGameplayModifierInfo ModifierInfo;
+			ModifierInfo.Attribute = UAutoChessAttributeSet::GetHealthAttribute();
+			ModifierInfo.ModifierOp = EGameplayModOp::Additive;
+			
+			// 创建一个临时的 Gameplay Effect 来应用伤害
+			// 注意：这里我们需要用负值来减血
+			SpecHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), -DamageAmount);
+			
+			// 简化版：直接修改 AttributeSet 的 Health
+			// 注意：直接调用 SetHealth 不会触发 PostGameplayEffectExecute，所以需要手动检查死亡
+			float OldHealth = AttributeSet->GetHealth();
+			float NewHealth = OldHealth - DamageAmount;
+			AttributeSet->SetHealth(FMath::Max(0.0f, NewHealth));
+			
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage from %s. Health: %.1f -> %.1f"), 
+				*GetName(), DamageAmount, Attacker ? *Attacker->GetName() : TEXT("Unknown"), 
+				OldHealth, AttributeSet->GetHealth());
+			
+			// 手动检查死亡（因为 PostGameplayEffectExecute 不会被触发）
+			if (AttributeSet->GetHealth() <= 0.0f)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s health reached 0, triggering OnDeath"), *GetName());
+				OnDeath();
+			}
+		}
+	}
+	else
+	{
+		// 回退到旧方式（不应该发生）
+		Health -= DamageAmount;
+		UE_LOG(LogTemp, Error, TEXT("[UnitBase::ReceiveDamage] ASC or AttributeSet is NULL! Falling back to old Health system."));
+		
+		if (Health <= 0.0f)
+		{
+			OnDeath();
+		}
 	}
 }
 
