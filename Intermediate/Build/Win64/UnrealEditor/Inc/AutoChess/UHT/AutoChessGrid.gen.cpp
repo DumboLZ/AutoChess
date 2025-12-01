@@ -12,6 +12,7 @@ void EmptyLinkFunctionForGeneratedCodeAutoChessGrid() {}
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGrid();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGrid_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FIntPoint();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FVector();
 ENGINE_API UClass* Z_Construct_UClass_AActor();
@@ -164,6 +165,72 @@ DEFINE_FUNCTION(AAutoChessGrid::execGenerateGrid)
 	P_NATIVE_END;
 }
 // End Class AAutoChessGrid Function GenerateGrid
+
+// Begin Class AAutoChessGrid Function GetUnitsInRadius
+struct Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics
+{
+	struct AutoChessGrid_eventGetUnitsInRadius_Parms
+	{
+		int32 CenterX;
+		int32 CenterY;
+		int32 Radius;
+		TArray<AAutoChessUnitBase*> ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Grid" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\x8e\xb7\xe5\x8f\x96\xe6\x8c\x87\xe5\xae\x9a\xe8\x8c\x83\xe5\x9b\xb4\xe5\x86\x85\xe7\x9a\x84\xe6\x89\x80\xe6\x9c\x89\xe5\x8d\x95\xe4\xbd\x8d\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGrid.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\x8e\xb7\xe5\x8f\x96\xe6\x8c\x87\xe5\xae\x9a\xe8\x8c\x83\xe5\x9b\xb4\xe5\x86\x85\xe7\x9a\x84\xe6\x89\x80\xe6\x9c\x89\xe5\x8d\x95\xe4\xbd\x8d" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FIntPropertyParams NewProp_CenterX;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_CenterY;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_Radius;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_ReturnValue_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_CenterX = { "CenterX", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGrid_eventGetUnitsInRadius_Parms, CenterX), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_CenterY = { "CenterY", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGrid_eventGetUnitsInRadius_Parms, CenterY), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_Radius = { "Radius", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGrid_eventGetUnitsInRadius_Parms, Radius), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGrid_eventGetUnitsInRadius_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_CenterX,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_CenterY,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_Radius,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_ReturnValue_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGrid, nullptr, "GetUnitsInRadius", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::AutoChessGrid_eventGetUnitsInRadius_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::AutoChessGrid_eventGetUnitsInRadius_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGrid::execGetUnitsInRadius)
+{
+	P_GET_PROPERTY(FIntProperty,Z_Param_CenterX);
+	P_GET_PROPERTY(FIntProperty,Z_Param_CenterY);
+	P_GET_PROPERTY(FIntProperty,Z_Param_Radius);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(TArray<AAutoChessUnitBase*>*)Z_Param__Result=P_THIS->GetUnitsInRadius(Z_Param_CenterX,Z_Param_CenterY,Z_Param_Radius);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGrid Function GetUnitsInRadius
 
 // Begin Class AAutoChessGrid Function GridToWorld
 struct Z_Construct_UFunction_AAutoChessGrid_GridToWorld_Statics
@@ -417,6 +484,7 @@ void AAutoChessGrid::StaticRegisterNativesAAutoChessGrid()
 		{ "ClearHighlights", &AAutoChessGrid::execClearHighlights },
 		{ "FindPath", &AAutoChessGrid::execFindPath },
 		{ "GenerateGrid", &AAutoChessGrid::execGenerateGrid },
+		{ "GetUnitsInRadius", &AAutoChessGrid::execGetUnitsInRadius },
 		{ "GridToWorld", &AAutoChessGrid::execGridToWorld },
 		{ "HighlightTiles", &AAutoChessGrid::execHighlightTiles },
 		{ "IsValidGridPosition", &AAutoChessGrid::execIsValidGridPosition },
@@ -502,14 +570,24 @@ struct Z_Construct_UClass_AAutoChessGrid_Statics
 		{ "ToolTip", "\xe6\x89\x8b\xe5\x8a\xa8\xe4\xbd\x8d\xe7\xbd\xae\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x94\xa8\xe4\xba\x8e\xe5\xbe\xae\xe8\xb0\x83\xe5\xaf\xb9\xe9\xbd\x90)" },
 #endif
 	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ScalePadding_MetaData[] = {
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_InteractionHeightOffset_MetaData[] = {
 		{ "Category", "AutoChess|Visuals|Adjustments" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe7\xbc\xa9\xe6\x94\xbe\xe8\xa1\xa5\xe5\x81\xbf (\xe9\xbb\x98\xe8\xae\xa4""1.0\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe8\xbf\x98\xe6\x9c\x89\xe7\xbc\x9d\xe9\x9a\x99\xe5\x8f\xaf\xe4\xbb\xa5\xe8\xae\xbe\xe4\xb8\xba""1.01)\n" },
+		{ "Comment", "// \xe4\xba\xa4\xe4\xba\x92\xe5\xb9\xb3\xe9\x9d\xa2\xe9\xab\x98\xe5\xba\xa6\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x94\xa8\xe4\xba\x8e\xe5\xb0\x84\xe7\xba\xbf\xe6\xa3\x80\xe6\xb5\x8b\xef\xbc\x8c\xe9\x80\x9a\xe5\xb8\xb8\xe7\xad\x89\xe4\xba\x8e TileHeight \xe6\x88\x96 0)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessGrid.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe7\xbc\xa9\xe6\x94\xbe\xe8\xa1\xa5\xe5\x81\xbf (\xe9\xbb\x98\xe8\xae\xa4""1.0\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe8\xbf\x98\xe6\x9c\x89\xe7\xbc\x9d\xe9\x9a\x99\xe5\x8f\xaf\xe4\xbb\xa5\xe8\xae\xbe\xe4\xb8\xba""1.01)" },
+		{ "ToolTip", "\xe4\xba\xa4\xe4\xba\x92\xe5\xb9\xb3\xe9\x9d\xa2\xe9\xab\x98\xe5\xba\xa6\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x94\xa8\xe4\xba\x8e\xe5\xb0\x84\xe7\xba\xbf\xe6\xa3\x80\xe6\xb5\x8b\xef\xbc\x8c\xe9\x80\x9a\xe5\xb8\xb8\xe7\xad\x89\xe4\xba\x8e TileHeight \xe6\x88\x96 0)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ScalePadding_MetaData[] = {
+		{ "Category", "AutoChess|Visuals|Adjustments" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\xbc\xa9\xe6\x94\xbe\xe5\xa1\xab\xe5\x85\x85 (0.9 \xe8\xa1\xa8\xe7\xa4\xba\xe7\x95\x99 10% \xe7\xbc\x9d\xe9\x9a\x99)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGrid.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\xbc\xa9\xe6\x94\xbe\xe5\xa1\xab\xe5\x85\x85 (0.9 \xe8\xa1\xa8\xe7\xa4\xba\xe7\x95\x99 10% \xe7\xbc\x9d\xe9\x9a\x99)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TileISM_White_MetaData[] = {
@@ -592,6 +670,7 @@ struct Z_Construct_UClass_AAutoChessGrid_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_TileHeight;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_GridOrigin;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_VisualOffset;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_InteractionHeightOffset;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ScalePadding;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_TileISM_White;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_TileISM_Black;
@@ -606,6 +685,7 @@ struct Z_Construct_UClass_AAutoChessGrid_Statics
 		{ &Z_Construct_UFunction_AAutoChessGrid_ClearHighlights, "ClearHighlights" }, // 1010077040
 		{ &Z_Construct_UFunction_AAutoChessGrid_FindPath, "FindPath" }, // 3494343221
 		{ &Z_Construct_UFunction_AAutoChessGrid_GenerateGrid, "GenerateGrid" }, // 3211765730
+		{ &Z_Construct_UFunction_AAutoChessGrid_GetUnitsInRadius, "GetUnitsInRadius" }, // 3838359953
 		{ &Z_Construct_UFunction_AAutoChessGrid_GridToWorld, "GridToWorld" }, // 116919497
 		{ &Z_Construct_UFunction_AAutoChessGrid_HighlightTiles, "HighlightTiles" }, // 735317690
 		{ &Z_Construct_UFunction_AAutoChessGrid_IsValidGridPosition, "IsValidGridPosition" }, // 3553283616
@@ -623,6 +703,7 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGrid_
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileHeight = { "TileHeight", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, TileHeight), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TileHeight_MetaData), NewProp_TileHeight_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_GridOrigin = { "GridOrigin", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, GridOrigin), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_GridOrigin_MetaData), NewProp_GridOrigin_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_VisualOffset = { "VisualOffset", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, VisualOffset), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_VisualOffset_MetaData), NewProp_VisualOffset_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_InteractionHeightOffset = { "InteractionHeightOffset", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, InteractionHeightOffset), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InteractionHeightOffset_MetaData), NewProp_InteractionHeightOffset_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_ScalePadding = { "ScalePadding", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, ScalePadding), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ScalePadding_MetaData), NewProp_ScalePadding_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileISM_White = { "TileISM_White", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, TileISM_White), Z_Construct_UClass_UInstancedStaticMeshComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TileISM_White_MetaData), NewProp_TileISM_White_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileISM_Black = { "TileISM_Black", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGrid, TileISM_Black), Z_Construct_UClass_UInstancedStaticMeshComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TileISM_Black_MetaData), NewProp_TileISM_Black_MetaData) };
@@ -638,6 +719,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileHeight,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_GridOrigin,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_VisualOffset,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_InteractionHeightOffset,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_ScalePadding,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileISM_White,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGrid_Statics::NewProp_TileISM_Black,
@@ -688,10 +770,10 @@ AAutoChessGrid::~AAutoChessGrid() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGrid, AAutoChessGrid::StaticClass, TEXT("AAutoChessGrid"), &Z_Registration_Info_UClass_AAutoChessGrid, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGrid), 2927402443U) },
+		{ Z_Construct_UClass_AAutoChessGrid, AAutoChessGrid::StaticClass, TEXT("AAutoChessGrid"), &Z_Registration_Info_UClass_AAutoChessGrid, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGrid), 1192557020U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_2543972328(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_1253163307(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

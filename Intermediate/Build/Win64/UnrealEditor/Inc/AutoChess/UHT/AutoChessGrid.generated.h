@@ -9,12 +9,14 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class AAutoChessUnitBase;
 #ifdef AUTOCHESS_AutoChessGrid_generated_h
 #error "AutoChessGrid.generated.h already included, missing '#pragma once' in AutoChessGrid.h"
 #endif
 #define AUTOCHESS_AutoChessGrid_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execGetUnitsInRadius); \
 	DECLARE_FUNCTION(execFindPath); \
 	DECLARE_FUNCTION(execIsValidGridPosition); \
 	DECLARE_FUNCTION(execGridToWorld); \

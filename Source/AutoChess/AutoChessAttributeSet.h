@@ -25,6 +25,9 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// 重写这个函数来处理 GE 执行后的逻辑
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 	// --- 属性定义 ---
 
 	// 生命值

@@ -15,6 +15,7 @@ AAutoChessGrid::AAutoChessGrid()
 	GridOrigin = FVector::ZeroVector;
 	
 	VisualOffset = FVector::ZeroVector;
+	InteractionHeightOffset = 20.0f; // 默认等于 TileHeight
 	ScalePadding = 1.0f;
 
 	// 创建根组件
@@ -173,7 +174,8 @@ void AAutoChessGrid::GenerateGrid()
 
 bool AAutoChessGrid::WorldToGrid(FVector WorldLocation, int32& OutGridX, int32& OutGridY)
 {
-	FVector LocalPos = WorldLocation - GetActorLocation();
+	// 必须减去 VisualOffset，否则点击位置会偏离
+	FVector LocalPos = WorldLocation - GetActorLocation() - VisualOffset;
 	
 	OutGridX = FMath::FloorToInt(LocalPos.X / TileSize);
 	OutGridY = FMath::FloorToInt(LocalPos.Y / TileSize);
@@ -185,7 +187,8 @@ FVector AAutoChessGrid::GridToWorld(int32 GridX, int32 GridY)
 {
 	float X = (GridX * TileSize) + (TileSize * 0.5f);
 	float Y = (GridY * TileSize) + (TileSize * 0.5f);
-	return GetActorLocation() + FVector(X, Y, 0.0f);
+	// 加上 VisualOffset，确保返回的是视觉中心
+	return GetActorLocation() + FVector(X, Y, 0.0f) + VisualOffset;
 }
 
 bool AAutoChessGrid::IsValidGridPosition(int32 GridX, int32 GridY)
@@ -357,4 +360,28 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 	}
 
 	return false;
+}
+
+TArray<AAutoChessUnitBase*> AAutoChessGrid::GetUnitsInRadius(int32 CenterX, int32 CenterY, int32 Radius)
+{
+	TArray<AAutoChessUnitBase*> FoundUnits;
+
+	// 获取 GameState
+	AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState());
+	if (!GS) return FoundUnits;
+
+	for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
+	{
+		for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
+		{
+			if (IsValidGridPosition(x, y))
+			{
+				if (AAutoChessUnitBase* Unit = GS->GetUnitAtGrid(x, y))
+				{
+					FoundUnits.Add(Unit);
+				}
+			}
+		}
+	}
+	return FoundUnits;
 }

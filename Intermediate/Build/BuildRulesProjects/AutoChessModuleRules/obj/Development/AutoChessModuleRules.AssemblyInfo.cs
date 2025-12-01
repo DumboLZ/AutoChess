@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoChessModuleRules")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Development")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66a4137a27288abdb5026e05b5890957fb2e8480")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41b096602cb333ee9189a1bc75e26026e6ad371a")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoChessModuleRules")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoChessModuleRules")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

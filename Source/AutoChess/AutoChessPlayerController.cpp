@@ -50,6 +50,26 @@ void AAutoChessPlayerController::BeginPlay()
 
 }
 
+void AAutoChessPlayerController::ReceivedPlayer()
+{
+	Super::ReceivedPlayer();
+
+	// 在这里设置 TeamID 最安全，因为 LocalPlayer 肯定存在
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{
+		int32 ControllerId = LocalPlayer->GetControllerId();
+		TeamID = ControllerId;
+		UE_LOG(LogTemp, Warning, TEXT("[PlayerController::ReceivedPlayer] Found LocalPlayer. ControllerId: %d -> TeamID: %d"), 
+			ControllerId, TeamID);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[PlayerController::ReceivedPlayer] LocalPlayer is NULL! This should not happen for local players."));
+	}
+}
+
+
+
 void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -382,8 +402,17 @@ void AAutoChessPlayerController::UpdateHealthBars()
 		// 更新位置和数据
 		if (Widget)
 		{
-			// 更新数据
-			Widget->UpdateHealth(Unit->Health, Unit->MaxHealth);
+			// 更新数据 - 从 GAS AttributeSet 读取
+			float CurrentHealth = Unit->Health; // 默认值
+			float CurrentMaxHealth = Unit->MaxHealth;
+
+			if (Unit->AttributeSet)
+			{
+				CurrentHealth = Unit->AttributeSet->GetHealth();
+				CurrentMaxHealth = Unit->AttributeSet->GetMaxHealth();
+			}
+
+			Widget->UpdateHealth(CurrentHealth, CurrentMaxHealth);
 			Widget->SetTeamColor(Unit->TeamID);
 
 			// 更新位置 (世界 -> 屏幕)
@@ -467,14 +496,51 @@ void AAutoChessPlayerController::DrawCard()
 
 bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card, const FVector2D& ScreenPosition)
 {
-	FHitResult HitResult;
-	if (GetHitResultAtScreenPosition(ScreenPosition, ECC_Visibility, true, HitResult))
+	UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Called with Card: %s"), Card ? *Card->CardName.ToString() : TEXT("NULL"));
+
+	if (!Card) return false;
+
+	// 统一使用射线-平面相交计算精准的格子坐标 (忽略单位碰撞)
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS || !GS->GameGrid) 
 	{
-		AActor* HitActor = HitResult.GetActor();
-		return PlayCard(Card, HitActor);
+		UE_LOG(LogTemp, Error, TEXT("[TryPlayCardAtPosition] GameState or Grid is NULL!"));
+		return false;
 	}
-	// 如果没有点到任何东西（比如点到虚空），也可以尝试 PlayCard(Card, nullptr)
-	return PlayCard(Card, nullptr);
+
+	FVector WorldLoc, WorldDir;
+	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
+	{
+		// 使用可配置的交互平面高度
+		float GridZ = GS->GameGrid->GetActorLocation().Z + GS->GameGrid->InteractionHeightOffset + GS->GameGrid->VisualOffset.Z;
+
+		if (FMath::Abs(WorldDir.Z) > KINDA_SMALL_NUMBER)
+		{
+			float t = (GridZ - WorldLoc.Z) / WorldDir.Z;
+			
+			if (t > 0.0f)
+			{
+				FVector Intersection = WorldLoc + WorldDir * t;
+				
+				int32 GridX = -1;
+				int32 GridY = -1;
+				
+				if (GS->GameGrid->WorldToGrid(Intersection, GridX, GridY))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Plane Intersection at GridPos: (%d, %d)"), GridX, GridY);
+					
+					// 查找格子上的单位
+					AAutoChessUnitBase* TargetUnit = GS->GetUnitAtGrid(GridX, GridY);
+					UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Target unit on grid: %s"), TargetUnit ? *TargetUnit->GetName() : TEXT("NULL (Empty Grid)"));
+					return PlayCard(Card, TargetUnit);
+				}
+			}
+		}
+	}
+
+
+	UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Failed to find valid target"));
+	return false;
 }
 
 void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, const FVector2D& ScreenPosition)
@@ -488,111 +554,96 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 		return;
 	}
 
-	FHitResult HitResult;
-	if (GetHitResultAtScreenPosition(ScreenPosition, ECC_Visibility, true, HitResult))
+	// 统一使用射线-平面相交计算精准的格子坐标 (忽略单位碰撞，防止遮挡导致偏移)
+	FVector WorldLoc, WorldDir;
+	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
 	{
-		AActor* HitActor = HitResult.GetActor();
-		UE_LOG(LogTemp, Log, TEXT("Drag Hit: %s"), *HitActor->GetName());
-		
-		// 尝试获取格子坐标
-		int32 CenterX = -1;
-		int32 CenterY = -1;
+		// 使用可配置的交互平面高度
+		float GridZ = GS->GameGrid->GetActorLocation().Z + GS->GameGrid->InteractionHeightOffset + GS->GameGrid->VisualOffset.Z;
 
-		if (AAutoChessGrid* Grid = Cast<AAutoChessGrid>(HitActor))
+		// 计算射线与平面的交点: t = (PlaneZ - RayOriginZ) / RayDirZ
+		if (FMath::Abs(WorldDir.Z) > KINDA_SMALL_NUMBER)
 		{
-			// 点到了格子本身
-			Grid->WorldToGrid(HitResult.Location, CenterX, CenterY);
-		}
-		else if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(HitActor))
-		{
-			// 点到了单位
-			CenterX = Unit->CurrentGridPos.X;
-			CenterY = Unit->CurrentGridPos.Y;
-		}
-		else
-		{
-			// 点到了地板或其他物体 (Floor)，尝试用 GameGrid 计算坐标
-			// 只要是在 Grid 范围内的地板，也应该算作有效
-			if (GS->GameGrid)
+			float t = (GridZ - WorldLoc.Z) / WorldDir.Z;
+			
+			// 只有交点在相机前方才有效
+			if (t > 0.0f)
 			{
-				GS->GameGrid->WorldToGrid(HitResult.Location, CenterX, CenterY);
-			}
-		}
-
-		if (CenterX != -1 && CenterY != -1)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Highlight Center: %d, %d"), CenterX, CenterY);
-
-			// 计算 AOE 范围
-			TArray<FIntPoint> HighlightPoints;
-			int32 Radius = Card->AOERadius;
-
-			for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
-			{
-				for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
+				FVector Intersection = WorldLoc + WorldDir * t;
+				
+				int32 CenterX = -1;
+				int32 CenterY = -1;
+				
+				// 转换为格子坐标
+				if (GS->GameGrid->WorldToGrid(Intersection, CenterX, CenterY))
 				{
-					if (GS->GameGrid->IsValidGridPosition(x, y))
+					// 高亮逻辑
+					TArray<FIntPoint> HighlightPoints;
+					int32 Radius = Card->AOERadius;
+
+					for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
 					{
-						HighlightPoints.Add(FIntPoint(x, y));
+						for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
+						{
+							if (GS->GameGrid->IsValidGridPosition(x, y))
+							{
+								HighlightPoints.Add(FIntPoint(x, y));
+							}
+						}
 					}
+					
+					// 缓存高亮格子列表到卡牌对象中
+					Card->HighlightedTiles = HighlightPoints;
+					
+					GS->GameGrid->HighlightTiles(HighlightPoints);
+					return;
 				}
 			}
+		}
+	}
 
-			if (HighlightPoints.Num() > 0)
-			{
-				GS->GameGrid->HighlightTiles(HighlightPoints);
-				UE_LOG(LogTemp, Log, TEXT("Highlighting %d tiles"), HighlightPoints.Num());
-			}
-		}
-		else
-		{
-			GS->GameGrid->ClearHighlights();
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Drag Raycast Failed"));
-		GS->GameGrid->ClearHighlights();
-	}
+	// 如果都没匹配上，清除高亮
+	GS->GameGrid->ClearHighlights();
 }
 
 bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target)
 {
-	if (!Card || !HandCards.Contains(Card)) return false;
+	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Called with Card: %s, Target: %s"), 
+		Card ? *Card->CardName.ToString() : TEXT("NULL"),
+		Target ? *Target->GetName() : TEXT("NULL"));
 
-	// 1. 验证目标类型
-	if (Card->TargetType != EAutoChessCardTargetType::None && Card->TargetType != EAutoChessCardTargetType::Self)
+	if (!Card || !HandCards.Contains(Card))
 	{
-		AAutoChessUnitBase* TargetUnit = Cast<AAutoChessUnitBase>(Target);
-		if (!TargetUnit) return false; // 需要单位但没点到单位
-
-		// 获取我的 TeamID (假设 PlayerController 有 TeamID 或者根据 PlayerState)
-		// 这里简单假设 Player1 = 0, Player2 = 1。可以通过 Controller ID 判断
-		int32 MyTeamID = 0; // 临时写死，后续应从 PlayerState 获取
-
-		bool bIsEnemy = (TargetUnit->TeamID != MyTeamID);
-
-		if (Card->TargetType == EAutoChessCardTargetType::Enemy && !bIsEnemy) return false;
-		if (Card->TargetType == EAutoChessCardTargetType::Ally && bIsEnemy) return false;
+		UE_LOG(LogTemp, Error, TEXT("[PlayCard] Card is NULL or not in hand!"));
+		return false;
 	}
 
+	// 移除严格的目标验证逻辑，允许 AOE 法术对空地施放
+	// 具体的伤害判定逻辑交由 GAS (Gameplay Ability) 处理
+	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Skipping target validation to allow AOE casting."));
+
 	// 2. 检查费用
+	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
 	if (Mana >= Card->Cost)
 	{
 		// 扣费
 		Mana -= Card->Cost;
 		OnManaUpdated.Broadcast(Mana, MaxMana);
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Mana deducted, new Mana: %f"), Mana);
 
 		// 触发效果
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
 		Card->OnPlayed(this, Target);
 
 		// 移除手牌
 		HandCards.Remove(Card);
 		OnHandUpdated.Broadcast(HandCards);
 		
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Card played successfully!"));
 		return true;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Not enough mana!"));
 	return false;
 }
 

@@ -591,6 +591,26 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ "ToolTip", "--- GAS \xe7\xbb\x84\xe4\xbb\xb6 ---" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TeamID_MetaData[] = {
+		{ "Category", "AutoChess" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe9\x98\x9f\xe4\xbc\x8dID (0: \xe7\x8e\xa9\xe5\xae\xb6""1, 1: \xe7\x8e\xa9\xe5\xae\xb6""2)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe9\x98\x9f\xe4\xbc\x8dID (0: \xe7\x8e\xa9\xe5\xae\xb6""1, 1: \xe7\x8e\xa9\xe5\xae\xb6""2)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Gold_MetaData[] = {
+		{ "Category", "AutoChess" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe9\x87\x91\xe5\xb8\x81\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe9\x87\x91\xe5\xb8\x81" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SelectedCardClass_MetaData[] = {
 		{ "Category", "AutoChess|Input" },
 #if !UE_BUILD_SHIPPING
@@ -774,6 +794,8 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_AbilitySystemComponent;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_Gold;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_SelectedCardClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SelectedUnit;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_MainHUDClass;
@@ -816,6 +838,8 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_AbilitySystemComponent = { "AbilitySystemComponent", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, AbilitySystemComponent), Z_Construct_UClass_UAbilitySystemComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AbilitySystemComponent_MetaData), NewProp_AbilitySystemComponent_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_TeamID = { "TeamID", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, TeamID), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TeamID_MetaData), NewProp_TeamID_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_Gold = { "Gold", nullptr, (EPropertyFlags)0x0010000000020005, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, Gold), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Gold_MetaData), NewProp_Gold_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass = { "SelectedCardClass", nullptr, (EPropertyFlags)0x0014000000000004, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, SelectedCardClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SelectedCardClass_MetaData), NewProp_SelectedCardClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedUnit = { "SelectedUnit", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, SelectedUnit), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SelectedUnit_MetaData), NewProp_SelectedUnit_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDClass = { "MainHUDClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, MainHUDClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MainHUDClass_MetaData), NewProp_MainHUDClass_MetaData) };
@@ -840,6 +864,8 @@ const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAu
 const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnHandUpdated = { "OnHandUpdated", nullptr, (EPropertyFlags)0x0010000010080000, UECodeGen_Private::EPropertyGenFlags::InlineMulticastDelegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, OnHandUpdated), Z_Construct_UDelegateFunction_AutoChess_OnHandUpdate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OnHandUpdated_MetaData), NewProp_OnHandUpdated_MetaData) }; // 4042686198
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessPlayerController_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_AbilitySystemComponent,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_TeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_Gold,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedUnit,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDClass,
@@ -907,10 +933,10 @@ AAutoChessPlayerController::~AAutoChessPlayerController() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 324809638U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 627151415U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_3667922683(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_70693005(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

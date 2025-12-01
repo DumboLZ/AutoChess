@@ -50,6 +50,8 @@ void AAutoChessUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] %s initializing GAS..."), *GetName());
+
 	// 初始化 GAS 属性
 	if (AbilitySystemComponent)
 	{
@@ -57,12 +59,27 @@ void AAutoChessUnitBase::BeginPlay()
 		
 		if (AttributeSet)
 		{
+			// **关键修复**：必须把 AttributeSet 注册到 ASC！
+			AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet);
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] AttributeSet registered to ASC"));
+
 			AttributeSet->InitHealth(MaxHealth);
 			AttributeSet->InitMaxHealth(MaxHealth);
 			AttributeSet->InitMana(Mana);
 			AttributeSet->InitMaxMana(MaxMana);
 			AttributeSet->InitAttackDamage(AttackDamage);
+
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Attributes initialized - Health: %.1f, MaxHealth: %.1f"), 
+				AttributeSet->GetHealth(), AttributeSet->GetMaxHealth());
 		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] AttributeSet is NULL!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] AbilitySystemComponent is NULL!"));
 	}
 
 	// 注册到 GameState

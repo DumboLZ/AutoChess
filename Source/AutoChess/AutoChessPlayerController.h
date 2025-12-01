@@ -31,6 +31,14 @@ public:
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	// 队伍ID (0: 玩家1, 1: 玩家2)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess")
+	int32 TeamID = 0;
+
+	// 金币
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess")
+	int32 Gold;
+
 	// 当前选中的卡牌类 (准备放置)
 	UPROPERTY(BlueprintReadWrite, Category = "AutoChess|Input")
 	TSubclassOf<UAutoChessCardBase> SelectedCardClass;
@@ -58,6 +66,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void PlayerTick(float DeltaTime) override;
+	virtual void ReceivedPlayer() override; // 当关联到 LocalPlayer 时调用
 	
 	// 鼠标点击处理
 	void HandleClick();

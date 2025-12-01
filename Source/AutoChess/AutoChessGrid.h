@@ -44,7 +44,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals|Adjustments")
 	FVector VisualOffset;
 
-	// 缩放补偿 (默认1.0，如果还有缝隙可以设为1.01)
+	// 交互平面高度偏移 (用于射线检测，通常等于 TileHeight 或 0)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals|Adjustments")
+	float InteractionHeightOffset;
+
+	// 缩放填充 (0.9 表示留 10% 缝隙)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals|Adjustments")
 	float ScalePadding;
 
@@ -107,6 +111,10 @@ public:
 	// 寻找路径 (BFS)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Pathfinding")
 	bool FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArray<FIntPoint>& OutPathPoints);
+
+	// 获取指定范围内的所有单位
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	TArray<class AAutoChessUnitBase*> GetUnitsInRadius(int32 CenterX, int32 CenterY, int32 Radius);
 
 protected:
 	virtual void BeginPlay() override;

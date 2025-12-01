@@ -63,6 +63,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	int32 AOERadius;
 
+	// 临时存储：被高亮的格子列表 (即将生效的范围)
+	UPROPERTY(BlueprintReadOnly, Category = "Card Info")
+	TArray<FIntPoint> HighlightedTiles;
+
 	// --- 卡牌效果 ---
 
 	// 当卡牌被打出时调用 (蓝图实现具体效果)
