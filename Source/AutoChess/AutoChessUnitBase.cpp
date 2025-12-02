@@ -126,6 +126,7 @@ bool AAutoChessUnitBase::CheckCanFight()
 {
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
+		// 只有战斗阶段且未进入结算时才战斗
 		return GM->CurrentPhase == EAutoChessPhase::Battle;
 	}
 	return false;
@@ -307,6 +308,12 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 
 void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
 {
+	// 结算阶段免疫伤害
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		if (GM->CurrentPhase == EAutoChessPhase::Settlement) return;
+	}
+
 	// 改用 GAS 系统应用伤害
 	if (AbilitySystemComponent && AttributeSet)
 	{

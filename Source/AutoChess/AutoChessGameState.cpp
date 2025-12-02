@@ -1,6 +1,7 @@
 #include "AutoChessGameState.h"
 #include "AutoChessUnitBase.h"
-#include "AutoChessGrid.h" // 需要引用 Grid 来获取坐标转换逻辑，或者 UnitBase 自身存储 GridPos
+#include "AutoChessGrid.h"
+#include "AutoChessGameModeBase.h" // Add this include
 
 AAutoChessGameState::AAutoChessGameState()
 {
@@ -23,6 +24,46 @@ void AAutoChessGameState::UnregisterUnit(AAutoChessUnitBase* Unit)
 	if (Unit)
 	{
 		AllUnits.Remove(Unit);
+		
+		// 检查胜利条件
+		CheckWinCondition();
+	}
+}
+
+void AAutoChessGameState::CheckWinCondition()
+{
+	// 只有在战斗阶段才检查
+	AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (!GM || GM->CurrentPhase != EAutoChessPhase::Battle) return;
+
+	int32 Team0Count = 0;
+	int32 Team1Count = 0;
+
+	for (AAutoChessUnitBase* Unit : AllUnits)
+	{
+		if (IsValid(Unit))
+		{
+			if (Unit->TeamID == 0) Team0Count++;
+			else if (Unit->TeamID == 1) Team1Count++;
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] CheckWinCondition - Team0: %d, Team1: %d"), Team0Count, Team1Count);
+
+	if (Team0Count == 0 && Team1Count == 0)
+	{
+		// 平局
+		GM->EndRound(-1); 
+	}
+	else if (Team0Count == 0)
+	{
+		// Team 1 获胜
+		GM->EndRound(1);
+	}
+	else if (Team1Count == 0)
+	{
+		// Team 0 获胜
+		GM->EndRound(0);
 	}
 }
 

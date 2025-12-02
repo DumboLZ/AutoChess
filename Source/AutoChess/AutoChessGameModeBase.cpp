@@ -1,6 +1,5 @@
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
-#include "AutoChessGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpectatorPawn.h"
 #include "AutoChessCameraPawn.h"
@@ -83,7 +82,8 @@ void AAutoChessGameModeBase::UpdateTimer(float DeltaTime)
 			}
 			else if (CurrentPhase == EAutoChessPhase::Battle)
 			{
-				EndTurn();
+				// 战斗超时，进入结算
+				EndRound(-1); // -1 表示平局或超时
 			}
 		}
 	}
@@ -118,22 +118,17 @@ void AAutoChessGameModeBase::StartBattle()
 	if (CurrentPhase == EAutoChessPhase::Preparation)
 	{
 		SwitchPhase(EAutoChessPhase::Battle);
-		// TODO: 触发所有棋子的战斗AI
 	}
 }
 
-void AAutoChessGameModeBase::EndTurn()
+void AAutoChessGameModeBase::EndRound(int32 WinnerTeamID)
 {
-	if (CurrentPhase == EAutoChessPhase::Battle)
-	{
-		SwitchPhase(EAutoChessPhase::Settlement);
-		
-		// 延迟后进入下一回合准备
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
-		{
-			CurrentRound++;
-			SwitchPhase(EAutoChessPhase::Preparation);
-		}, 5.0f, false);
-	}
+	if (CurrentPhase == EAutoChessPhase::Settlement) return;
+
+	CurrentPhase = EAutoChessPhase::Settlement;
+	PhaseTimer = 5.0f; // 结算阶段持续时间
+
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Round Ended! Winner Team: %d"), WinnerTeamID);
+
+	// TODO: 可以在这里广播事件给 UI 显示胜利/失败画面
 }

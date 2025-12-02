@@ -10,6 +10,7 @@
 #include "Engine/Engine.h" // For GEngine
 #include "Blueprint/UserWidget.h"
 #include "AutoChessUnitWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h" // Add this include
 
 AAutoChessPlayerController::AAutoChessPlayerController()
 {
@@ -500,19 +501,47 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 
 	if (!Card) return false;
 
-	// 统一使用射线-平面相交计算精准的格子坐标 (忽略单位碰撞)
+	// 检查游戏阶段
 	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		if (GM->CurrentPhase == EAutoChessPhase::Settlement) return false;
+	}
+
 	if (!GS || !GS->GameGrid) 
 	{
 		UE_LOG(LogTemp, Error, TEXT("[TryPlayCardAtPosition] GameState or Grid is NULL!"));
 		return false;
 	}
 
+	// 使用 WidgetLayoutLibrary 获取视口鼠标位置 (Slate Units)
+	FVector2D ViewportPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(this);
+	
+	// 获取视口缩放比例 (DPI Scale)
+	float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+	
+	// 将 Slate Units 转换为 Pixels
+	ViewportPosition *= ViewportScale;
+
 	FVector WorldLoc, WorldDir;
-	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
+	if (DeprojectScreenPositionToWorld(ViewportPosition.X, ViewportPosition.Y, WorldLoc, WorldDir))
 	{
-		// 使用可配置的交互平面高度
-		float GridZ = GS->GameGrid->GetActorLocation().Z + GS->GameGrid->InteractionHeightOffset + GS->GameGrid->VisualOffset.Z;
+		// 自动计算交互平面高度（从棋盘中心格子的实际位置）
+		// 这样在所有设备上都能保证准确性
+		float GridZ;
+		if (GS->GameGrid->GridWidth > 0 && GS->GameGrid->GridHeight > 0)
+		{
+			// 获取中心格子的世界坐标
+			int32 CenterX = GS->GameGrid->GridWidth / 2;
+			int32 CenterY = GS->GameGrid->GridHeight / 2;
+			FVector CenterWorldPos = GS->GameGrid->GridToWorld(CenterX, CenterY);
+			GridZ = CenterWorldPos.Z; // 使用中心格子的实际 Z 坐标作为平面高度
+		}
+		else
+		{
+			// 回退方案：使用 Grid Actor 的位置
+			GridZ = GS->GameGrid->GetActorLocation().Z;
+		}
 
 		if (FMath::Abs(WorldDir.Z) > KINDA_SMALL_NUMBER)
 		{
@@ -554,12 +583,31 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 		return;
 	}
 
-	// 统一使用射线-平面相交计算精准的格子坐标 (忽略单位碰撞，防止遮挡导致偏移)
+	// 使用 WidgetLayoutLibrary 获取视口鼠标位置 (Slate Units)
+	FVector2D ViewportPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(this);
+	
+	// 获取视口缩放比例 (DPI Scale)
+	float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+	
+	// 将 Slate Units 转换为 Pixels
+	ViewportPosition *= ViewportScale;
+
 	FVector WorldLoc, WorldDir;
-	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
+	if (DeprojectScreenPositionToWorld(ViewportPosition.X, ViewportPosition.Y, WorldLoc, WorldDir))
 	{
-		// 使用可配置的交互平面高度
-		float GridZ = GS->GameGrid->GetActorLocation().Z + GS->GameGrid->InteractionHeightOffset + GS->GameGrid->VisualOffset.Z;
+		// 自动计算交互平面高度（从棋盘中心格子的实际位置）
+		float GridZ;
+		if (GS->GameGrid->GridWidth > 0 && GS->GameGrid->GridHeight > 0)
+		{
+			int32 CenterX = GS->GameGrid->GridWidth / 2;
+			int32 CenterY = GS->GameGrid->GridHeight / 2;
+			FVector CenterWorldPos = GS->GameGrid->GridToWorld(CenterX, CenterY);
+			GridZ = CenterWorldPos.Z;
+		}
+		else
+		{
+			GridZ = GS->GameGrid->GetActorLocation().Z;
+		}
 
 		// 计算射线与平面的交点: t = (PlaneZ - RayOriginZ) / RayDirZ
 		if (FMath::Abs(WorldDir.Z) > KINDA_SMALL_NUMBER)
@@ -616,6 +664,16 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 	{
 		UE_LOG(LogTemp, Error, TEXT("[PlayCard] Card is NULL or not in hand!"));
 		return false;
+	}
+
+	// 检查游戏阶段：结算阶段禁止出牌
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		if (GM->CurrentPhase == EAutoChessPhase::Settlement)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Cannot play card during Settlement phase!"));
+			return false;
+		}
 	}
 
 	// 移除严格的目标验证逻辑，允许 AOE 法术对空地施放
