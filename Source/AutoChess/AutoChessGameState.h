@@ -55,9 +55,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")
 	TArray<AAutoChessUnitBase*> GetUnitsByTeam(int32 TeamID);
 
-	// 检查格子是否被占据
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")
+	// 检查网格是否被占用
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	bool IsGridOccupied(int32 GridX, int32 GridY);
+
+	// 检查胜利条件
+	void CheckWinCondition();
 
 	// 获取占据格子的单位
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")

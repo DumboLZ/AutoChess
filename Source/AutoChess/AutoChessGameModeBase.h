@@ -51,7 +51,7 @@ public:
 
 	// 结束回合
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
-	void EndTurn();
+	void EndRound(int32 WinnerTeamID);
 
 	// 阶段改变时调用 (蓝图可重写)
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|GameFlow")
