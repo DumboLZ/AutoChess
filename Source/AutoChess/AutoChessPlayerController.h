@@ -66,7 +66,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void PlayerTick(float DeltaTime) override;
+
 	virtual void ReceivedPlayer() override; // 当关联到 LocalPlayer 时调用
+	virtual void OnPossess(APawn* InPawn) override;
 	
 	// 鼠标点击处理
 	void HandleClick(const FVector2D& ScreenPosition);
@@ -87,6 +89,10 @@ protected:
 	// 主 HUD 实例
 	UPROPERTY(BlueprintReadOnly, Category = "AutoChess|UI")
 	class UUserWidget* MainHUDWidget;
+
+	// 高亮管理器
+	UPROPERTY()
+	class AAutoChessHighlightActor* HighlightActor;
 
 	// 血条 Widget 类
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")

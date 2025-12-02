@@ -11,6 +11,8 @@
 #include "Blueprint/UserWidget.h"
 #include "AutoChessUnitWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h" // Add this include
+#include "AutoChessHighlightActor.h"
+#include "Components/InstancedStaticMeshComponent.h"
 
 AAutoChessPlayerController::AAutoChessPlayerController()
 {
@@ -62,10 +64,69 @@ void AAutoChessPlayerController::ReceivedPlayer()
 		TeamID = ControllerId;
 		UE_LOG(LogTemp, Warning, TEXT("[PlayerController::ReceivedPlayer] Found LocalPlayer. ControllerId: %d -> TeamID: %d"), 
 			ControllerId, TeamID);
+
+		// 生成高亮管理器
+		if (!HighlightActor && GetWorld())
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this; // 暂时设为 PC
+			HighlightActor = GetWorld()->SpawnActor<AAutoChessHighlightActor>(AAutoChessHighlightActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+			
+			UE_LOG(LogTemp, Warning, TEXT("[PC %d ReceivedPlayer] HighlightActor spawned: %s"), ControllerId, HighlightActor ? TEXT("SUCCESS") : TEXT("FAILED"));
+			
+			if (HighlightActor)
+			{
+				// 尝试获取 Pawn 并设置为 Owner (为了 bOnlyOwnerSee)
+				APawn* CurrentPawn = GetPawn();
+				if (CurrentPawn)
+				{
+					HighlightActor->SetOwner(CurrentPawn);
+					UE_LOG(LogTemp, Warning, TEXT("[PC %d ReceivedPlayer] HighlightActor Owner set to Pawn: %s"), ControllerId, *CurrentPawn->GetName());
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("[PC %d ReceivedPlayer] Pawn is NULL, will set Owner in OnPossess"), ControllerId);
+				}
+				
+				// 初始化视觉 (从 Grid 获取材质)
+				if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+				{
+					if (GS->GameGrid)
+					{
+						HighlightActor->InitVisuals(GS->GameGrid->TileMesh, GS->GameGrid->MaterialHighlight);
+						UE_LOG(LogTemp, Warning, TEXT("[PC %d ReceivedPlayer] HighlightActor InitVisuals called. Mesh: %s, Material: %s"), 
+							ControllerId, 
+							GS->GameGrid->TileMesh ? TEXT("Valid") : TEXT("NULL"),
+							GS->GameGrid->MaterialHighlight ? TEXT("Valid") : TEXT("NULL"));
+					}
+					else
+					{
+						UE_LOG(LogTemp, Error, TEXT("[PC %d ReceivedPlayer] GameGrid is NULL!"), ControllerId);
+					}
+				}
+			}
+		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("[PlayerController::ReceivedPlayer] LocalPlayer is NULL! This should not happen for local players."));
+	}
+}
+
+void AAutoChessPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	// 确保 HighlightActor 的 Owner 是 Pawn
+	if (HighlightActor && InPawn)
+	{
+		HighlightActor->SetOwner(InPawn);
+		UE_LOG(LogTemp, Warning, TEXT("[PC OnPossess] HighlightActor Owner set to Pawn: %s"), *InPawn->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PC OnPossess] HighlightActor: %s, InPawn: %s"), 
+			HighlightActor ? TEXT("Valid") : TEXT("NULL"),
+			InPawn ? *InPawn->GetName() : TEXT("NULL"));
 	}
 }
 
@@ -161,6 +222,30 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 
 	// 更新血条 UI
 	UpdateHealthBars();
+
+	// 确保高亮管理器的 Owner 正确 (分屏修复)
+	if (HighlightActor && GetPawn() && HighlightActor->GetOwner() != GetPawn())
+	{
+		HighlightActor->SetOwner(GetPawn());
+		UE_LOG(LogTemp, Warning, TEXT("[PC PlayerTick] Fixed HighlightActor Owner to: %s"), *GetPawn()->GetName());
+	}
+
+	// 确保高亮管理器已初始化 (延迟初始化，防止 GameGrid 还未准备好)
+	if (HighlightActor && HighlightActor->HighlightISM)
+	{
+		// 检查是否有 Mesh（判断是否已初始化）
+		if (!HighlightActor->HighlightISM->GetStaticMesh())
+		{
+			AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+			if (GS && GS->GameGrid && GS->GameGrid->TileMesh)
+			{
+				HighlightActor->InitVisuals(GS->GameGrid->TileMesh, GS->GameGrid->MaterialHighlight);
+				UE_LOG(LogTemp, Warning, TEXT("[PC PlayerTick] Deferred HighlightActor InitVisuals called. Mesh: %s, Material: %s"),
+					GS->GameGrid->TileMesh ? TEXT("Valid") : TEXT("NULL"),
+					GS->GameGrid->MaterialHighlight ? TEXT("Valid") : TEXT("NULL"));
+			}
+		}
+	}
 
 	// 战斗阶段逻辑：回蓝和抽牌
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
@@ -618,7 +703,10 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 
 	if (!Card)
 	{
-		GS->GameGrid->ClearHighlights();
+		if (HighlightActor && GS && GS->GameGrid)
+		{
+			HighlightActor->UpdateHighlights(GS->GameGrid, TArray<FIntPoint>());
+		}
 		return;
 	}
 
@@ -682,7 +770,11 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 					// 缓存高亮格子列表到卡牌对象中
 					Card->HighlightedTiles = HighlightPoints;
 					
-					GS->GameGrid->HighlightTiles(HighlightPoints);
+					// 使用专属的高亮管理器
+					if (HighlightActor)
+					{
+						HighlightActor->UpdateHighlights(GS->GameGrid, HighlightPoints);
+					}
 					return;
 				}
 			}
@@ -690,7 +782,10 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 	}
 
 	// 如果都没匹配上，清除高亮
-	GS->GameGrid->ClearHighlights();
+	if (HighlightActor)
+	{
+		HighlightActor->UpdateHighlights(GS->GameGrid, TArray<FIntPoint>());
+	}
 }
 
 bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target)
@@ -736,6 +831,18 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		HandCards.Remove(Card);
 		OnHandUpdated.Broadcast(HandCards);
 		
+		// 成功打出后清除高亮
+		if (HighlightActor && GetWorld())
+		{
+			if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+			{
+				if (GS->GameGrid)
+				{
+					HighlightActor->UpdateHighlights(GS->GameGrid, TArray<FIntPoint>());
+				}
+			}
+		}
+
 		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Card played successfully!"));
 		return true;
 	}

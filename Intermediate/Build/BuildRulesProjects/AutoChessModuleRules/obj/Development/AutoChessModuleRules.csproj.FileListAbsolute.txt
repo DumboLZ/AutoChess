@@ -38,8 +38,8 @@ D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChes
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.AssemblyInfoInputs.cache
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.AssemblyInfo.cs
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.csproj.CoreCompileInputs.cache
+D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.sourcelink.json
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChes.BD8F4F5A.Up2Date
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.dll
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\refint\AutoChessModuleRules.dll
 D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.pdb
-D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\BuildRulesProjects\AutoChessModuleRules\obj\Development\AutoChessModuleRules.sourcelink.json

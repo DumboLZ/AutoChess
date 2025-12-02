@@ -87,6 +87,12 @@
     <ClInclude Include="..\..\Source\AutoChess\AutoChessGrid.h">
       <Filter>Source\AutoChess</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\AutoChess\AutoChessHighlightActor.cpp">
+      <Filter>Source\AutoChess</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\AutoChess\AutoChessHighlightActor.h">
+      <Filter>Source\AutoChess</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\AutoChess\AutoChessPlayerController.cpp">
       <Filter>Source\AutoChess</Filter>
     </ClCompile>

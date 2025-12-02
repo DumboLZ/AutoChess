@@ -23,13 +23,13 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0xB944C213,
-				0x6F080519,
+				0xA6DA87DF,
+				0x87DD7669,
 				METADATA_PARAMS(0, nullptr)
 			};
 			UECodeGen_Private::ConstructUPackage(Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton, PackageParams);
 		}
 		return Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xB944C213, 0x6F080519));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xA6DA87DF, 0x87DD7669));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
