@@ -108,27 +108,55 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 		}
 	}
 
-	// 处理鼠标点击
-	if (WasInputKeyJustPressed(EKeys::LeftMouseButton))
+	// 处理鼠标点击和拖拽 (支持分屏共享鼠标)
+	if (IsLocalController())
 	{
-		// 优先尝试拖拽
-		HandleDragStart();
-		if (!bIsDragging)
-		{
-			HandleClick();
-		}
-	}
-	else if (WasInputKeyJustReleased(EKeys::LeftMouseButton))
-	{
-		if (bIsDragging)
-		{
-			HandleDragEnd();
-		}
-	}
+		// 获取视口鼠标位置 (Slate Units)
+		FVector2D MousePos = UWidgetLayoutLibrary::GetMousePositionOnViewport(this);
+		float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+		MousePos *= ViewportScale; // 转换为像素
 
-	if (bIsDragging)
-	{
-		HandleDragging();
+		// 获取视口大小
+		FVector2D ViewportSize;
+		GetLocalPlayer()->ViewportClient->GetViewportSize(ViewportSize);
+
+		// 判断鼠标在哪个半屏
+		bool bIsRightSide = MousePos.X > (ViewportSize.X * 0.5f);
+		
+		// 目标控制器
+		AAutoChessPlayerController* TargetPC = this;
+		
+		// 如果是分屏模式且鼠标在右侧，尝试获取玩家2的控制器
+		if (bIsRightSide && UGameplayStatics::GetNumPlayerControllers(this) > 1)
+		{
+			TargetPC = Cast<AAutoChessPlayerController>(UGameplayStatics::GetPlayerController(this, 1));
+		}
+		
+		// 如果目标控制器不是自己，且自己是 Player 0，则负责转发输入
+		// 注意：Player 1 (Index 1) 也会运行这个 Tick，但它没有鼠标输入，所以不会触发
+		if (TargetPC && (TargetPC == this || GetLocalPlayer()->GetControllerId() == 0))
+		{
+			if (WasInputKeyJustPressed(EKeys::LeftMouseButton))
+			{
+				TargetPC->HandleDragStart(MousePos);
+				if (!TargetPC->bIsDragging)
+				{
+					TargetPC->HandleClick(MousePos);
+				}
+			}
+			else if (WasInputKeyJustReleased(EKeys::LeftMouseButton))
+			{
+				if (TargetPC->bIsDragging)
+				{
+					TargetPC->HandleDragEnd();
+				}
+			}
+
+			if (TargetPC->bIsDragging)
+			{
+				TargetPC->HandleDragging(MousePos);
+			}
+		}
 	}
 
 	// 更新血条 UI
@@ -143,37 +171,39 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 			ProcessAutoDraw(DeltaTime);
 		}
 	}
+
 }
 
-void AAutoChessPlayerController::HandleClick()
+void AAutoChessPlayerController::HandleClick(const FVector2D& ScreenPosition)
 {
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-	if (Hit.bBlockingHit)
+	FVector WorldLoc, WorldDir;
+	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
 	{
-		AActor* HitActor = Hit.GetActor();
-
-		// 1. 点击格子放置单位
-		if (SelectedCardClass && HitActor && HitActor->IsA(AAutoChessGrid::StaticClass()))
+		FVector End = WorldLoc + WorldDir * 10000.0f;
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
 		{
-			if (AAutoChessGrid* Grid = Cast<AAutoChessGrid>(HitActor))
+			AActor* HitActor = Hit.GetActor();
+
+			// 1. 点击格子放置单位
+			if (SelectedCardClass && HitActor && HitActor->IsA(AAutoChessGrid::StaticClass()))
 			{
-				int32 GridX, GridY;
-				if (Grid->WorldToGrid(Hit.Location, GridX, GridY))
+				if (AAutoChessGrid* Grid = Cast<AAutoChessGrid>(HitActor))
 				{
-					PlaceUnit(SelectedCardClass, GridX, GridY);
-					SelectedCardClass = nullptr; // 放置后清除选择
+					int32 GridX, GridY;
+					if (Grid->WorldToGrid(Hit.Location, GridX, GridY))
+					{
+						PlaceUnit(SelectedCardClass, GridX, GridY);
+						SelectedCardClass = nullptr; // 放置后清除选择
+					}
 				}
 			}
-		}
-		// 2. 点击单位 (例如出售或查看信息)
-		else if (AAutoChessUnitBase* ClickedUnit = Cast<AAutoChessUnitBase>(HitActor))
-		{
-			// 简单的出售逻辑：点击自己的单位出售
-			// 实际逻辑应该更复杂，比如先选中再点出售按钮
-			// 这里为了测试，先注释掉直接出售，改为选中
-			// SellUnit(ClickedUnit);
+			// 2. 点击单位 (例如出售或查看信息)
+			else if (AAutoChessUnitBase* ClickedUnit = Cast<AAutoChessUnitBase>(HitActor))
+			{
+				// 简单的出售逻辑：点击自己的单位出售
+				// SellUnit(ClickedUnit);
+			}
 		}
 	}
 }
@@ -215,7 +245,7 @@ void AAutoChessPlayerController::PlaceUnit(TSubclassOf<UAutoChessCardBase> CardC
 			
 			if (NewUnit)
 			{
-				NewUnit->TeamID = 0; // 默认玩家1
+				NewUnit->TeamID = TeamID; // 使用当前控制器的 TeamID
 				NewUnit->SnapToGrid(); // 确保对齐
 			}
 		}
@@ -231,7 +261,7 @@ void AAutoChessPlayerController::SellUnit(AAutoChessUnitBase* Unit)
 	}
 }
 
-void AAutoChessPlayerController::HandleDragStart()
+void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition)
 {
 	// 只有在准备阶段允许拖拽
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
@@ -239,43 +269,49 @@ void AAutoChessPlayerController::HandleDragStart()
 		if (GM->CurrentPhase != EAutoChessPhase::Preparation) return;
 	}
 
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-	if (Hit.bBlockingHit)
+	FVector WorldLoc, WorldDir;
+	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
 	{
-		if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Hit.GetActor()))
+		FVector End = WorldLoc + WorldDir * 10000.0f;
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
 		{
-			// 只能拖拽自己的单位
-			// if (Unit->TeamID != 0) return; 
+			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Hit.GetActor()))
+			{
+				// 只能拖拽自己的单位
+				if (Unit->TeamID != TeamID) return; 
 
-			DraggedUnit = Unit;
-			bIsDragging = true;
-			
-			DragOffset = FVector::ZeroVector;
+				DraggedUnit = Unit;
+				bIsDragging = true;
+				
+				DragOffset = FVector::ZeroVector;
 
-			// 暂时禁用碰撞，防止拖拽时扫到其他东西
-			DraggedUnit->SetActorEnableCollision(false);
+				// 暂时禁用碰撞，防止拖拽时扫到其他东西
+				DraggedUnit->SetActorEnableCollision(false);
+			}
 		}
 	}
 }
 
-void AAutoChessPlayerController::HandleDragging()
+void AAutoChessPlayerController::HandleDragging(const FVector2D& ScreenPosition)
 {
 	if (!bIsDragging || !DraggedUnit) return;
 
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-	if (Hit.bBlockingHit)
+	FVector WorldLoc, WorldDir;
+	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
 	{
 		// 射线检测到了地面或棋盘
-		FVector NewLocation = Hit.Location;
-		
-		// 保持单位原有的 Z 高度
-		NewLocation.Z = DraggedUnit->GetActorLocation().Z;
-		
-		DraggedUnit->SetActorLocation(NewLocation);
+		FVector End = WorldLoc + WorldDir * 10000.0f;
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
+		{
+			FVector NewLocation = Hit.Location;
+			
+			// 保持单位原有的 Z 高度
+			NewLocation.Z = DraggedUnit->GetActorLocation().Z;
+			
+			DraggedUnit->SetActorLocation(NewLocation);
+		}
 	}
 }
 
@@ -404,16 +440,19 @@ void AAutoChessPlayerController::UpdateHealthBars()
 		if (Widget)
 		{
 			// 更新数据 - 从 GAS AttributeSet 读取
+			// 更新数据 - 从 GAS AttributeSet 读取
 			float CurrentHealth = Unit->Health; // 默认值
 			float CurrentMaxHealth = Unit->MaxHealth;
+			float CurrentShield = 0.0f;
 
 			if (Unit->AttributeSet)
 			{
 				CurrentHealth = Unit->AttributeSet->GetHealth();
 				CurrentMaxHealth = Unit->AttributeSet->GetMaxHealth();
+				CurrentShield = Unit->AttributeSet->GetShield();
 			}
 
-			Widget->UpdateHealth(CurrentHealth, CurrentMaxHealth);
+			Widget->UpdateHealth(CurrentHealth, CurrentMaxHealth, CurrentShield);
 			Widget->SetTeamColor(Unit->TeamID);
 
 			// 更新位置 (世界 -> 屏幕)

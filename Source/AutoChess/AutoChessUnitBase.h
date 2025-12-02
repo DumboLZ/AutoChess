@@ -111,6 +111,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	void SnapToGrid();
 
+	// 护盾流失速度 (每秒)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Attributes")
+	float ShieldDecayRate = 0.0f;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

@@ -17,6 +17,7 @@ void UAutoChessAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, Shield, COND_None, REPNOTIFY_Always);
 }
 
 void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -30,14 +31,35 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		float OldHealth = Health.GetCurrentValue();
-		UE_LOG(LogTemp, Warning, TEXT("[AttributeSet] Health changed! Old: %.1f, New: %.1f, Magnitude: %.1f"), 
-			OldHealth, GetHealth(), Data.EvaluatedData.Magnitude);
+		float NewHealth = GetHealth();
+		float Magnitude = Data.EvaluatedData.Magnitude;
+
+		// 如果是受到伤害 (Magnitude < 0) 且有护盾
+		if (Magnitude < 0.0f && GetShield() > 0.0f)
+		{
+			float Damage = -Magnitude;
+			float CurrentShield = GetShield();
+
+			if (CurrentShield >= Damage)
+			{
+				// 护盾完全抵挡伤害
+				SetShield(CurrentShield - Damage);
+				SetHealth(OldHealth); // 恢复血量
+				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed all damage: %.1f. Remaining Shield: %.1f"), Damage, GetShield());
+			}
+			else
+			{
+				// 护盾抵挡部分伤害
+				float RemainingDamage = Damage - CurrentShield;
+				SetShield(0.0f);
+				SetHealth(OldHealth - RemainingDamage); // 扣除剩余伤害
+				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, RemainingDamage);
+			}
+		}
 
 		// Clamp Health
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 		
-		UE_LOG(LogTemp, Warning, TEXT("[AttributeSet] Health after clamp: %.1f"), GetHealth());
-
 		// 死亡检测
 		if (GetHealth() <= 0.0f)
 		{
@@ -46,6 +68,20 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 				Unit->OnDeath();
 			}
 		}
+	}
+	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
+	{
+		// 如果护盾增加，更新流失速度
+		if (Data.EvaluatedData.Magnitude > 0.0f)
+		{
+			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+			{
+				// 3秒内流失完当前所有护盾
+				Unit->ShieldDecayRate = GetShield() / 3.0f;
+				UE_LOG(LogTemp, Warning, TEXT("[Shield] Shield increased to %.1f. Decay Rate set to %.1f/s"), GetShield(), Unit->ShieldDecayRate);
+			}
+		}
+		SetShield(FMath::Max(GetShield(), 0.0f));
 	}
 	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
@@ -77,4 +113,9 @@ void UAutoChessAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxM
 void UAutoChessAttributeSet::OnRep_AttackDamage(const FGameplayAttributeData& OldAttackDamage)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, AttackDamage, OldAttackDamage);
+}
+
+void UAutoChessAttributeSet::OnRep_Shield(const FGameplayAttributeData& OldShield)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, Shield, OldShield);
 }

@@ -69,20 +69,18 @@ protected:
 	virtual void ReceivedPlayer() override; // 当关联到 LocalPlayer 时调用
 	
 	// 鼠标点击处理
-	void HandleClick();
+	void HandleClick(const FVector2D& ScreenPosition);
 
 	// --- 拖拽逻辑 ---
 	bool bIsDragging;
 	AAutoChessUnitBase* DraggedUnit;
 	FVector DragOffset; // 鼠标点击位置相对于单位中心的偏移
 
-	void HandleDragStart();
-	void HandleDragging();
+	void HandleDragStart(const FVector2D& ScreenPosition);
+	void HandleDragging(const FVector2D& ScreenPosition);
 	void HandleDragEnd();
 
 	// --- UI 逻辑 ---
-	
-	// 主 HUD 类 (玩家手牌、法力值等)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
 	TSubclassOf<class UUserWidget> MainHUDClass;
 

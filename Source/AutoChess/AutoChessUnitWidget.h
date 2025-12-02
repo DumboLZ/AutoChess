@@ -14,8 +14,9 @@ class AUTOCHESS_API UAutoChessUnitWidget : public UUserWidget
 	
 public:
 	// 更新血量百分比
+	// 更新血量百分比
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
-	void UpdateHealth(float CurrentHealth, float MaxHealth);
+	void UpdateHealth(float CurrentHealth, float MaxHealth, float CurrentShield);
 
 	// 设置队伍颜色
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")

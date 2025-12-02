@@ -634,11 +634,11 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MainHUDClass_MetaData[] = {
 		{ "Category", "AutoChess|UI" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe4\xb8\xbb HUD \xe7\xb1\xbb (\xe7\x8e\xa9\xe5\xae\xb6\xe6\x89\x8b\xe7\x89\x8c\xe3\x80\x81\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\xe7\xad\x89)\n" },
+		{ "Comment", "// --- UI \xe9\x80\xbb\xe8\xbe\x91 ---\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe4\xb8\xbb HUD \xe7\xb1\xbb (\xe7\x8e\xa9\xe5\xae\xb6\xe6\x89\x8b\xe7\x89\x8c\xe3\x80\x81\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\xe7\xad\x89)" },
+		{ "ToolTip", "--- UI \xe9\x80\xbb\xe8\xbe\x91 ---" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MainHUDWidget_MetaData[] = {
@@ -933,10 +933,10 @@ AAutoChessPlayerController::~AAutoChessPlayerController() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 627151415U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 3268728966U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_70693005(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_613235745(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

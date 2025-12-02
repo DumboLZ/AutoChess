@@ -249,6 +249,51 @@ DEFINE_FUNCTION(UAutoChessAttributeSet::execOnRep_MaxMana)
 }
 // End Class UAutoChessAttributeSet Function OnRep_MaxMana
 
+// Begin Class UAutoChessAttributeSet Function OnRep_Shield
+struct Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics
+{
+	struct AutoChessAttributeSet_eventOnRep_Shield_Parms
+	{
+		FGameplayAttributeData OldShield;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "AutoChessAttributeSet.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_OldShield_MetaData[] = {
+		{ "NativeConst", "" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_OldShield;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::NewProp_OldShield = { "OldShield", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessAttributeSet_eventOnRep_Shield_Parms, OldShield), Z_Construct_UScriptStruct_FGameplayAttributeData, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OldShield_MetaData), NewProp_OldShield_MetaData) }; // 675369593
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::NewProp_OldShield,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessAttributeSet, nullptr, "OnRep_Shield", nullptr, nullptr, Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::AutoChessAttributeSet_eventOnRep_Shield_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00480400, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::AutoChessAttributeSet_eventOnRep_Shield_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UAutoChessAttributeSet::execOnRep_Shield)
+{
+	P_GET_STRUCT_REF(FGameplayAttributeData,Z_Param_Out_OldShield);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->OnRep_Shield(Z_Param_Out_OldShield);
+	P_NATIVE_END;
+}
+// End Class UAutoChessAttributeSet Function OnRep_Shield
+
 // Begin Class UAutoChessAttributeSet
 void UAutoChessAttributeSet::StaticRegisterNativesUAutoChessAttributeSet()
 {
@@ -259,6 +304,7 @@ void UAutoChessAttributeSet::StaticRegisterNativesUAutoChessAttributeSet()
 		{ "OnRep_Mana", &UAutoChessAttributeSet::execOnRep_Mana },
 		{ "OnRep_MaxHealth", &UAutoChessAttributeSet::execOnRep_MaxHealth },
 		{ "OnRep_MaxMana", &UAutoChessAttributeSet::execOnRep_MaxMana },
+		{ "OnRep_Shield", &UAutoChessAttributeSet::execOnRep_Shield },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 }
@@ -330,12 +376,23 @@ struct Z_Construct_UClass_UAutoChessAttributeSet_Statics
 		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\x9b" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Shield_MetaData[] = {
+		{ "Category", "Attributes" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\xa4\xe7\x9b\xbe\xe5\x80\xbc\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessAttributeSet.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\xa4\xe7\x9b\xbe\xe5\x80\xbc" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FStructPropertyParams NewProp_Health;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_MaxHealth;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_Mana;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_MaxMana;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_AttackDamage;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_Shield;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -344,6 +401,7 @@ struct Z_Construct_UClass_UAutoChessAttributeSet_Statics
 		{ &Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Mana, "OnRep_Mana" }, // 2347213120
 		{ &Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_MaxHealth, "OnRep_MaxHealth" }, // 2402769712
 		{ &Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_MaxMana, "OnRep_MaxMana" }, // 3543424869
+		{ &Z_Construct_UFunction_UAutoChessAttributeSet_OnRep_Shield, "OnRep_Shield" }, // 152348777
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -356,12 +414,14 @@ const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessAttr
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_Mana = { "Mana", "OnRep_Mana", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessAttributeSet, Mana), Z_Construct_UScriptStruct_FGameplayAttributeData, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Mana_MetaData), NewProp_Mana_MetaData) }; // 675369593
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_MaxMana = { "MaxMana", "OnRep_MaxMana", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessAttributeSet, MaxMana), Z_Construct_UScriptStruct_FGameplayAttributeData, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxMana_MetaData), NewProp_MaxMana_MetaData) }; // 675369593
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_AttackDamage = { "AttackDamage", "OnRep_AttackDamage", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessAttributeSet, AttackDamage), Z_Construct_UScriptStruct_FGameplayAttributeData, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackDamage_MetaData), NewProp_AttackDamage_MetaData) }; // 675369593
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_Shield = { "Shield", "OnRep_Shield", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessAttributeSet, Shield), Z_Construct_UScriptStruct_FGameplayAttributeData, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Shield_MetaData), NewProp_Shield_MetaData) }; // 675369593
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChessAttributeSet_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_Health,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_MaxHealth,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_Mana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_MaxMana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_AttackDamage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessAttributeSet_Statics::NewProp_Shield,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_UAutoChessAttributeSet_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_UAutoChessAttributeSet_Statics::DependentSingletons[])() = {
@@ -403,12 +463,14 @@ void UAutoChessAttributeSet::ValidateGeneratedRepEnums(const TArray<struct FRepR
 	static const FName Name_Mana(TEXT("Mana"));
 	static const FName Name_MaxMana(TEXT("MaxMana"));
 	static const FName Name_AttackDamage(TEXT("AttackDamage"));
+	static const FName Name_Shield(TEXT("Shield"));
 	const bool bIsValid = true
 		&& Name_Health == ClassReps[(int32)ENetFields_Private::Health].Property->GetFName()
 		&& Name_MaxHealth == ClassReps[(int32)ENetFields_Private::MaxHealth].Property->GetFName()
 		&& Name_Mana == ClassReps[(int32)ENetFields_Private::Mana].Property->GetFName()
 		&& Name_MaxMana == ClassReps[(int32)ENetFields_Private::MaxMana].Property->GetFName()
-		&& Name_AttackDamage == ClassReps[(int32)ENetFields_Private::AttackDamage].Property->GetFName();
+		&& Name_AttackDamage == ClassReps[(int32)ENetFields_Private::AttackDamage].Property->GetFName()
+		&& Name_Shield == ClassReps[(int32)ENetFields_Private::Shield].Property->GetFName();
 	checkf(bIsValid, TEXT("UHT Generated Rep Indices do not match runtime populated Rep Indices for properties in UAutoChessAttributeSet"));
 }
 DEFINE_VTABLE_PTR_HELPER_CTOR(UAutoChessAttributeSet);
@@ -419,10 +481,10 @@ UAutoChessAttributeSet::~UAutoChessAttributeSet() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessAttributeSet, UAutoChessAttributeSet::StaticClass, TEXT("UAutoChessAttributeSet"), &Z_Registration_Info_UClass_UAutoChessAttributeSet, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessAttributeSet), 2857209802U) },
+		{ Z_Construct_UClass_UAutoChessAttributeSet, UAutoChessAttributeSet::StaticClass, TEXT("UAutoChessAttributeSet"), &Z_Registration_Info_UClass_UAutoChessAttributeSet, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessAttributeSet), 1368070077U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_1776904417(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_1742230531(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

@@ -55,6 +55,11 @@ public:
 	FGameplayAttributeData AttackDamage;
 	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, AttackDamage)
 
+	// 护盾值
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Shield)
+	FGameplayAttributeData Shield;
+	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, Shield)
+
 protected:
 	// --- 网络同步回调 ---
 	
@@ -72,4 +77,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_AttackDamage(const FGameplayAttributeData& OldAttackDamage);
+
+	UFUNCTION()
+	virtual void OnRep_Shield(const FGameplayAttributeData& OldShield);
 };
