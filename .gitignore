@@ -6,6 +6,7 @@ DerivedDataCache/
 *.vcxproj.user
 *.suo
 *.pch
+*.pdb
 # 调试和日志文件
 *.log
 *.pdb
