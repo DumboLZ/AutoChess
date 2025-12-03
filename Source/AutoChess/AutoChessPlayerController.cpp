@@ -106,6 +106,27 @@ void AAutoChessPlayerController::ReceivedPlayer()
 				}
 			}
 		}
+
+		// --- 初始化虚拟光标 (仅针对 Player 1 / 手柄玩家) ---
+		if (TeamID == 1 && VirtualCursorClass && !VirtualCursorWidget)
+		{
+			VirtualCursorWidget = CreateWidget<UUserWidget>(this, VirtualCursorClass);
+			if (VirtualCursorWidget)
+			{
+				VirtualCursorWidget->AddToViewport(100); // 高 Z-Order 确保在最上层
+				
+				// 初始位置设为屏幕中心
+				FVector2D ViewportSize;
+				if (GetLocalPlayer() && GetLocalPlayer()->ViewportClient)
+				{
+					GetLocalPlayer()->ViewportClient->GetViewportSize(ViewportSize);
+					VirtualCursorPosition = ViewportSize * 0.5f;
+					VirtualCursorWidget->SetPositionInViewport(VirtualCursorPosition);
+				}
+				
+				UE_LOG(LogTemp, Warning, TEXT("[PC %d] Virtual Cursor Created!"), TeamID);
+			}
+		}
 	}
 	else
 	{
@@ -135,6 +156,35 @@ void AAutoChessPlayerController::OnPossess(APawn* InPawn)
 void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+
+	// --- 虚拟光标移动逻辑 (仅 Player 1) ---
+	if (TeamID == 1 && VirtualCursorWidget)
+	{
+		float AxisX = GetInputAnalogKeyState(EKeys::Gamepad_LeftX);
+		float AxisY = GetInputAnalogKeyState(EKeys::Gamepad_LeftY); 
+		// UE Gamepad LeftY: Up is +1, Down is -1. Screen Y: Down is +. So we need to invert Y.
+		
+		// 死区处理
+		if (FMath::Abs(AxisX) < 0.1f) AxisX = 0.0f;
+		if (FMath::Abs(AxisY) < 0.1f) AxisY = 0.0f;
+
+		if (AxisX != 0.0f || AxisY != 0.0f)
+		{
+			VirtualCursorPosition.X += AxisX * CursorMoveSpeed * DeltaTime;
+			VirtualCursorPosition.Y -= AxisY * CursorMoveSpeed * DeltaTime; // Invert Y for screen coords
+
+			// 限制在视口范围内
+			FVector2D ViewportSize;
+			if (GetLocalPlayer() && GetLocalPlayer()->ViewportClient)
+			{
+				GetLocalPlayer()->ViewportClient->GetViewportSize(ViewportSize);
+				VirtualCursorPosition.X = FMath::Clamp(VirtualCursorPosition.X, 0.0f, ViewportSize.X);
+				VirtualCursorPosition.Y = FMath::Clamp(VirtualCursorPosition.Y, 0.0f, ViewportSize.Y);
+			}
+
+			VirtualCursorWidget->SetPositionInViewport(VirtualCursorPosition);
+		}
+	}
 
 	// 延迟创建 HUD，确保 Player 已经附加
 	if (!MainHUDWidget && IsLocalController() && MainHUDClass)
@@ -217,6 +267,13 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 			{
 				TargetPC->HandleDragging(MousePos);
 			}
+		}
+	}
+	else if (TeamID == 1 && VirtualCursorWidget) // Player 1 使用虚拟光标拖拽
+	{
+		if (bIsDragging)
+		{
+			HandleDragging(VirtualCursorPosition);
 		}
 	}
 
@@ -638,14 +695,23 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 		return false;
 	}
 
-	// 使用 WidgetLayoutLibrary 获取视口鼠标位置 (Slate Units)
-	FVector2D ViewportPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(this);
+	// 直接使用传入的 ScreenPosition (已经包含了正确的坐标源)
+	FVector2D ViewportPosition = ScreenPosition;
 	
-	// 获取视口缩放比例 (DPI Scale)
-	float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+	// 注意：ScreenPosition 通常已经是视口坐标 (Slate Units) 或 像素坐标
+	// 如果来自 GetCursorPosition()，它是像素坐标 (ViewportPosition * Scale)
+	// 如果来自 UMG OnDrop，它是 Geometry 转换后的坐标
 	
-	// 将 Slate Units 转换为 Pixels
-	ViewportPosition *= ViewportScale;
+	// 这里假设传入的是像素坐标 (因为 GetCursorPosition 返回的是像素)
+	// 如果 DeprojectScreenPositionToWorld 需要像素坐标，则直接使用
+	// 如果需要 Slate Units，则除以 Scale
+	
+	// DeprojectScreenPositionToWorld 文档说: "ScreenPosition: The position in screen space (pixels)"
+	// 所以我们直接用 ScreenPosition 即可，不需要再乘以 Scale (除非传入的是 Slate Units)
+	
+	// 我们的 GetCursorPosition 返回的是: GetMousePositionOnViewport * Scale (即像素)
+	// 所以这里直接用 ScreenPosition
+	ViewportPosition = ScreenPosition;
 
 	FVector WorldLoc, WorldDir;
 	if (DeprojectScreenPositionToWorld(ViewportPosition.X, ViewportPosition.Y, WorldLoc, WorldDir))
@@ -678,15 +744,17 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 				int32 GridX = -1;
 				int32 GridY = -1;
 				
-				if (GS->GameGrid->WorldToGrid(Intersection, GridX, GridY))
-				{
-					UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Plane Intersection at GridPos: (%d, %d)"), GridX, GridY);
-					
-					// 查找格子上的单位
-					AAutoChessUnitBase* TargetUnit = GS->GetUnitAtGrid(GridX, GridY);
-					UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Target unit on grid: %s"), TargetUnit ? *TargetUnit->GetName() : TEXT("NULL (Empty Grid)"));
-					return PlayCard(Card, TargetUnit);
-				}
+				// 将世界坐标转换为格子坐标（即使在边缘也允许）
+				GS->GameGrid->WorldToGrid(Intersection, GridX, GridY);
+				
+				UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Plane Intersection at GridPos: (%d, %d)"), GridX, GridY);
+				
+				// 查找格子上的单位（可能为空）
+				AAutoChessUnitBase* TargetUnit = GS->GetUnitAtGrid(GridX, GridY);
+				UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Target unit on grid: %s"), TargetUnit ? *TargetUnit->GetName() : TEXT("NULL (Empty Grid)"));
+				
+				// 允许对空地施放（AOE 技能）
+				return PlayCard(Card, TargetUnit);
 			}
 		}
 	}
@@ -832,7 +900,7 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		OnHandUpdated.Broadcast(HandCards);
 		
 		// 成功打出后清除高亮
-		if (HighlightActor && GetWorld())
+		if (IsValid(HighlightActor) && GetWorld())
 		{
 			if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
 			{
@@ -849,6 +917,43 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 
 	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Not enough mana!"));
 	return false;
+}
+
+FVector2D AAutoChessPlayerController::GetCursorPosition()
+{
+	// 如果是 Player 1 且有虚拟光标，返回虚拟光标位置
+	if (TeamID == 1 && VirtualCursorWidget)
+	{
+		return VirtualCursorPosition;
+	}
+
+	// 否则返回鼠标位置 (Player 0 或 fallback)
+	return UWidgetLayoutLibrary::GetMousePositionOnViewport(this) * UWidgetLayoutLibrary::GetViewportScale(this);
+}
+
+void AAutoChessPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	InputComponent->BindAction("LeftClick", IE_Pressed, this, &AAutoChessPlayerController::OnLeftClickPressed);
+	InputComponent->BindAction("LeftClick", IE_Released, this, &AAutoChessPlayerController::OnLeftClickReleased);
+	
+	// 绑定手柄 A 键作为点击 (Face Button Bottom)
+	InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, IE_Pressed, this, &AAutoChessPlayerController::OnLeftClickPressed);
+	InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, IE_Released, this, &AAutoChessPlayerController::OnLeftClickReleased);
+}
+
+void AAutoChessPlayerController::OnLeftClickPressed()
+{
+	HandleClick(GetCursorPosition());
+}
+
+void AAutoChessPlayerController::OnLeftClickReleased()
+{
+	if (bIsDragging)
+	{
+		HandleDragEnd();
+	}
 }
 
 

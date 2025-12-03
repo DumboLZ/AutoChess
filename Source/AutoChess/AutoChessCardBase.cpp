@@ -40,26 +40,44 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 	FGameplayEventData EventData;
 	EventData.Instigator = Controller;
 	EventData.Target = Target;
+	EventData.OptionalObject = this; // 传递当前卡牌实例，这样蓝图可以拿到最新的 HighlightedTiles
 	
 	// 定义一个通用的 Tag，例如 "Card.Played"
-	FGameplayTag EventTag = FGameplayTag::RequestGameplayTag(FName("Card.Played"));
+	FGameplayTag EventTag = TriggerTag;
+	if (!EventTag.IsValid())
+	{
+		EventTag = FGameplayTag::RequestGameplayTag(FName("Card.Played"));
+	}
 	EventData.EventTag = EventTag;
 
 	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Event Tag: %s, HighlightedTiles Count: %d"), 
 		*EventTag.ToString(), HighlightedTiles.Num());
 
-	// 给予 Ability
-	FGameplayAbilitySpec Spec(CardAbilityClass, 1, -1, this);
-	FGameplayAbilitySpecHandle Handle = ASC->GiveAbility(Spec);
-	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability given, Handle valid: %s"), Handle.IsValid() ? TEXT("true") : TEXT("false"));
-
-	// 尝试激活
-	bool bActivated = ASC->TryActivateAbilityByClass(CardAbilityClass, true);
-	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] TryActivateAbilityByClass result: %s"), bActivated ? TEXT("true") : TEXT("false"));
+	// 检查是否已经拥有该技能
+	FGameplayAbilitySpec* ExistingSpec = ASC->FindAbilitySpecFromClass(CardAbilityClass);
 	
-	// 发送事件
+	if (!ExistingSpec)
+	{
+		// 如果没有，才给予
+		FGameplayAbilitySpec Spec(CardAbilityClass, 1, -1, this);
+		ASC->GiveAbility(Spec);
+		UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability given to Player."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Player already has this ability. Skipping GiveAbility."));
+	}
+
+	// 尝试激活 (通过 Class 激活，如果有多个只会激活一个，但现在我们保证了只有一个)
+	// 注意：如果技能是"被动"或"通过事件触发"，TryActivate 可能不适用，或者需要配合 HandleGameplayEvent
+	// bool bActivated = ASC->TryActivateAbilityByClass(CardAbilityClass, true);
+	// UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] TryActivateAbilityByClass result: %s"), bActivated ? TEXT("true") : TEXT("false"));
+	
+	// 发送事件 (如果技能是靠事件触发的)
+	// 注意：如果技能同时响应 Activate 和 Event，可能会触发两次。建议蓝图里只用一种方式。
+	// 改为纯事件驱动：只发送事件，让 Ability 通过 Trigger Tag 自动激活
 	ASC->HandleGameplayEvent(EventTag, &EventData);
-	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] HandleGameplayEvent called"));
+	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] HandleGameplayEvent called with Tag: %s"), *EventTag.ToString());
 }
 
 // 纯数据类，暂无逻辑实现

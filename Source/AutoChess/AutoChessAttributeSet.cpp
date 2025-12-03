@@ -30,9 +30,9 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	// 检查哪个属性被修改了
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		float OldHealth = Health.GetCurrentValue();
 		float NewHealth = GetHealth();
 		float Magnitude = Data.EvaluatedData.Magnitude;
+		float OldHealth = NewHealth - Magnitude; // 反推旧血量
 
 		// 如果是受到伤害 (Magnitude < 0) 且有护盾
 		if (Magnitude < 0.0f && GetShield() > 0.0f)
@@ -44,8 +44,9 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 			{
 				// 护盾完全抵挡伤害
 				SetShield(CurrentShield - Damage);
-				SetHealth(OldHealth); // 恢复血量
-				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed all damage: %.1f. Remaining Shield: %.1f"), Damage, GetShield());
+				SetHealth(OldHealth); // 恢复满血 (因为伤害全被护盾吃了)
+				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed all damage: %.1f. Health restored to: %.1f. Remaining Shield: %.1f"), 
+					Damage, OldHealth, GetShield());
 			}
 			else
 			{
@@ -53,7 +54,8 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 				float RemainingDamage = Damage - CurrentShield;
 				SetShield(0.0f);
 				SetHealth(OldHealth - RemainingDamage); // 扣除剩余伤害
-				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, RemainingDamage);
+				UE_LOG(LogTemp, Warning, TEXT("[Shield] Absorbed %.1f damage. Remaining Damage: %.1f. New Health: %.1f"), 
+					CurrentShield, RemainingDamage, GetHealth());
 			}
 		}
 

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GameplayTagContainer.h"
 #include "AutoChessCardBase.generated.h"
 
 class AAutoChessUnitBase;
@@ -66,6 +67,11 @@ public:
 	// 临时存储：被高亮的格子列表 (即将生效的范围)
 	UPROPERTY(BlueprintReadOnly, Category = "Card Info")
 	TArray<FIntPoint> HighlightedTiles;
+
+	// 触发标签 (用于区分不同卡牌的技能事件)
+	// 默认为 "Card.Played"，建议为每张卡设置唯一的 Tag，例如 "Card.Played.Fireball"
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	FGameplayTag TriggerTag;
 
 	// --- 卡牌效果 ---
 

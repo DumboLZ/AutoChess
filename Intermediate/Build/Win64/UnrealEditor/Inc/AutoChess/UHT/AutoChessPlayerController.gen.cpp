@@ -219,6 +219,54 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execDrawCard)
 }
 // End Class AAutoChessPlayerController Function DrawCard
 
+// Begin Class AAutoChessPlayerController Function GetCursorPosition
+struct Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics
+{
+	struct AutoChessPlayerController_eventGetCursorPosition_Parms
+	{
+		FVector2D ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Input" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\x8e\xb7\xe5\x8f\x96\xe5\xbd\x93\xe5\x89\x8d\xe5\x85\x89\xe6\xa0\x87\xe4\xbd\x8d\xe7\xbd\xae (\xe8\x87\xaa\xe5\x8a\xa8\xe5\x88\xa4\xe6\x96\xad\xe9\xbc\xa0\xe6\xa0\x87\xe6\x88\x96\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87)\n// \xe8\x8e\xb7\xe5\x8f\x96\xe5\xbd\x93\xe5\x89\x8d\xe5\x85\x89\xe6\xa0\x87\xe4\xbd\x8d\xe7\xbd\xae (\xe8\x87\xaa\xe5\x8a\xa8\xe5\x88\xa4\xe6\x96\xad\xe9\xbc\xa0\xe6\xa0\x87\xe6\x88\x96\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\x8e\xb7\xe5\x8f\x96\xe5\xbd\x93\xe5\x89\x8d\xe5\x85\x89\xe6\xa0\x87\xe4\xbd\x8d\xe7\xbd\xae (\xe8\x87\xaa\xe5\x8a\xa8\xe5\x88\xa4\xe6\x96\xad\xe9\xbc\xa0\xe6\xa0\x87\xe6\x88\x96\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87)\n\xe8\x8e\xb7\xe5\x8f\x96\xe5\xbd\x93\xe5\x89\x8d\xe5\x85\x89\xe6\xa0\x87\xe4\xbd\x8d\xe7\xbd\xae (\xe8\x87\xaa\xe5\x8a\xa8\xe5\x88\xa4\xe6\x96\xad\xe9\xbc\xa0\xe6\xa0\x87\xe6\x88\x96\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessPlayerController_eventGetCursorPosition_Parms, ReturnValue), Z_Construct_UScriptStruct_FVector2D, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "GetCursorPosition", nullptr, nullptr, Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::AutoChessPlayerController_eventGetCursorPosition_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04880401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::AutoChessPlayerController_eventGetCursorPosition_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execGetCursorPosition)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(FVector2D*)Z_Param__Result=P_THIS->GetCursorPosition();
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function GetCursorPosition
+
 // Begin Class AAutoChessPlayerController Function PlaceUnit
 struct Z_Construct_UFunction_AAutoChessPlayerController_PlaceUnit_Statics
 {
@@ -554,6 +602,7 @@ void AAutoChessPlayerController::StaticRegisterNativesAAutoChessPlayerController
 	static const FNameNativePtrPair Funcs[] = {
 		{ "BuyCard", &AAutoChessPlayerController::execBuyCard },
 		{ "DrawCard", &AAutoChessPlayerController::execDrawCard },
+		{ "GetCursorPosition", &AAutoChessPlayerController::execGetCursorPosition },
 		{ "PlaceUnit", &AAutoChessPlayerController::execPlaceUnit },
 		{ "PlayCard", &AAutoChessPlayerController::execPlayCard },
 		{ "SellUnit", &AAutoChessPlayerController::execSellUnit },
@@ -660,6 +709,37 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe9\xab\x98\xe4\xba\xae\xe7\xae\xa1\xe7\x90\x86\xe5\x99\xa8" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_VirtualCursorClass_MetaData[] = {
+		{ "Category", "AutoChess|Input" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87 Widget \xe7\xb1\xbb\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87 Widget \xe7\xb1\xbb" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_VirtualCursorWidget_MetaData[] = {
+		{ "Category", "AutoChess|Input" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87\xe5\xae\x9e\xe4\xbe\x8b\n" },
+#endif
+		{ "EditInline", "true" },
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\x99\x9a\xe6\x8b\x9f\xe5\x85\x89\xe6\xa0\x87\xe5\xae\x9e\xe4\xbe\x8b" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CursorMoveSpeed_MetaData[] = {
+		{ "Category", "AutoChess|Input" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x85\x89\xe6\xa0\x87\xe7\xa7\xbb\xe5\x8a\xa8\xe9\x80\x9f\xe5\xba\xa6 (\xe5\x83\x8f\xe7\xb4\xa0/\xe7\xa7\x92)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x85\x89\xe6\xa0\x87\xe7\xa7\xbb\xe5\x8a\xa8\xe9\x80\x9f\xe5\xba\xa6 (\xe5\x83\x8f\xe7\xb4\xa0/\xe7\xa7\x92)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitHealthBarClass_MetaData[] = {
@@ -811,6 +891,9 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static const UECodeGen_Private::FClassPropertyParams NewProp_MainHUDClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MainHUDWidget;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_HighlightActor;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_VirtualCursorClass;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_VirtualCursorWidget;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CursorMoveSpeed;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_UnitHealthBarClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitHealthBars_ValueProp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitHealthBars_Key_KeyProp;
@@ -834,6 +917,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_BuyCard, "BuyCard" }, // 564924422
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_DrawCard, "DrawCard" }, // 3409514534
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_GetCursorPosition, "GetCursorPosition" }, // 1269009474
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_PlaceUnit, "PlaceUnit" }, // 1670979043
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_PlayCard, "PlayCard" }, // 4161845518
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_RefreshShop, "RefreshShop" }, // 1906884202
@@ -856,6 +940,9 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlay
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDClass = { "MainHUDClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, MainHUDClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MainHUDClass_MetaData), NewProp_MainHUDClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDWidget = { "MainHUDWidget", nullptr, (EPropertyFlags)0x002008000008001c, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, MainHUDWidget), Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MainHUDWidget_MetaData), NewProp_MainHUDWidget_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HighlightActor = { "HighlightActor", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HighlightActor), Z_Construct_UClass_AAutoChessHighlightActor_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HighlightActor_MetaData), NewProp_HighlightActor_MetaData) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_VirtualCursorClass = { "VirtualCursorClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, VirtualCursorClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_VirtualCursorClass_MetaData), NewProp_VirtualCursorClass_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_VirtualCursorWidget = { "VirtualCursorWidget", nullptr, (EPropertyFlags)0x002008000008001c, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, VirtualCursorWidget), Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_VirtualCursorWidget_MetaData), NewProp_VirtualCursorWidget_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_CursorMoveSpeed = { "CursorMoveSpeed", nullptr, (EPropertyFlags)0x0020080000010005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, CursorMoveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CursorMoveSpeed_MetaData), NewProp_CursorMoveSpeed_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBarClass = { "UnitHealthBarClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, UnitHealthBarClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessUnitWidget_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitHealthBarClass_MetaData), NewProp_UnitHealthBarClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_ValueProp = { "UnitHealthBars", nullptr, (EPropertyFlags)0x0000000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 1, Z_Construct_UClass_UAutoChessUnitWidget_NoRegister, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_Key_KeyProp = { "UnitHealthBars_Key", nullptr, (EPropertyFlags)0x0000000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
@@ -883,6 +970,9 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MainHUDWidget,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HighlightActor,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_VirtualCursorClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_VirtualCursorWidget,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_CursorMoveSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBarClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_ValueProp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitHealthBars_Key_KeyProp,
@@ -946,10 +1036,10 @@ AAutoChessPlayerController::~AAutoChessPlayerController() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 2337672554U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 70578130U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_901090884(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_2196462069(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

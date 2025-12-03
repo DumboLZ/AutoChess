@@ -57,6 +57,12 @@ void AAutoChessUnitBase::BeginPlay()
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 		
+		if (!AttributeSet)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] AttributeSet is NULL! Attempting to create via NewObject..."));
+			AttributeSet = NewObject<UAutoChessAttributeSet>(this, TEXT("AttributeSet"));
+		}
+
 		if (AttributeSet)
 		{
 			// **关键修复**：必须把 AttributeSet 注册到 ASC！
@@ -74,7 +80,7 @@ void AAutoChessUnitBase::BeginPlay()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] AttributeSet is NULL!"));
+			UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] Failed to create AttributeSet!"));
 		}
 	}
 	else
@@ -234,6 +240,19 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	{
 		AttackTimer -= DeltaTime;
 	}
+
+	// --- 护盾流失逻辑 ---
+	if (HasAuthority() && AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
+	{
+		float NewShield = AttributeSet->GetShield() - ShieldDecayRate * DeltaTime;
+		AttributeSet->SetShield(FMath::Max(0.0f, NewShield));
+		
+		// 如果护盾归零，重置流失速度
+		if (NewShield <= 0.0f)
+		{
+			ShieldDecayRate = 0.0f;
+		}
+	}
 }
 
 void AAutoChessUnitBase::ProcessGridMovement(float DeltaTime)
@@ -337,15 +356,41 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 			
 			// 简化版：直接修改 AttributeSet 的 Health
 			// 注意：直接调用 SetHealth 不会触发 PostGameplayEffectExecute，所以需要手动检查死亡
-			float OldHealth = AttributeSet->GetHealth();
-			float NewHealth = OldHealth - DamageAmount;
-			AttributeSet->SetHealth(FMath::Max(0.0f, NewHealth));
 			
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage from %s. Health: %.1f -> %.1f"), 
-				*GetName(), DamageAmount, Attacker ? *Attacker->GetName() : TEXT("Unknown"), 
-				OldHealth, AttributeSet->GetHealth());
+			float CurrentShield = AttributeSet->GetShield();
+			float ActualDamageToHealth = DamageAmount;
+
+			// 优先扣除护盾
+			if (CurrentShield > 0.0f)
+			{
+				if (CurrentShield >= DamageAmount)
+				{
+					// 护盾完全抵挡
+					AttributeSet->SetShield(CurrentShield - DamageAmount);
+					ActualDamageToHealth = 0.0f;
+					UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed all damage. Remaining Shield: %.1f"), AttributeSet->GetShield());
+				}
+				else
+				{
+					// 护盾抵挡部分
+					ActualDamageToHealth = DamageAmount - CurrentShield;
+					AttributeSet->SetShield(0.0f);
+					UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, ActualDamageToHealth);
+				}
+			}
+
+			if (ActualDamageToHealth > 0.0f)
+			{
+				float OldHealth = AttributeSet->GetHealth();
+				float NewHealth = OldHealth - ActualDamageToHealth;
+				AttributeSet->SetHealth(FMath::Max(0.0f, NewHealth));
+				
+				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage (Health). Health: %.1f -> %.1f"), 
+					*GetName(), ActualDamageToHealth, 
+					OldHealth, AttributeSet->GetHealth());
+			}
 			
-			// 手动检查死亡（因为 PostGameplayEffectExecute 不会被触发）
+			// 手动检查死亡
 			if (AttributeSet->GetHealth() <= 0.0f)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s health reached 0, triggering OnDeath"), *GetName());

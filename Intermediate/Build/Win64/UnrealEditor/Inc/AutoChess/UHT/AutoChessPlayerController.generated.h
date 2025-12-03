@@ -30,6 +30,7 @@ AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	DECLARE_FUNCTION(execUpdateDragHighlight); \
 	DECLARE_FUNCTION(execTryPlayCardAtPosition); \
 	DECLARE_FUNCTION(execPlayCard); \
+	DECLARE_FUNCTION(execGetCursorPosition); \
 	DECLARE_FUNCTION(execSellUnit); \
 	DECLARE_FUNCTION(execPlaceUnit); \
 	DECLARE_FUNCTION(execBuyCard);

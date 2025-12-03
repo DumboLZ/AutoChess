@@ -94,6 +94,32 @@ protected:
 	UPROPERTY()
 	class AAutoChessHighlightActor* HighlightActor;
 
+	// --- 虚拟光标 (手柄支持) ---
+	
+	// 虚拟光标 Widget 类
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Input")
+	TSubclassOf<UUserWidget> VirtualCursorClass;
+
+	// 虚拟光标实例
+	UPROPERTY(BlueprintReadOnly, Category = "AutoChess|Input")
+	UUserWidget* VirtualCursorWidget;
+
+	// 虚拟光标当前位置 (屏幕坐标)
+	FVector2D VirtualCursorPosition;
+
+	// 光标移动速度 (像素/秒)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AutoChess|Input")
+	float CursorMoveSpeed = 1000.0f;
+
+	// 获取当前光标位置 (自动判断鼠标或虚拟光标)
+	// 获取当前光标位置 (自动判断鼠标或虚拟光标)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Input")
+	FVector2D GetCursorPosition();
+
+	virtual void SetupInputComponent() override;
+	void OnLeftClickPressed();
+	void OnLeftClickReleased();
+
 	// 血条 Widget 类
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
 	TSubclassOf<class UAutoChessUnitWidget> UnitHealthBarClass;
