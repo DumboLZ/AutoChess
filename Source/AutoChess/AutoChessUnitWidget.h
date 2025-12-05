@@ -21,4 +21,8 @@ public:
 	// 设置队伍颜色
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
 	void SetTeamColor(int32 TeamID);
+
+	// 更新法力值
+	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
+	void UpdateMana(float CurrentMana, float MaxMana);
 };

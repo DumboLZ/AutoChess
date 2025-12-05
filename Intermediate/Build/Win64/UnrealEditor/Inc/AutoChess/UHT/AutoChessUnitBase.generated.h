@@ -15,17 +15,20 @@ class AAutoChessUnitBase;
 #endif
 #define AUTOCHESS_AutoChessUnitBase_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void OnDeath_Implementation(); \
+	virtual void UseSkill_Implementation(); \
 	DECLARE_FUNCTION(execSnapToGrid); \
 	DECLARE_FUNCTION(execOnDeath); \
+	DECLARE_FUNCTION(execUseSkill); \
 	DECLARE_FUNCTION(execReceiveDamage); \
 	DECLARE_FUNCTION(execAttackTarget); \
-	DECLARE_FUNCTION(execCheckCanFight);
+	DECLARE_FUNCTION(execCheckCanFight); \
+	DECLARE_FUNCTION(execInitFromUnitData);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessUnitBase(); \
 	friend struct Z_Construct_UClass_AAutoChessUnitBase_Statics; \
@@ -35,7 +38,7 @@ public: \
 	virtual UObject* _getUObject() const override { return const_cast<AAutoChessUnitBase*>(this); }
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessUnitBase(AAutoChessUnitBase&&); \
@@ -47,14 +50,14 @@ public: \
 	NO_API virtual ~AAutoChessUnitBase();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_14_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_19_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

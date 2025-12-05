@@ -7,7 +7,9 @@
 #include "Components/WidgetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "AutoChessUnitWidget.h"
+#include "AutoChessUnitWidget.h"
 #include "AutoChessProjectile.h"
+#include "AutoChessUnitData.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
@@ -21,6 +23,9 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 	AttackSpeed = 1.0f;
 	MaxMana = 100.0f;
 	Mana = 0.0f;
+	InitialMana = 0.0f;
+	ManaRegenOnAttack = 10.0f;
+	ManaRegenOnHit = 5.0f;
 	
 	MoveSpeed = 300.0f;
 	bIsMoving = false;
@@ -69,9 +74,14 @@ void AAutoChessUnitBase::BeginPlay()
 			AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet);
 			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] AttributeSet registered to ASC"));
 
+			// 尝试从 DataAsset 初始化
+			InitFromUnitData();
+
+			// 无论是否从 DataAsset 初始化，都确保 AttributeSet 被正确赋值
+			// 如果 InitFromUnitData 执行了，这里的 MaxHealth 等值已经被更新为 DA 中的值
 			AttributeSet->InitHealth(MaxHealth);
 			AttributeSet->InitMaxHealth(MaxHealth);
-			AttributeSet->InitMana(Mana);
+			AttributeSet->InitMana(InitialMana);
 			AttributeSet->InitMaxMana(MaxMana);
 			AttributeSet->InitAttackDamage(AttackDamage);
 
@@ -315,12 +325,18 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			Target->ReceiveDamage(AttackDamage, this);
 		}
 
-		// 增加法力值
-		Mana = FMath::Clamp(Mana + 10.0f, 0.0f, MaxMana);
-		if (Mana >= MaxMana)
+		// 增加法力值 (通过 AttributeSet)
+		if (AttributeSet)
 		{
-			UseSkill();
-			Mana = 0.0f;
+			float CurrentMana = AttributeSet->GetMana();
+			float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnAttack, 0.0f, AttributeSet->GetMaxMana());
+			AttributeSet->SetMana(NewMana);
+			
+			// 检查是否可以释放技能
+			if (NewMana >= AttributeSet->GetMaxMana())
+			{
+				UseSkill();
+			}
 		}
 	}
 }
@@ -368,14 +384,14 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 					// 护盾完全抵挡
 					AttributeSet->SetShield(CurrentShield - DamageAmount);
 					ActualDamageToHealth = 0.0f;
-					UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed all damage. Remaining Shield: %.1f"), AttributeSet->GetShield());
+					// UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed all damage. Remaining Shield: %.1f"), AttributeSet->GetShield());
 				}
 				else
 				{
 					// 护盾抵挡部分
 					ActualDamageToHealth = DamageAmount - CurrentShield;
 					AttributeSet->SetShield(0.0f);
-					UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, ActualDamageToHealth);
+					// UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, ActualDamageToHealth);
 				}
 			}
 
@@ -385,16 +401,29 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 				float NewHealth = OldHealth - ActualDamageToHealth;
 				AttributeSet->SetHealth(FMath::Max(0.0f, NewHealth));
 				
-				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage (Health). Health: %.1f -> %.1f"), 
-					*GetName(), ActualDamageToHealth, 
-					OldHealth, AttributeSet->GetHealth());
+				// UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage (Health). Health: %.1f -> %.1f"), 
+				// 	*GetName(), ActualDamageToHealth, 
+				// 	OldHealth, AttributeSet->GetHealth());
 			}
 			
 			// 手动检查死亡
 			if (AttributeSet->GetHealth() <= 0.0f)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s health reached 0, triggering OnDeath"), *GetName());
+				// UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s health reached 0, triggering OnDeath"), *GetName());
 				OnDeath();
+			}
+			else
+			{
+				// 受击回蓝
+				float CurrentMana = AttributeSet->GetMana();
+				float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
+				AttributeSet->SetMana(NewMana);
+
+				// 检查是否可以释放技能
+				if (NewMana >= AttributeSet->GetMaxMana())
+				{
+					UseSkill();
+				}
 			}
 		}
 	}
@@ -448,4 +477,73 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 		}
 	}
 	return NearestEnemy;
+}
+
+void AAutoChessUnitBase::UseSkill_Implementation()
+{
+	// 默认实现：如果有配置 Ability，则激活它
+	if (UnitAbilityClass && AbilitySystemComponent)
+	{
+		// 给予 Ability (如果还没给) - 简化起见，这里假设已经给了或者每次给
+		// 更好的做法是在 BeginPlay 给一次
+		FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+		
+		if (SpecHandle.IsValid())
+		{
+			if (AbilitySystemComponent->TryActivateAbility(SpecHandle))
+			{
+				// 技能释放成功，扣除蓝量
+				if (AttributeSet)
+				{
+					AttributeSet->SetMana(0.0f);
+				}
+
+				// 播放特效
+				if (SkillVFX)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SkillVFX, GetActorLocation(), GetActorRotation(), true);
+				}
+			}
+		}
+	}
+}
+
+void AAutoChessUnitBase::InitFromUnitData()
+{
+	if (!UnitData) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from UnitData: %s"), *UnitData->GetName());
+
+	// 基础属性
+	MaxHealth = UnitData->MaxHealth;
+	AttackDamage = UnitData->AttackDamage;
+	AttackSpeed = UnitData->AttackSpeed;
+	AttackRangeGrid = UnitData->AttackRangeGrid;
+	MoveSpeed = UnitData->MoveSpeed;
+
+	// 蓝量属性
+	MaxMana = UnitData->MaxMana;
+	InitialMana = UnitData->InitialMana;
+	ManaRegenOnAttack = UnitData->ManaRegenOnAttack;
+	ManaRegenOnHit = UnitData->ManaRegenOnHit;
+
+	// 技能与战斗
+	UnitAbilityClass = UnitData->AbilityClass;
+	SkillVFX = UnitData->SkillVFX;
+	SkillNiagaraVFX = UnitData->SkillNiagaraVFX;
+	ProjectileClass = UnitData->ProjectileClass;
+
+	// 模型与动画 (如果还没设置)
+	if (GetMesh())
+	{
+		if (UnitData->SkeletalMesh && GetMesh()->GetSkeletalMeshAsset() != UnitData->SkeletalMesh)
+		{
+			GetMesh()->SetSkeletalMesh(UnitData->SkeletalMesh);
+		}
+
+		if (UnitData->AnimBlueprint && GetMesh()->GetAnimClass() != UnitData->AnimBlueprint)
+		{
+			GetMesh()->SetAnimInstanceClass(UnitData->AnimBlueprint);
+		}
+	}
 }

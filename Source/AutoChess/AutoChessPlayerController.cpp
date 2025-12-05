@@ -595,6 +595,17 @@ void AAutoChessPlayerController::UpdateHealthBars()
 			}
 
 			Widget->UpdateHealth(CurrentHealth, CurrentMaxHealth, CurrentShield);
+			
+			// 更新法力值
+			float CurrentMana = Unit->Mana;
+			float CurrentMaxMana = Unit->MaxMana;
+			if (Unit->AttributeSet)
+			{
+				CurrentMana = Unit->AttributeSet->GetMana();
+				CurrentMaxMana = Unit->AttributeSet->GetMaxMana();
+			}
+			Widget->UpdateMana(CurrentMana, CurrentMaxMana);
+
 			Widget->SetTeamColor(Unit->TeamID);
 
 			// 更新位置 (世界 -> 屏幕)
@@ -680,7 +691,11 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 {
 	UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Called with Card: %s"), Card ? *Card->CardName.ToString() : TEXT("NULL"));
 
-	if (!Card) return false;
+	if (!IsValid(Card))
+	{
+		UE_LOG(LogTemp, Error, TEXT("[TryPlayCardAtPosition] Card is Invalid or NULL!"));
+		return false;
+	}
 
 	// 检查游戏阶段
 	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
@@ -862,9 +877,9 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		Card ? *Card->CardName.ToString() : TEXT("NULL"),
 		Target ? *Target->GetName() : TEXT("NULL"));
 
-	if (!Card || !HandCards.Contains(Card))
+	if (!IsValid(Card) || !HandCards.Contains(Card))
 	{
-		UE_LOG(LogTemp, Error, TEXT("[PlayCard] Card is NULL or not in hand!"));
+		UE_LOG(LogTemp, Error, TEXT("[PlayCard] Card is Invalid, NULL or not in hand!"));
 		return false;
 	}
 

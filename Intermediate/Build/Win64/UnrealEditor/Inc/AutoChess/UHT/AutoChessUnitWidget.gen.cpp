@@ -122,6 +122,59 @@ UFunction* Z_Construct_UFunction_UAutoChessUnitWidget_UpdateHealth()
 }
 // End Class UAutoChessUnitWidget Function UpdateHealth
 
+// Begin Class UAutoChessUnitWidget Function UpdateMana
+struct AutoChessUnitWidget_eventUpdateMana_Parms
+{
+	float CurrentMana;
+	float MaxMana;
+};
+static FName NAME_UAutoChessUnitWidget_UpdateMana = FName(TEXT("UpdateMana"));
+void UAutoChessUnitWidget::UpdateMana(float CurrentMana, float MaxMana)
+{
+	AutoChessUnitWidget_eventUpdateMana_Parms Parms;
+	Parms.CurrentMana=CurrentMana;
+	Parms.MaxMana=MaxMana;
+	ProcessEvent(FindFunctionChecked(NAME_UAutoChessUnitWidget_UpdateMana),&Parms);
+}
+struct Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9b\xb4\xe6\x96\xb0\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitWidget.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9b\xb4\xe6\x96\xb0\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CurrentMana;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxMana;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::NewProp_CurrentMana = { "CurrentMana", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitWidget_eventUpdateMana_Parms, CurrentMana), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::NewProp_MaxMana = { "MaxMana", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitWidget_eventUpdateMana_Parms, MaxMana), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::NewProp_CurrentMana,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::NewProp_MaxMana,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessUnitWidget, nullptr, "UpdateMana", nullptr, nullptr, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::PropPointers), sizeof(AutoChessUnitWidget_eventUpdateMana_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x08020800, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessUnitWidget_eventUpdateMana_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+// End Class UAutoChessUnitWidget Function UpdateMana
+
 // Begin Class UAutoChessUnitWidget
 void UAutoChessUnitWidget::StaticRegisterNativesUAutoChessUnitWidget()
 {
@@ -149,6 +202,7 @@ struct Z_Construct_UClass_UAutoChessUnitWidget_Statics
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_UAutoChessUnitWidget_SetTeamColor, "SetTeamColor" }, // 2012989646
 		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateHealth, "UpdateHealth" }, // 1579901184
+		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana, "UpdateMana" }, // 4091366506
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -197,10 +251,10 @@ UAutoChessUnitWidget::~UAutoChessUnitWidget() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessUnitWidget, UAutoChessUnitWidget::StaticClass, TEXT("UAutoChessUnitWidget"), &Z_Registration_Info_UClass_UAutoChessUnitWidget, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitWidget), 1022519494U) },
+		{ Z_Construct_UClass_UAutoChessUnitWidget, UAutoChessUnitWidget::StaticClass, TEXT("UAutoChessUnitWidget"), &Z_Registration_Info_UClass_UAutoChessUnitWidget, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitWidget), 3299829565U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_3844196300(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_2878316221(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);
