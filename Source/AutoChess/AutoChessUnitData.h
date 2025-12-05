@@ -69,6 +69,9 @@ public:
 	TSubclassOf<UGameplayAbility> AbilityClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill")
+	TSubclassOf<UGameplayAbility> PassiveAbilityClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill")
 	UParticleSystem* SkillVFX;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill")

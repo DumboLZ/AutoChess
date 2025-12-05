@@ -121,6 +121,10 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 		{ "Category", "Skill" },
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PassiveAbilityClass_MetaData[] = {
+		{ "Category", "Skill" },
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillVFX_MetaData[] = {
 		{ "Category", "Skill" },
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
@@ -148,6 +152,7 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManaRegenOnAttack;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManaRegenOnHit;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_AbilityClass;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_PassiveAbilityClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillVFX;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillNiagaraVFX;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_ProjectileClass;
@@ -172,6 +177,7 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitD
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnAttack = { "ManaRegenOnAttack", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, ManaRegenOnAttack), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManaRegenOnAttack_MetaData), NewProp_ManaRegenOnAttack_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnHit = { "ManaRegenOnHit", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, ManaRegenOnHit), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManaRegenOnHit_MetaData), NewProp_ManaRegenOnHit_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AbilityClass = { "AbilityClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, AbilityClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayAbility_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AbilityClass_MetaData), NewProp_AbilityClass_MetaData) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_PassiveAbilityClass = { "PassiveAbilityClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, PassiveAbilityClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayAbility_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PassiveAbilityClass_MetaData), NewProp_PassiveAbilityClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkillVFX = { "SkillVFX", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, SkillVFX), Z_Construct_UClass_UParticleSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillVFX_MetaData), NewProp_SkillVFX_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkillNiagaraVFX = { "SkillNiagaraVFX", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, SkillNiagaraVFX), Z_Construct_UClass_UNiagaraSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillNiagaraVFX_MetaData), NewProp_SkillNiagaraVFX_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileClass_MetaData), NewProp_ProjectileClass_MetaData) };
@@ -190,6 +196,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnAttack,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnHit,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AbilityClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_PassiveAbilityClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkillVFX,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkillNiagaraVFX,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ProjectileClass,
@@ -236,10 +243,10 @@ UAutoChessUnitData::~UAutoChessUnitData() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 262057830U) },
+		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 667812235U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_496117174(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_3021044856(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

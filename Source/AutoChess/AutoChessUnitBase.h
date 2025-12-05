@@ -93,6 +93,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> UnitAbilityClass;
 
+	// 被动技能 Ability 类
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
+	TSubclassOf<class UGameplayAbility> PassiveAbilityClass;
+
 	// 技能特效 (可配置)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	class UParticleSystem* SkillVFX;

@@ -85,6 +85,20 @@ void AAutoChessUnitBase::BeginPlay()
 			AttributeSet->InitMaxMana(MaxMana);
 			AttributeSet->InitAttackDamage(AttackDamage);
 
+			// 授予技能 (主动)
+			if (UnitAbilityClass)
+			{
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+			}
+
+			// 授予技能 (被动)
+			if (PassiveAbilityClass)
+			{
+				FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
+				// 尝试立即激活被动技能 (通常被动技能会自动激活并监听事件)
+				AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
+			}
+
 			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Attributes initialized - Health: %.1f, MaxHealth: %.1f"), 
 				AttributeSet->GetHealth(), AttributeSet->GetMaxHealth());
 		}
@@ -338,6 +352,26 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 				UseSkill();
 			}
 		}
+
+		// 发送攻击事件 (用于触发被动技能)
+		if (AbilitySystemComponent)
+		{
+			FGameplayEventData EventData;
+			EventData.Instigator = this;
+			EventData.Target = Target;
+			// EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Attack")); // 需要在某处定义 Tag，或者直接用 Name
+			// 为了简单，我们这里直接发送 Tag，假设 Tag 已经在 Editor 中创建
+			// 如果 Tag 不存在，SendGameplayEventToActor 可能会失败，或者我们需要用 FGameplayTag::RequestGameplayTag
+			
+			// 注意：为了避免硬编码 Tag 导致的查找失败，建议在 DefaultGameplayTags.ini 中配置
+			// 这里我们暂时使用 FindTag，如果找不到就不发
+			FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Attack"), false);
+			if (AttackTag.IsValid())
+			{
+				// 发送给自己的 ASC，触发拥有该 Tag 触发器的 Ability
+				AbilitySystemComponent->HandleGameplayEvent(AttackTag, &EventData);
+			}
+		}
 	}
 }
 
@@ -423,6 +457,19 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 				if (NewMana >= AttributeSet->GetMaxMana())
 				{
 					UseSkill();
+				}
+
+				// 发送受击事件 (用于触发被动技能)
+				// Tag: AutoChess.Event.Hit
+				FGameplayEventData EventData;
+				EventData.Instigator = Attacker;
+				EventData.Target = this;
+				EventData.EventMagnitude = ActualDamageToHealth; // 可选：传递伤害值
+
+				FGameplayTag HitTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Hit"), false);
+				if (HitTag.IsValid())
+				{
+					AbilitySystemComponent->HandleGameplayEvent(HitTag, &EventData);
 				}
 			}
 		}
@@ -529,6 +576,7 @@ void AAutoChessUnitBase::InitFromUnitData()
 
 	// 技能与战斗
 	UnitAbilityClass = UnitData->AbilityClass;
+	PassiveAbilityClass = UnitData->PassiveAbilityClass;
 	SkillVFX = UnitData->SkillVFX;
 	SkillNiagaraVFX = UnitData->SkillNiagaraVFX;
 	ProjectileClass = UnitData->ProjectileClass;
