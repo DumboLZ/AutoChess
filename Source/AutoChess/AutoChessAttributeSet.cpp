@@ -34,8 +34,28 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 		float Magnitude = Data.EvaluatedData.Magnitude;
 		float OldHealth = NewHealth - Magnitude; // 反推旧血量
 
-		// 如果是受到伤害 (Magnitude < 0) 且有护盾
-		if (Magnitude < 0.0f && GetShield() > 0.0f)
+		// 检查是否为"真实伤害" (无视护盾)
+		bool bIsTrueDamage = false;
+		bool bIsNonLethal = false; // 非致命伤害（至少保留1点生命）
+		if (Data.EffectSpec.Def)
+		{
+			FGameplayTag TrueDamageTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.True"), false);
+			FGameplayTag NonLethalTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.NonLethal"), false);
+			
+			if (TrueDamageTag.IsValid())
+			{
+				// 检查 GE 的 AssetTags
+				bIsTrueDamage = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(TrueDamageTag);
+			}
+			
+			if (NonLethalTag.IsValid())
+			{
+				bIsNonLethal = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(NonLethalTag);
+			}
+		}
+
+		// 如果是受到伤害 (Magnitude < 0) 且有护盾 且不是真实伤害或非致命伤害
+		if (Magnitude < 0.0f && GetShield() > 0.0f && !bIsTrueDamage && !bIsNonLethal)
 		{
 			float Damage = -Magnitude;
 			float CurrentShield = GetShield();
@@ -59,11 +79,12 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 			}
 		}
 
-		// Clamp Health
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+		// Clamp Health (非致命伤害至少保留1点生命)
+		float MinHealth = bIsNonLethal ? 1.0f : 0.0f;
+		SetHealth(FMath::Clamp(GetHealth(), MinHealth, GetMaxHealth()));
 		
-		// 死亡检测
-		if (GetHealth() <= 0.0f)
+		// 死亡检测 (非致命伤害不会触发死亡)
+		if (GetHealth() <= 0.0f && !bIsNonLethal)
 		{
 			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
 			{

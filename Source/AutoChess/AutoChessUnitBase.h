@@ -62,7 +62,7 @@ public:
 	float AttackDamage;
 
 	// 攻击范围 (格子数)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	int32 AttackRangeGrid;
 
 	// 攻击速度 (次/秒)
@@ -106,7 +106,7 @@ public:
 	class UNiagaraSystem* SkillNiagaraVFX;
 
 	// 投射物类 (如果为空则为近战)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
 
 	// 当前攻击目标
