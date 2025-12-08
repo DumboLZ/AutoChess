@@ -60,6 +60,11 @@ public:
 	FGameplayAttributeData Shield;
 	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, Shield)
 
+	// 攻击速度
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_AttackSpeed)
+	FGameplayAttributeData AttackSpeed;
+	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, AttackSpeed)
+
 protected:
 	// --- 网络同步回调 ---
 	
@@ -80,4 +85,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_Shield(const FGameplayAttributeData& OldShield);
+
+	UFUNCTION()
+	virtual void OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed);
 };

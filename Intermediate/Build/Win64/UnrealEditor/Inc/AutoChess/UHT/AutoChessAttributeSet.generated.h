@@ -17,6 +17,7 @@ struct FGameplayAttributeData;
 #define AUTOCHESS_AutoChessAttributeSet_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_21_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execOnRep_AttackSpeed); \
 	DECLARE_FUNCTION(execOnRep_Shield); \
 	DECLARE_FUNCTION(execOnRep_AttackDamage); \
 	DECLARE_FUNCTION(execOnRep_MaxMana); \
@@ -41,7 +42,8 @@ public: \
 		MaxMana, \
 		AttackDamage, \
 		Shield, \
-		NETFIELD_REP_END=Shield	}; \
+		AttackSpeed, \
+		NETFIELD_REP_END=AttackSpeed	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override; \
 private: \
 	REPLICATED_BASE_CLASS(UAutoChessAttributeSet) \

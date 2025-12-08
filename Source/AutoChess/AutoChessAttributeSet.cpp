@@ -18,6 +18,7 @@ void UAutoChessAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, Shield, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -141,4 +142,9 @@ void UAutoChessAttributeSet::OnRep_AttackDamage(const FGameplayAttributeData& Ol
 void UAutoChessAttributeSet::OnRep_Shield(const FGameplayAttributeData& OldShield)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, Shield, OldShield);
+}
+
+void UAutoChessAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, AttackSpeed, OldAttackSpeed);
 }

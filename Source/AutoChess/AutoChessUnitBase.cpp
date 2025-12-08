@@ -84,6 +84,7 @@ void AAutoChessUnitBase::BeginPlay()
 			AttributeSet->InitMana(InitialMana);
 			AttributeSet->InitMaxMana(MaxMana);
 			AttributeSet->InitAttackDamage(AttackDamage);
+			AttributeSet->InitAttackSpeed(AttackSpeed);
 
 			// 授予技能 (主动)
 			if (UnitAbilityClass)
@@ -249,7 +250,14 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 				SetActorRotation(Direction.Rotation());
 
 				AttackTarget(CurrentTarget);
-				AttackTimer = 1.0f / AttackSpeed;
+				
+				// 从 AttributeSet 获取攻击速度
+				float CurrentAttackSpeed = AttackSpeed; // 默认值
+				if (AttributeSet)
+				{
+					CurrentAttackSpeed = AttributeSet->GetAttackSpeed();
+				}
+				AttackTimer = 1.0f / FMath::Max(0.1f, CurrentAttackSpeed); // 防止除0
 			}
 		}
 		else
