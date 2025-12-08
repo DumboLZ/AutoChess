@@ -317,6 +317,13 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 {
 	if (Target)
 	{
+		// 获取当前攻击力（从 AttributeSet）
+		float CurrentAttackDamage = AttackDamage; // 默认值
+		if (AttributeSet)
+		{
+			CurrentAttackDamage = AttributeSet->GetAttackDamage();
+		}
+
 		if (ProjectileClass)
 		{
 			// 远程攻击：生成投射物
@@ -330,13 +337,13 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			AAutoChessProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 			if (Projectile)
 			{
-				Projectile->InitProjectile(Target, AttackDamage, this);
+				Projectile->InitProjectile(Target, CurrentAttackDamage, this);
 			}
 		}
 		else
 		{
 			// 近战攻击：直接造成伤害
-			Target->ReceiveDamage(AttackDamage, this);
+			Target->ReceiveDamage(CurrentAttackDamage, this);
 		}
 
 		// 增加法力值 (通过 AttributeSet)
