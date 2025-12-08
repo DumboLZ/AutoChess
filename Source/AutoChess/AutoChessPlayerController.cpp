@@ -901,14 +901,24 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
 	if (Mana >= Card->Cost)
 	{
-		// 扣费
-		Mana -= Card->Cost;
-		OnManaUpdated.Broadcast(Mana, MaxMana);
-		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Mana deducted, new Mana: %f"), Mana);
-
-		// 触发效果
+		// **先触发效果**（GA可以读到完整的法力值）
 		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
 		Card->OnPlayed(this, Target);
+
+		// **然后扣费**（但如果勾选了"消耗所有法力"，由GA自行处理）
+		if (!Card->bConsumeAllMana)
+		{
+			// 普通卡牌：自动扣除Cost
+			Mana -= Card->Cost;
+			OnManaUpdated.Broadcast(Mana, MaxMana);
+			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Auto deducted Cost: %d, Remaining Mana: %f"), Card->Cost, Mana);
+		}
+		else
+		{
+			// "消耗所有法力"卡牌：由GA自行处理法力消耗
+			// 这里不扣费，让GA根据消耗的法力值决定效果强度
+			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, GA will handle mana consumption"));
+		}
 
 		// 移除手牌
 		HandCards.Remove(Card);

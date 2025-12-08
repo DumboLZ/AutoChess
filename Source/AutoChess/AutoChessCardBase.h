@@ -36,8 +36,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FText CardDescription;
 
-	// 金币消耗
+	// 是否消耗所有法力值 (用于可变强度技能)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	bool bConsumeAllMana = false;
+
+	// 金币消耗 (如果勾选"消耗所有法力"，此项将被忽略)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info", meta=(EditCondition="!bConsumeAllMana"))
 	int32 Cost;
 
 	// 对应的棋子类 (生成时使用)
