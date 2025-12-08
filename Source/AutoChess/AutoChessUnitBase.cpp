@@ -99,6 +99,13 @@ void AAutoChessUnitBase::BeginPlay()
 				AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
 			}
 
+			// 授予初始 Gameplay Tags (从 UnitData)
+			if (UnitData && UnitData->InitialTags.Num() > 0)
+			{
+				AbilitySystemComponent->AddLooseGameplayTags(UnitData->InitialTags);
+				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Granted %d initial tags"), UnitData->InitialTags.Num());
+			}
+
 			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Attributes initialized - Health: %.1f, MaxHealth: %.1f"), 
 				AttributeSet->GetHealth(), AttributeSet->GetMaxHealth());
 		}
@@ -173,6 +180,19 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		CurrentPath.Empty();
 		CurrentTarget = nullptr;
 		return;
+	}
+
+	// --- 护盾流失逻辑（优先执行，不受眩晕影响） ---
+	if (HasAuthority() && AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
+	{
+		float NewShield = AttributeSet->GetShield() - ShieldDecayRate * DeltaTime;
+		AttributeSet->SetShield(FMath::Max(0.0f, NewShield));
+		
+		// 如果护盾归零，重置流失速度
+		if (NewShield <= 0.0f)
+		{
+			ShieldDecayRate = 0.0f;
+		}
 	}
 
 	// 检查眩晕状态
@@ -288,19 +308,6 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	if (AttackTimer > 0.0f)
 	{
 		AttackTimer -= DeltaTime;
-	}
-
-	// --- 护盾流失逻辑 ---
-	if (HasAuthority() && AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
-	{
-		float NewShield = AttributeSet->GetShield() - ShieldDecayRate * DeltaTime;
-		AttributeSet->SetShield(FMath::Max(0.0f, NewShield));
-		
-		// 如果护盾归零，重置流失速度
-		if (NewShield <= 0.0f)
-		{
-			ShieldDecayRate = 0.0f;
-		}
 	}
 }
 
@@ -560,6 +567,17 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 
 void AAutoChessUnitBase::UseSkill_Implementation()
 {
+	// 检查眩晕状态 - 眩晕时无法释放技能
+	if (AbilitySystemComponent)
+	{
+		FGameplayTag StunTag = FGameplayTag::RequestGameplayTag(FName("State.CC.Stunned"), false);
+		if (StunTag.IsValid() && AbilitySystemComponent->HasMatchingGameplayTag(StunTag))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UseSkill] %s is stunned, cannot use skill!"), *GetName());
+			return;
+		}
+	}
+
 	// 默认实现：如果有配置 Ability，则激活它
 	if (UnitAbilityClass && AbilitySystemComponent)
 	{

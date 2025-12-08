@@ -1,0 +1,1 @@
+#include "D:/Project/ue/AutoChess/AutoChess/Source/AutoChess/AutoChessCardBase.h"

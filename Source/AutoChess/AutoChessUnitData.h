@@ -71,6 +71,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill")
 	TSubclassOf<UGameplayAbility> PassiveAbilityClass;
 
+	// 初始 Gameplay Tags (种族、职业、类型等，用于技能判定)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
+	FGameplayTagContainer InitialTags;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill")
 	UParticleSystem* SkillVFX;
 
