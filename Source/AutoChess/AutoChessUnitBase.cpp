@@ -175,11 +175,36 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		return;
 	}
 
-	// 移动逻辑优先
+	// 检查眩晕状态
+	bool bIsStunned = false;
+	if (AbilitySystemComponent)
+	{
+		FGameplayTag StunTag = FGameplayTag::RequestGameplayTag(FName("State.CC.Stunned"), false);
+		if (StunTag.IsValid())
+		{
+			bIsStunned = AbilitySystemComponent->HasMatchingGameplayTag(StunTag);
+		}
+	}
+
+	// 移动逻辑优先（眩晕时允许完成当前移动）
 	if (bIsMoving)
 	{
 		ProcessGridMovement(DeltaTime);
+		// 如果眩晕，完成当前移动后停止
+		if (bIsStunned && !bIsMoving)
+		{
+			CurrentPath.Empty();
+			CurrentTarget = nullptr;
+		}
 		return; // 移动中不攻击
+	}
+
+	// 眩晕时不允许新的行动（寻敌、移动、攻击）
+	if (bIsStunned)
+	{
+		CurrentPath.Empty();
+		// 不清除 CurrentTarget，眩晕结束后可以继续攻击
+		return;
 	}
 
 	// 简单的自动攻击逻辑 (仅在有目标时)
