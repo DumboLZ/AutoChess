@@ -140,7 +140,9 @@
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\particles\\particlesystem.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\particlesystem.generated.h",
             "d:\\epic\\ue_5.4\\engine\\plugins\\fx\\niagara\\intermediate\\build\\win64\\unrealeditor\\inc\\niagara\\uht\\niagarasystem.generated.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitbase.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitbase.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\public\\net\\unrealnetwork.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\net\\core\\public\\net\\core\\propertyconditions\\propertyconditions.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

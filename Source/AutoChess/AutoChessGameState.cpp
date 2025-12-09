@@ -1,7 +1,8 @@
 #include "AutoChessGameState.h"
 #include "AutoChessUnitBase.h"
 #include "AutoChessGrid.h"
-#include "AutoChessGameModeBase.h" // Add this include
+#include "AutoChessGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 AAutoChessGameState::AAutoChessGameState()
 {
@@ -9,6 +10,31 @@ AAutoChessGameState::AAutoChessGameState()
 	Player2Health = 100;
 	Player1Gold = 0;
 	Player2Gold = 0;
+}
+
+void AAutoChessGameState::OnRep_Player1Health()
+{
+	OnHealthUpdated.Broadcast(Player1Health, 0);
+}
+
+void AAutoChessGameState::OnRep_Player2Health()
+{
+	OnHealthUpdated.Broadcast(Player2Health, 1);
+}
+
+void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAutoChessGameState, Player1Health);
+	DOREPLIFETIME(AAutoChessGameState, Player2Health);
+	DOREPLIFETIME(AAutoChessGameState, Player1Gold);
+	DOREPLIFETIME(AAutoChessGameState, Player2Gold);
+	DOREPLIFETIME(AAutoChessGameState, CurrentPhaseIndex);
+	DOREPLIFETIME(AAutoChessGameState, CurrentRound);
+	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
+	DOREPLIFETIME(AAutoChessGameState, GameGrid);
+	DOREPLIFETIME(AAutoChessGameState, AllUnits);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)

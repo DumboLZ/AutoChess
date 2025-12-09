@@ -189,7 +189,9 @@
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessunitwidget.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitwidget.generated.h",
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessprojectile.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessprojectile.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessprojectile.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\public\\net\\unrealnetwork.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\net\\core\\public\\net\\core\\propertyconditions\\propertyconditions.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

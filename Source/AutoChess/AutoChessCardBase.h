@@ -82,7 +82,13 @@ public:
 	// 当卡牌被打出时调用 (蓝图实现具体效果)
 	// Controller: 谁打出的
 	// Target: 目标 (可能是单位、地块或空)
+	// 当卡牌被打出时调用 (蓝图实现具体效果)
+	// Controller: 谁打出的
+	// Target: 目标 (可能是单位、地块或空)
 	UFUNCTION(BlueprintNativeEvent, Category = "Card Effect")
 	void OnPlayed(APlayerController* Controller, AActor* Target);
 	virtual void OnPlayed_Implementation(APlayerController* Controller, AActor* Target);
+
+	// 支持网络复制
+	virtual bool IsSupportedForNetworking() const override { return true; }
 };

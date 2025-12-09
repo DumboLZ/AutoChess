@@ -32,7 +32,7 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	// 队伍ID (0: 玩家1, 1: 玩家2)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess")
 	int32 TeamID = 0;
 
 	// 金币
@@ -76,6 +76,11 @@ protected:
 	// --- 拖拽逻辑 ---
 	bool bIsDragging;
 	AAutoChessUnitBase* DraggedUnit;
+	
+	UPROPERTY()
+	class AAutoChessGhost* DragGhost; // 幽灵 Actor
+
+	float DragStartZ; // 拖拽开始时的 Z 高度
 	FVector DragOffset; // 鼠标点击位置相对于单位中心的偏移
 
 	void HandleDragStart(const FVector2D& ScreenPosition);
@@ -120,37 +125,16 @@ protected:
 	void OnLeftClickPressed();
 	void OnLeftClickReleased();
 
-	// 血条 Widget 类
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
-	TSubclassOf<class UAutoChessUnitWidget> UnitHealthBarClass;
 
-	// 管理所有单位的血条 Widget
-	UPROPERTY()
-	TMap<AAutoChessUnitBase*, class UAutoChessUnitWidget*> UnitHealthBars;
-
-	// 血条垂直偏移量
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
-	float HealthBarZOffset = 150.0f;
-
-	// 血条缩放参考距离 (在这个距离下缩放为 1.0)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
-	float HealthBarRefDistance = 1000.0f;
-
-	// 血条最小缩放
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
-	float HealthBarMinScale = 0.5f;
-
-	// 血条最大缩放
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
-	float HealthBarMaxScale = 1.5f;
-
-	void UpdateHealthBars();
 
 	// --- 实时卡牌战斗系统 ---
 
 	// 当前法力值
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
+	UPROPERTY(ReplicatedUsing = OnRep_Mana, VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
 	float Mana;
+
+	UFUNCTION()
+	void OnRep_Mana();
 
 	// 最大法力值
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
@@ -165,8 +149,11 @@ protected:
 	TArray<TSubclassOf<UAutoChessCardBase>> DeckConfig;
 
 	// 当前手牌 (实例化后的卡牌对象)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Battle")
+	UPROPERTY(ReplicatedUsing = OnRep_HandCards, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Battle")
 	TArray<UAutoChessCardBase*> HandCards;
+
+	UFUNCTION()
+	void OnRep_HandCards();
 
 	// 抽牌间隔 (秒)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
@@ -174,7 +161,7 @@ protected:
 
 	// 尝试打出卡牌
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
-	bool PlayCard(UAutoChessCardBase* Card, AActor* Target);
+	bool PlayCard(UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos);
 
 	// 尝试在指定屏幕位置打出卡牌 (用于拖拽释放)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
@@ -188,15 +175,36 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
 	void DrawCard();
 
+public:
+	// 回复法力 (Public for GameMode access)
+	void RegenerateMana(float DeltaTime);
+
+	// 处理自动抽牌 (Public for GameMode access)
+	void ProcessAutoDraw(float DeltaTime);
+
 protected:
 	// 内部计时器
 	float DrawCardTimer;
 
-	// 回复法力
-	void RegenerateMana(float DeltaTime);
+	// --- 网络复制 ---
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 
-	// 处理自动抽牌
-	void ProcessAutoDraw(float DeltaTime);
+	// Server RPCs
+	UFUNCTION(Server, Reliable)
+	void Server_BuyCard(TSubclassOf<UAutoChessCardBase> CardClass);
+
+	UFUNCTION(Server, Reliable)
+	void Server_PlaceUnit(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY);
+
+	UFUNCTION(Server, Reliable)
+	void Server_SellUnit(AAutoChessUnitBase* Unit);
+
+	UFUNCTION(Server, Reliable)
+	void Server_PlayCard(UAutoChessCardBase* Card, AActor* Target, int32 GridX, int32 GridY);
+
+	UFUNCTION(Server, Reliable)
+	void Server_MoveUnit(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY);
 
 public:
 	// --- UI 事件 ---
@@ -208,4 +216,16 @@ public:
 	// 手牌更新事件
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnHandUpdate OnHandUpdated;
+
+	// --- 联机功能 (控制台命令) ---
+	
+	// 创建游戏（作为 Host）
+	// 用法：在控制台输入 HostGame
+	UFUNCTION(Exec)
+	void HostGame();
+
+	// 加入游戏（作为 Client）
+	// 用法：在控制台输入 JoinGame 192.168.1.100
+	UFUNCTION(Exec)
+	void JoinGame(const FString& Address);
 };

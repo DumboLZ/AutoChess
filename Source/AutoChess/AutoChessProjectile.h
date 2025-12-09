@@ -40,11 +40,14 @@ protected:
 	UProjectileMovementComponent* MovementComp;
 
 	// 目标
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_TargetUnit)
 	AAutoChessUnitBase* TargetUnit;
 
+	UFUNCTION()
+	void OnRep_TargetUnit();
+
 	// 施法者
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	AAutoChessUnitBase* InstigatorUnit;
 
 	// 伤害值

@@ -5,14 +5,14 @@
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/Engine.h" // For GEngine
 #include "Engine/Engine.h" // For GEngine
 #include "Blueprint/UserWidget.h"
 #include "AutoChessUnitWidget.h"
-#include "Blueprint/WidgetLayoutLibrary.h" // Add this include
+#include "Blueprint/WidgetLayoutLibrary.h" 
 #include "AutoChessHighlightActor.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
+#include "Engine/ActorChannel.h"
 
 AAutoChessPlayerController::AAutoChessPlayerController()
 {
@@ -24,6 +24,63 @@ AAutoChessPlayerController::AAutoChessPlayerController()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+}
+
+void AAutoChessPlayerController::OnRep_Mana()
+{
+	OnManaUpdated.Broadcast(Mana, MaxMana);
+}
+
+void AAutoChessPlayerController::OnRep_HandCards()
+{
+	// 过滤掉尚未复制完成的空指针
+	TArray<UAutoChessCardBase*> ValidCards;
+	for (UAutoChessCardBase* Card : HandCards)
+	{
+		if (Card)
+		{
+			ValidCards.Add(Card);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] OnRep_HandCards: %d cards (Valid: %d)"), 
+		TeamID, HandCards.Num(), ValidCards.Num());
+	
+	// 广播委托 (使用过滤后的列表)
+	OnHandUpdated.Broadcast(ValidCards);
+	
+	// 如果HUD已创建，直接调用更新
+	if (MainHUDWidget)
+	{
+		// 注意：这里需要包含 HUD 头文件才能 Cast，或者使用 Interface
+		// 为了避免循环依赖，我们暂时只广播委托。
+		// 如果蓝图绑定了 OnHandUpdated，应该能收到。
+	}
+}
+
+void AAutoChessPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(AAutoChessPlayerController, Mana, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AAutoChessPlayerController, HandCards, COND_OwnerOnly);
+	DOREPLIFETIME(AAutoChessPlayerController, TeamID);
+}
+
+bool AAutoChessPlayerController::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+
+	// 复制手牌中的卡牌对象
+	for (UAutoChessCardBase* Card : HandCards)
+	{
+		if (Card)
+		{
+			WroteSomething |= Channel->ReplicateSubobject(Card, *Bunch, *RepFlags);
+		}
+	}
+
+	return WroteSomething;
 }
 
 UAbilitySystemComponent* AAutoChessPlayerController::GetAbilitySystemComponent() const
@@ -128,10 +185,7 @@ void AAutoChessPlayerController::ReceivedPlayer()
 			}
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("[PlayerController::ReceivedPlayer] LocalPlayer is NULL! This should not happen for local players."));
-	}
+	// else: Remote player on server, do nothing
 }
 
 void AAutoChessPlayerController::OnPossess(APawn* InPawn)
@@ -219,7 +273,7 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 		}
 	}
 
-	// 处理鼠标点击和拖拽 (支持分屏共享鼠标)
+	// 处理鼠标点击和拖拽
 	if (IsLocalController())
 	{
 		// 获取视口鼠标位置 (Slate Units)
@@ -227,46 +281,25 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 		float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
 		MousePos *= ViewportScale; // 转换为像素
 
-		// 获取视口大小
-		FVector2D ViewportSize;
-		GetLocalPlayer()->ViewportClient->GetViewportSize(ViewportSize);
-
-		// 判断鼠标在哪个半屏
-		bool bIsRightSide = MousePos.X > (ViewportSize.X * 0.5f);
-		
-		// 目标控制器
-		AAutoChessPlayerController* TargetPC = this;
-		
-		// 如果是分屏模式且鼠标在右侧，尝试获取玩家2的控制器
-		if (bIsRightSide && UGameplayStatics::GetNumPlayerControllers(this) > 1)
+		if (WasInputKeyJustPressed(EKeys::LeftMouseButton))
 		{
-			TargetPC = Cast<AAutoChessPlayerController>(UGameplayStatics::GetPlayerController(this, 1));
+			HandleDragStart(MousePos);
+			if (!bIsDragging)
+			{
+				HandleClick(MousePos);
+			}
 		}
-		
-		// 如果目标控制器不是自己，且自己是 Player 0，则负责转发输入
-		// 注意：Player 1 (Index 1) 也会运行这个 Tick，但它没有鼠标输入，所以不会触发
-		if (TargetPC && (TargetPC == this || GetLocalPlayer()->GetControllerId() == 0))
+		else if (WasInputKeyJustReleased(EKeys::LeftMouseButton))
 		{
-			if (WasInputKeyJustPressed(EKeys::LeftMouseButton))
+			if (bIsDragging)
 			{
-				TargetPC->HandleDragStart(MousePos);
-				if (!TargetPC->bIsDragging)
-				{
-					TargetPC->HandleClick(MousePos);
-				}
+				HandleDragEnd();
 			}
-			else if (WasInputKeyJustReleased(EKeys::LeftMouseButton))
-			{
-				if (TargetPC->bIsDragging)
-				{
-					TargetPC->HandleDragEnd();
-				}
-			}
+		}
 
-			if (TargetPC->bIsDragging)
-			{
-				TargetPC->HandleDragging(MousePos);
-			}
+		if (bIsDragging)
+		{
+			HandleDragging(MousePos);
 		}
 	}
 	else if (TeamID == 1 && VirtualCursorWidget) // Player 1 使用虚拟光标拖拽
@@ -276,9 +309,6 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 			HandleDragging(VirtualCursorPosition);
 		}
 	}
-
-	// 更新血条 UI
-	UpdateHealthBars();
 
 	// 确保高亮管理器的 Owner 正确 (分屏修复)
 	if (HighlightActor && GetPawn() && HighlightActor->GetOwner() != GetPawn())
@@ -305,6 +335,8 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 	}
 
 	// 战斗阶段逻辑：回蓝和抽牌
+	// 注意：这部分逻辑已移至 GameMode 统一调用，避免 Host 执行两次
+	/*
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
 		if (GM->CurrentPhase == EAutoChessPhase::Battle)
@@ -313,6 +345,7 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 			ProcessAutoDraw(DeltaTime);
 		}
 	}
+	*/
 
 }
 
@@ -352,56 +385,110 @@ void AAutoChessPlayerController::HandleClick(const FVector2D& ScreenPosition)
 
 void AAutoChessPlayerController::BuyCard(TSubclassOf<UAutoChessCardBase> CardClass)
 {
-	if (CardClass)
+	if (HasAuthority())
 	{
-		// 检查金币是否足够 (逻辑待完善)
-		// AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
-		// if (GS->Player1Gold >= Cost) ...
+		// Server Logic
+		if (CardClass)
+		{
+			// 检查金币是否足够 (逻辑待完善)
+			// AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+			// if (GS->Player1Gold >= Cost) ...
 
-		SelectedCardClass = CardClass;
-		UE_LOG(LogTemp, Log, TEXT("Card Selected: %s"), *CardClass->GetName());
+			SelectedCardClass = CardClass;
+			UE_LOG(LogTemp, Log, TEXT("Card Selected: %s"), *CardClass->GetName());
+		}
 	}
+	else
+	{
+		// Client Request
+		Server_BuyCard(CardClass);
+	}
+}
+
+void AAutoChessPlayerController::Server_BuyCard_Implementation(TSubclassOf<UAutoChessCardBase> CardClass)
+{
+	BuyCard(CardClass);
 }
 
 void AAutoChessPlayerController::PlaceUnit(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY)
 {
-	if (!CardClass) return;
-
-	// 获取卡牌默认对象以读取属性
-	UAutoChessCardBase* CardCDO = CardClass->GetDefaultObject<UAutoChessCardBase>();
-	if (!CardCDO || !CardCDO->UnitClass) return;
-
-	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
-	if (GS && !GS->IsGridOccupied(GridX, GridY))
+	if (HasAuthority())
 	{
-		// 生成单位
-		if (AAutoChessGrid* Grid = GS->GameGrid)
+		// Server Logic
+		if (!CardClass) return;
+
+		// 获取卡牌默认对象以读取属性
+		UAutoChessCardBase* CardCDO = CardClass->GetDefaultObject<UAutoChessCardBase>();
+		if (!CardCDO || !CardCDO->UnitClass) return;
+
+		AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+		if (GS && !GS->IsGridOccupied(GridX, GridY))
 		{
-			FVector SpawnLoc = Grid->GridToWorld(GridX, GridY);
-			SpawnLoc.Z += 50.0f; // 稍微抬高一点
-
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-			AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(CardCDO->UnitClass, SpawnLoc, FRotator::ZeroRotator, SpawnParams);
-			
-			if (NewUnit)
+			// 生成单位
+			if (AAutoChessGrid* Grid = GS->GameGrid)
 			{
-				NewUnit->TeamID = TeamID; // 使用当前控制器的 TeamID
-				NewUnit->SnapToGrid(); // 确保对齐
+				FVector SpawnLoc = Grid->GridToWorld(GridX, GridY);
+				SpawnLoc.Z += 50.0f; // 稍微抬高一点
+
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+				AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(CardCDO->UnitClass, SpawnLoc, FRotator::ZeroRotator, SpawnParams);
+				
+				if (NewUnit)
+				{
+					NewUnit->TeamID = TeamID; // 使用当前控制器的 TeamID
+					NewUnit->SnapToGrid(); // 确保对齐
+					
+					// 注册到 GameState (Server Only)
+					GS->RegisterUnit(NewUnit);
+				}
 			}
 		}
 	}
+	else
+	{
+		// Client Request
+		Server_PlaceUnit(CardClass, GridX, GridY);
+	}
+}
+
+void AAutoChessPlayerController::Server_PlaceUnit_Implementation(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY)
+{
+	PlaceUnit(CardClass, GridX, GridY);
 }
 
 void AAutoChessPlayerController::SellUnit(AAutoChessUnitBase* Unit)
 {
-	if (Unit)
+	if (HasAuthority())
 	{
-		// 返还金币逻辑...
-		Unit->Destroy();
+		// Server Logic
+		if (Unit)
+		{
+			// 返还金币逻辑...
+			
+			// 从 GameState 注销
+			if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+			{
+				GS->UnregisterUnit(Unit);
+			}
+			
+			Unit->Destroy();
+		}
+	}
+	else
+	{
+		// Client Request
+		Server_SellUnit(Unit);
 	}
 }
+
+void AAutoChessPlayerController::Server_SellUnit_Implementation(AAutoChessUnitBase* Unit)
+{
+	SellUnit(Unit);
+}
+
+#include "AutoChessGhost.h"
 
 void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition)
 {
@@ -425,11 +512,22 @@ void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition
 
 				DraggedUnit = Unit;
 				bIsDragging = true;
+				DragStartZ = Unit->GetActorLocation().Z; // 缓存初始高度
 				
 				DragOffset = FVector::ZeroVector;
 
-				// 暂时禁用碰撞，防止拖拽时扫到其他东西
-				DraggedUnit->SetActorEnableCollision(false);
+				// 生成幽灵 Actor
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				DragGhost = GetWorld()->SpawnActor<AAutoChessGhost>(AAutoChessGhost::StaticClass(), Unit->GetActorLocation(), Unit->GetActorRotation(), SpawnParams);
+				
+				if (DragGhost)
+				{
+					DragGhost->InitVisuals(Unit->GetMesh()->GetSkeletalMeshAsset(), nullptr); // 可选：设置半透明材质
+				}
+
+				// 隐藏真实单位 (本地)
+				DraggedUnit->SetActorHiddenInGame(true);
 			}
 		}
 	}
@@ -437,7 +535,7 @@ void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition
 
 void AAutoChessPlayerController::HandleDragging(const FVector2D& ScreenPosition)
 {
-	if (!bIsDragging || !DraggedUnit) return;
+	if (!bIsDragging || !DragGhost) return; // 拖拽幽灵
 
 	FVector WorldLoc, WorldDir;
 	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
@@ -449,10 +547,10 @@ void AAutoChessPlayerController::HandleDragging(const FVector2D& ScreenPosition)
 		{
 			FVector NewLocation = Hit.Location;
 			
-			// 保持单位原有的 Z 高度
-			NewLocation.Z = DraggedUnit->GetActorLocation().Z;
+			// 使用缓存的 Z 高度，防止掉落
+			NewLocation.Z = DragStartZ;
 			
-			DraggedUnit->SetActorLocation(NewLocation);
+			DragGhost->SetActorLocation(NewLocation);
 		}
 	}
 }
@@ -461,11 +559,19 @@ void AAutoChessPlayerController::HandleDragEnd()
 {
 	if (!bIsDragging || !DraggedUnit) return;
 
-	// 恢复碰撞
-	DraggedUnit->SetActorEnableCollision(true);
+	// 恢复真实单位显示
+	DraggedUnit->SetActorHiddenInGame(false);
+
+	// 获取目标位置 (从幽灵位置)
+	FVector FinalLoc = DraggedUnit->GetActorLocation();
+	if (DragGhost)
+	{
+		FinalLoc = DragGhost->GetActorLocation();
+		DragGhost->Destroy();
+		DragGhost = nullptr;
+	}
 
 	// 1. 获取拖拽结束时的目标格子坐标
-	// 先不直接 Snap，而是先计算目标位置
 	FIntPoint TargetGridPos = DraggedUnit->CurrentGridPos; // 默认回原位
 	
 	if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
@@ -473,173 +579,92 @@ void AAutoChessPlayerController::HandleDragEnd()
 		if (AAutoChessGrid* Grid = GS->GameGrid)
 		{
 			int32 X, Y;
-			// 使用当前 Actor 位置计算所在的格子
-			if (Grid->WorldToGrid(DraggedUnit->GetActorLocation(), X, Y))
+			// 使用幽灵位置计算所在的格子
+			if (Grid->WorldToGrid(FinalLoc, X, Y))
 			{
 				TargetGridPos = FIntPoint(X, Y);
 			}
 		}
-		
-		// 2. 检查是否有单位在目标格子
-		AAutoChessUnitBase* OverlappingUnit = nullptr;
-		for (AAutoChessUnitBase* OtherUnit : GS->AllUnits)
-		{
-			if (OtherUnit && OtherUnit != DraggedUnit && IsValid(OtherUnit))
-			{
-				if (OtherUnit->CurrentGridPos == TargetGridPos)
-				{
-					OverlappingUnit = OtherUnit;
-					break;
-				}
-			}
-		}
-
-		if (OverlappingUnit)
-		{
-			// 3. 交换位置逻辑
-			// 记录被拖拽单位原来的位置
-			FIntPoint OriginalPos = DraggedUnit->CurrentGridPos;
-
-			// 交换坐标
-			DraggedUnit->CurrentGridPos = TargetGridPos;
-			OverlappingUnit->CurrentGridPos = OriginalPos;
-
-			// 两个单位都吸附到新格子
-			DraggedUnit->SnapToGrid();
-			OverlappingUnit->SnapToGrid();
-
-			UE_LOG(LogTemp, Log, TEXT("Swapped Unit %s with %s"), *DraggedUnit->GetName(), *OverlappingUnit->GetName());
-		}
-		else
-		{
-			// 4. 没有重叠，直接移动过去
-			// 这里需要更新 CurrentGridPos，因为 SnapToGrid 依赖它或者反之
-			// 实际上 SnapToGrid 会根据当前 WorldLocation 计算 GridPos 并吸附
-			// 但为了保险，我们手动设置一下
-			DraggedUnit->CurrentGridPos = TargetGridPos;
-			DraggedUnit->SnapToGrid();
-		}
 	}
-	else
-	{
-		DraggedUnit->SnapToGrid();
-	}
+
+	// 2. 发送 RPC 请求移动 (Client -> Server)
+	Server_MoveUnit(DraggedUnit, TargetGridPos.X, TargetGridPos.Y);
+
+	// 3. 客户端预测 (可选，如果 OnRep 足够快可以省略，或者先吸附过去)
+	// 由于我们用了 Ghost，这里可以直接让 Unit 吸附到目标位置等待 Server 确认
+	DraggedUnit->CurrentGridPos = TargetGridPos; 
+	DraggedUnit->SnapToGrid();
 
 	bIsDragging = false;
 	DraggedUnit = nullptr;
 }
 
-void AAutoChessPlayerController::UpdateHealthBars()
+void AAutoChessPlayerController::Server_MoveUnit_Implementation(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY)
 {
-	if (!UnitHealthBarClass) return;
+	if (!Unit || !HasAuthority()) return;
+
+	// 验证所有权
+	if (Unit->TeamID != TeamID) return;
+
+	// 验证游戏阶段
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		if (GM->CurrentPhase != EAutoChessPhase::Preparation) return;
+	}
 
 	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
 	if (!GS) return;
 
-	// 1. 标记所有现有的 Widget 为“待删除”
-	TArray<AAutoChessUnitBase*> UnitsToRemove;
-	for (auto& Elem : UnitHealthBars)
+	FIntPoint TargetPos(TargetGridX, TargetGridY);
+	
+	// 检查是否有单位在目标格子
+	AAutoChessUnitBase* OverlappingUnit = nullptr;
+	for (AAutoChessUnitBase* OtherUnit : GS->AllUnits)
 	{
-		if (!IsValid(Elem.Key) || !GS->AllUnits.Contains(Elem.Key))
+		if (OtherUnit && OtherUnit != Unit && IsValid(OtherUnit))
 		{
-			UnitsToRemove.Add(Elem.Key);
+			if (OtherUnit->CurrentGridPos == TargetPos)
+			{
+				OverlappingUnit = OtherUnit;
+				break;
+			}
 		}
 	}
 
-	// 移除无效单位的 Widget
-	for (AAutoChessUnitBase* Unit : UnitsToRemove)
+	if (OverlappingUnit)
 	{
-		if (UnitHealthBars[Unit])
+		// 交换位置逻辑
+		// 只能交换己方单位
+		if (OverlappingUnit->TeamID == TeamID)
 		{
-			UnitHealthBars[Unit]->RemoveFromParent();
-		}
-		UnitHealthBars.Remove(Unit);
-	}
+			FIntPoint OriginalPos = Unit->CurrentGridPos;
 
-	// 2. 遍历所有单位，更新或创建 Widget
-	for (AAutoChessUnitBase* Unit : GS->AllUnits)
-	{
-		if (!IsValid(Unit)) continue;
+			Unit->CurrentGridPos = TargetPos;
+			OverlappingUnit->CurrentGridPos = OriginalPos;
 
-		UAutoChessUnitWidget* Widget = nullptr;
-
-		// 查找或创建
-		if (UnitHealthBars.Contains(Unit))
-		{
-			Widget = UnitHealthBars[Unit];
+			Unit->SnapToGrid();
+			OverlappingUnit->SnapToGrid();
 		}
 		else
 		{
-			Widget = CreateWidget<UAutoChessUnitWidget>(this, UnitHealthBarClass);
-			if (Widget)
-			{
-				Widget->AddToViewport(); // 添加到视口
-				UnitHealthBars.Add(Unit, Widget);
-			}
-		}
-
-		// 更新位置和数据
-		if (Widget)
-		{
-			// 更新数据 - 从 GAS AttributeSet 读取
-			// 更新数据 - 从 GAS AttributeSet 读取
-			float CurrentHealth = Unit->Health; // 默认值
-			float CurrentMaxHealth = Unit->MaxHealth;
-			float CurrentShield = 0.0f;
-
-			if (Unit->AttributeSet)
-			{
-				CurrentHealth = Unit->AttributeSet->GetHealth();
-				CurrentMaxHealth = Unit->AttributeSet->GetMaxHealth();
-				CurrentShield = Unit->AttributeSet->GetShield();
-			}
-
-			Widget->UpdateHealth(CurrentHealth, CurrentMaxHealth, CurrentShield);
-			
-			// 更新法力值
-			float CurrentMana = Unit->Mana;
-			float CurrentMaxMana = Unit->MaxMana;
-			if (Unit->AttributeSet)
-			{
-				CurrentMana = Unit->AttributeSet->GetMana();
-				CurrentMaxMana = Unit->AttributeSet->GetMaxMana();
-			}
-			Widget->UpdateMana(CurrentMana, CurrentMaxMana);
-
-			Widget->SetTeamColor(Unit->TeamID);
-
-			// 更新位置 (世界 -> 屏幕)
-			FVector WorldLoc = Unit->GetActorLocation();
-			WorldLoc.Z += HealthBarZOffset; // 使用可配置的偏移
-
-			FVector2D ScreenPos;
-			if (ProjectWorldLocationToScreen(WorldLoc, ScreenPos))
-			{
-				Widget->SetPositionInViewport(ScreenPos);
-				Widget->SetVisibility(ESlateVisibility::HitTestInvisible);
-
-				// 计算缩放 (近大远小)
-				FVector CameraLoc;
-				FRotator CameraRot;
-				GetPlayerViewPoint(CameraLoc, CameraRot);
-
-				float Dist = FVector::Dist(CameraLoc, WorldLoc);
-				// 避免除以0
-				if (Dist < 1.0f) Dist = 1.0f;
-
-				float Scale = HealthBarRefDistance / Dist;
-				Scale = FMath::Clamp(Scale, HealthBarMinScale, HealthBarMaxScale);
-
-				Widget->SetRenderScale(FVector2D(Scale, Scale));
-			}
-			else
-			{
-				// 如果在屏幕外，隐藏
-				Widget->SetVisibility(ESlateVisibility::Collapsed);
-			}
+			// 目标位置有敌方单位 (理论上准备阶段不应该发生，除非是在对方半场)
+			// 拒绝移动，回弹
+			Unit->SnapToGrid();
 		}
 	}
+	else
+	{
+		// 移动到空位
+		// 检查是否在己方半场 (可选)
+		// 简单起见，允许在整个棋盘移动，或者根据 TeamID 限制 Y 轴范围
+		// Player 0: Y [0, 3], Player 1: Y [4, 7]
+		
+		Unit->CurrentGridPos = TargetPos;
+		Unit->SnapToGrid();
+	}
 }
+
+
 
 void AAutoChessPlayerController::RegenerateMana(float DeltaTime)
 {
@@ -711,7 +736,7 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 	}
 
 	// 直接使用传入的 ScreenPosition (已经包含了正确的坐标源)
-	FVector2D ViewportPosition = ScreenPosition;
+	// FVector2D ViewportPosition = ScreenPosition;
 	
 	// 注意：ScreenPosition 通常已经是视口坐标 (Slate Units) 或 像素坐标
 	// 如果来自 GetCursorPosition()，它是像素坐标 (ViewportPosition * Scale)
@@ -726,7 +751,13 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 	
 	// 我们的 GetCursorPosition 返回的是: GetMousePositionOnViewport * Scale (即像素)
 	// 所以这里直接用 ScreenPosition
-	ViewportPosition = ScreenPosition;
+	// FIX: 强制使用 GetCursorPosition()
+	// 原因：蓝图 OnDrop 传入的通常是绝对坐标 (Absolute)，而 Deproject 需要视口坐标 (Viewport Space)
+	// GetCursorPosition() 已经处理了 Viewport Scale 和 Mouse/Virtual Cursor 的差异，且返回的是 Viewport Pixels
+	FVector2D ViewportPosition = GetCursorPosition();
+	
+	UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Input ScreenPos: %s, Used ViewportPos: %s"), 
+		*ScreenPosition.ToString(), *ViewportPosition.ToString());
 
 	FVector WorldLoc, WorldDir;
 	if (DeprojectScreenPositionToWorld(ViewportPosition.X, ViewportPosition.Y, WorldLoc, WorldDir))
@@ -768,8 +799,8 @@ bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card,
 				AAutoChessUnitBase* TargetUnit = GS->GetUnitAtGrid(GridX, GridY);
 				UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Target unit on grid: %s"), TargetUnit ? *TargetUnit->GetName() : TEXT("NULL (Empty Grid)"));
 				
-				// 允许对空地施放（AOE 技能）
-				return PlayCard(Card, TargetUnit);
+				// 允许对空地施放（AOE 技能），并传入格子坐标
+				return PlayCard(Card, TargetUnit, FIntPoint(GridX, GridY));
 			}
 		}
 	}
@@ -871,11 +902,12 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 	}
 }
 
-bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target)
+bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos)
 {
-	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Called with Card: %s, Target: %s"), 
+	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Called with Card: %s, Target: %s, GridPos: (%d, %d)"), 
 		Card ? *Card->CardName.ToString() : TEXT("NULL"),
-		Target ? *Target->GetName() : TEXT("NULL"));
+		Target ? *Target->GetName() : TEXT("NULL"),
+		TargetGridPos.X, TargetGridPos.Y);
 
 	if (!IsValid(Card) || !HandCards.Contains(Card))
 	{
@@ -893,38 +925,85 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		}
 	}
 
-	// 移除严格的目标验证逻辑，允许 AOE 法术对空地施放
-	// 具体的伤害判定逻辑交由 GAS (Gameplay Ability) 处理
-	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Skipping target validation to allow AOE casting."));
-
-	// 2. 检查费用
-	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
-	if (Mana >= Card->Cost)
+	if (HasAuthority())
 	{
-		// **先触发效果**（GA可以读到完整的法力值）
-		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
-		Card->OnPlayed(this, Target);
+		// --- Server Logic ---
 
-		// **然后扣费**（但如果勾选了"消耗所有法力"，由GA自行处理）
-		if (!Card->bConsumeAllMana)
+		// 如果提供了 GridPos，重新计算 HighlightedTiles (确保 AOE 技能有正确的目标范围)
+		if (TargetGridPos.X != -1 && TargetGridPos.Y != -1)
 		{
-			// 普通卡牌：自动扣除Cost
-			Mana -= Card->Cost;
-			OnManaUpdated.Broadcast(Mana, MaxMana);
-			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Auto deducted Cost: %d, Remaining Mana: %f"), Card->Cost, Mana);
-		}
-		else
-		{
-			// "消耗所有法力"卡牌：由GA自行处理法力消耗
-			// 这里不扣费，让GA根据消耗的法力值决定效果强度
-			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, GA will handle mana consumption"));
+			AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+			if (GS && GS->GameGrid)
+			{
+				TArray<FIntPoint> HighlightPoints;
+				int32 Radius = Card->AOERadius;
+				
+				// 简单的 AOE 范围计算 (正方形)
+				for (int32 x = TargetGridPos.X - Radius; x <= TargetGridPos.X + Radius; x++)
+				{
+					for (int32 y = TargetGridPos.Y - Radius; y <= TargetGridPos.Y + Radius; y++)
+					{
+						if (GS->GameGrid->IsValidGridPosition(x, y))
+						{
+							HighlightPoints.Add(FIntPoint(x, y));
+						}
+					}
+				}
+				
+				// 更新卡牌的高亮列表 (供 GAS 使用)
+				Card->HighlightedTiles = HighlightPoints;
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Server recalculated HighlightedTiles: %d tiles"), HighlightPoints.Num());
+			}
 		}
 
-		// 移除手牌
-		HandCards.Remove(Card);
-		OnHandUpdated.Broadcast(HandCards);
+		// 移除严格的目标验证逻辑，允许 AOE 法术对空地施放
+		// 具体的伤害判定逻辑交由 GAS (Gameplay Ability) 处理
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Skipping target validation to allow AOE casting."));
+
+		// 2. 检查费用
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
+		if (Mana >= Card->Cost)
+		{
+			// **先触发效果**（GA可以读到完整的法力值）
+			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
+			Card->OnPlayed(this, Target);
+
+			// **然后扣费**（但如果勾选了"消耗所有法力"，由GA自行处理）
+			if (!Card->bConsumeAllMana)
+			{
+				// 普通卡牌：自动扣除Cost
+				Mana -= Card->Cost;
+				OnManaUpdated.Broadcast(Mana, MaxMana);
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Auto deducted Cost: %d, Remaining Mana: %f"), Card->Cost, Mana);
+			}
+			else
+			{
+				// "消耗所有法力"卡牌：由GA自行处理法力消耗
+				// 这里不扣费，让GA根据消耗的法力值决定效果强度
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, GA will handle mana consumption"));
+			}
+
+			// 移除手牌
+			HandCards.Remove(Card);
+			OnHandUpdated.Broadcast(HandCards);
+			
+			// 成功打出后清除高亮 (Server 也需要清除吗？主要是 Client 需要)
+			// Server 可以通知 Client 清除，或者 Client 自己清除
+			// 这里我们让 Client 在 RPC 返回后清除，或者通过 Rep 通知
+			
+			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Card played successfully!"));
+			return true;
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Not enough mana!"));
+		return false;
+	}
+	else
+	{
+		// --- Client Request ---
+		Server_PlayCard(Card, Target, TargetGridPos.X, TargetGridPos.Y);
 		
-		// 成功打出后清除高亮
+		// 客户端预测：暂时清除高亮
 		if (IsValid(HighlightActor) && GetWorld())
 		{
 			if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
@@ -935,13 +1014,19 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 				}
 			}
 		}
-
-		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Card played successfully!"));
-		return true;
+		return true; // 假定成功
 	}
+}
 
-	UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Not enough mana!"));
-	return false;
+void AAutoChessPlayerController::Server_PlayCard_Implementation(UAutoChessCardBase* Card, AActor* Target, int32 GridX, int32 GridY)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[Server_PlayCard] PC %d received request. Card: %s, Target: %s, GridPos: (%d, %d)"), 
+		TeamID, 
+		Card ? *Card->CardName.ToString() : TEXT("NULL"),
+		Target ? *Target->GetName() : TEXT("NULL"),
+		GridX, GridY);
+		
+	PlayCard(Card, Target, FIntPoint(GridX, GridY));
 }
 
 FVector2D AAutoChessPlayerController::GetCursorPosition()
@@ -981,4 +1066,42 @@ void AAutoChessPlayerController::OnLeftClickReleased()
 	}
 }
 
+// --- 联机功能实现 ---
+
+void AAutoChessPlayerController::HostGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[HostGame] Creating game as Listen Server..."));
+	
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[HostGame] Failed: World is NULL!"));
+		return;
+	}
+
+	// 获取当前关卡名称
+	FString CurrentLevel = World->GetMapName();
+	CurrentLevel.RemoveFromStart(World->StreamingLevelsPrefix); // 移除前缀（如果有）
+	
+	// 作为 Listen Server 重新加载当前关卡
+	// ?listen 参数告诉引擎这是一个 Listen Server
+	FString TravelURL = FString::Printf(TEXT("%s?listen"), *CurrentLevel);
+	
+	UE_LOG(LogTemp, Warning, TEXT("[HostGame] Traveling to: %s"), *TravelURL);
+	World->ServerTravel(TravelURL);
+}
+
+void AAutoChessPlayerController::JoinGame(const FString& Address)
+{
+	if (Address.IsEmpty())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[JoinGame] Failed: IP Address is empty! Usage: JoinGame <IP>"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[JoinGame] Connecting to: %s"), *Address);
+	
+	// 客户端连接到指定地址
+	ClientTravel(Address, TRAVEL_Absolute);
+}
 

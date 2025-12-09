@@ -18,7 +18,8 @@ struct FHitResult;
 #define AUTOCHESS_AutoChessProjectile_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_15_RPC_WRAPPERS_NO_PURE_DECLS \
-	DECLARE_FUNCTION(execOnOverlapBegin);
+	DECLARE_FUNCTION(execOnOverlapBegin); \
+	DECLARE_FUNCTION(execOnRep_TargetUnit);
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_15_INCLASS_NO_PURE_DECLS \
@@ -27,7 +28,15 @@ private: \
 	friend struct Z_Construct_UClass_AAutoChessProjectile_Statics; \
 public: \
 	DECLARE_CLASS(AAutoChessProjectile, AActor, COMPILED_IN_FLAGS(0 | CLASS_Config), CASTCLASS_None, TEXT("/Script/AutoChess"), NO_API) \
-	DECLARE_SERIALIZER(AAutoChessProjectile)
+	DECLARE_SERIALIZER(AAutoChessProjectile) \
+	NO_API void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override; \
+	enum class ENetFields_Private : uint16 \
+	{ \
+		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
+		TargetUnit=NETFIELD_REP_START, \
+		InstigatorUnit, \
+		NETFIELD_REP_END=InstigatorUnit	}; \
+	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_15_ENHANCED_CONSTRUCTORS \

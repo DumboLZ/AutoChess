@@ -10,10 +10,12 @@
 #include "AutoChessUnitWidget.h"
 #include "AutoChessProjectile.h"
 #include "AutoChessUnitData.h"
+#include "Net/UnrealNetwork.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true; // 启用网络复制
 
 	TeamID = 0;
 	MaxHealth = 100.0f;
@@ -32,18 +34,35 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 	CurrentGridPos = FIntPoint(0, 0);
 
 	// 确保 AI 控制器自动接管
-	AutoPossessAI = EAutoPossessAI::Disabled;
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	// 禁用单位间碰撞，防止移动时互相卡住
 	// 禁用单位间碰撞，防止移动时互相卡住
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 
 	// 初始化 GAS 组件
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed); // Mixed 模式对 AI 更好
 
 	AttributeSet = CreateDefaultSubobject<UAutoChessAttributeSet>(TEXT("AttributeSet"));
+
+	// 初始化血条组件
+	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComp"));
+	HealthBarWidgetComp->SetupAttachment(RootComponent);
+	HealthBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen); // 屏幕空间，始终面向摄像机
+	HealthBarWidgetComp->SetDrawAtDesiredSize(true);
+	HealthBarWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f)); // 默认高度
+}
+
+void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAutoChessUnitBase, TeamID);
+	DOREPLIFETIME(AAutoChessUnitBase, CurrentGridPos);
+	DOREPLIFETIME(AAutoChessUnitBase, TargetGridPos);
+	DOREPLIFETIME(AAutoChessUnitBase, bIsMoving);
+	DOREPLIFETIME(AAutoChessUnitBase, CurrentTarget);
 }
 
 UAbilitySystemComponent* AAutoChessUnitBase::GetAbilitySystemComponent() const
@@ -64,21 +83,24 @@ void AAutoChessUnitBase::BeginPlay()
 		
 		if (!AttributeSet)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] AttributeSet is NULL! Attempting to create via NewObject..."));
 			AttributeSet = NewObject<UAutoChessAttributeSet>(this, TEXT("AttributeSet"));
 		}
 
 		if (AttributeSet)
 		{
-			// **关键修复**：必须把 AttributeSet 注册到 ASC！
+			// 注册 AttributeSet
 			AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet);
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] AttributeSet registered to ASC"));
+
+			// 绑定属性变化委托
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetHealthAttribute()).AddUObject(this, &AAutoChessUnitBase::OnHealthChanged);
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &AAutoChessUnitBase::OnMaxHealthChanged);
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetManaAttribute()).AddUObject(this, &AAutoChessUnitBase::OnManaChanged);
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetMaxManaAttribute()).AddUObject(this, &AAutoChessUnitBase::OnMaxManaChanged);
 
 			// 尝试从 DataAsset 初始化
 			InitFromUnitData();
 
 			// 无论是否从 DataAsset 初始化，都确保 AttributeSet 被正确赋值
-			// 如果 InitFromUnitData 执行了，这里的 MaxHealth 等值已经被更新为 DA 中的值
 			AttributeSet->InitHealth(MaxHealth);
 			AttributeSet->InitMaxHealth(MaxHealth);
 			AttributeSet->InitMana(InitialMana);
@@ -86,38 +108,56 @@ void AAutoChessUnitBase::BeginPlay()
 			AttributeSet->InitAttackDamage(AttackDamage);
 			AttributeSet->InitAttackSpeed(AttackSpeed);
 
-			// 授予技能 (主动)
-			if (UnitAbilityClass)
+			// 授予技能 (主动) - 仅服务器
+			if (HasAuthority() && UnitAbilityClass)
 			{
 				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
 			}
 
-			// 授予技能 (被动)
-			if (PassiveAbilityClass)
+			// 授予技能 (被动) - 仅服务器
+			if (HasAuthority() && PassiveAbilityClass)
 			{
 				FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
-				// 尝试立即激活被动技能 (通常被动技能会自动激活并监听事件)
 				AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
 			}
 
-			// 授予初始 Gameplay Tags (从 UnitData)
+			// 授予初始 Gameplay Tags
 			if (UnitData && UnitData->InitialTags.Num() > 0)
 			{
 				AbilitySystemComponent->AddLooseGameplayTags(UnitData->InitialTags);
-				UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Granted %d initial tags"), UnitData->InitialTags.Num());
 			}
-
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase::BeginPlay] Attributes initialized - Health: %.1f, MaxHealth: %.1f"), 
-				AttributeSet->GetHealth(), AttributeSet->GetMaxHealth());
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] Failed to create AttributeSet!"));
+			
+			// 初始更新 UI（传入正确的初始值）
+			FOnAttributeChangeData HealthData;
+			HealthData.NewValue = AttributeSet->GetHealth();
+			OnHealthChanged(HealthData);
+			
+			FOnAttributeChangeData ManaData;
+			ManaData.NewValue = AttributeSet->GetMana();
+			OnManaChanged(ManaData);
 		}
 	}
-	else
+
+	// 初始化血条 Widget
+	if (HealthBarWidgetComp)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[UnitBase::BeginPlay] AbilitySystemComponent is NULL!"));
+		UUserWidget* WidgetObj = HealthBarWidgetComp->GetUserWidgetObject();
+		if (WidgetObj)
+		{
+			if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(WidgetObj))
+			{
+				UnitWidget->SetTeamColor(TeamID);
+				
+				// 立即更新一次显示
+				if (AttributeSet)
+				{
+					UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), AttributeSet->GetShield());
+					UnitWidget->UpdateMana(AttributeSet->GetMana(), AttributeSet->GetMaxMana());
+				}
+			}
+
+		}
+
 	}
 
 	// 注册到 GameState
@@ -127,7 +167,6 @@ void AAutoChessUnitBase::BeginPlay()
 	}
 
 	// 初始化位置对齐
-	// 第一次生成时，需要根据世界坐标计算 Grid 坐标
 	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 	{
 		if (AAutoChessGrid* Grid = GS->GameGrid)
@@ -139,6 +178,96 @@ void AAutoChessUnitBase::BeginPlay()
 			}
 		}
 	}
+	SnapToGrid();
+}
+
+void AAutoChessUnitBase::OnHealthChanged(const FOnAttributeChangeData& Data)
+{
+	// 优先使用传入的 Data.NewValue（来自 OnRep），否则从 AttributeSet 读取
+	float NewHealth = 0.0f;
+	float NewMaxHealth = 0.0f;
+	
+	if (Data.NewValue != 0.0f || Data.OldValue != 0.0f) // Data 有效
+	{
+		NewHealth = Data.NewValue;
+		if (AttributeSet)
+		{
+			NewMaxHealth = AttributeSet->GetMaxHealth();
+		}
+	}
+	else if (AttributeSet) // 从 AttributeSet 读取
+	{
+		NewHealth = AttributeSet->GetHealth();
+		NewMaxHealth = AttributeSet->GetMaxHealth();
+	}
+	
+	// 同步旧的 float 变量
+	Health = NewHealth;
+	MaxHealth = NewMaxHealth;
+	
+
+
+	if (HealthBarWidgetComp && AttributeSet)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			UnitWidget->UpdateHealth(NewHealth, NewMaxHealth, AttributeSet->GetShield());
+		}
+	}
+}
+
+void AAutoChessUnitBase::OnMaxHealthChanged(const FOnAttributeChangeData& Data)
+{
+	OnHealthChanged(Data);
+}
+
+void AAutoChessUnitBase::OnManaChanged(const FOnAttributeChangeData& Data)
+{
+	// 优先使用传入的 Data.NewValue（来自 OnRep），否则从 AttributeSet 读取
+	float NewMana = 0.0f;
+	float NewMaxMana = 0.0f;
+	
+	if (Data.NewValue != 0.0f || Data.OldValue != 0.0f) // Data 有效
+	{
+		NewMana = Data.NewValue;
+		if (AttributeSet)
+		{
+			NewMaxMana = AttributeSet->GetMaxMana();
+		}
+	}
+	else if (AttributeSet) // 从 AttributeSet 读取
+	{
+		NewMana = AttributeSet->GetMana();
+		NewMaxMana = AttributeSet->GetMaxMana();
+	}
+	
+	// 同步旧的 float 变量
+	Mana = NewMana;
+	MaxMana = NewMaxMana;
+
+	if (HealthBarWidgetComp && AttributeSet)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			UnitWidget->UpdateMana(NewMana, NewMaxMana);
+		}
+	}
+}
+
+void AAutoChessUnitBase::OnMaxManaChanged(const FOnAttributeChangeData& Data)
+{
+	// 不要直接传递 MaxMana 的 Data，而是触发一次 Mana 更新
+	if (AttributeSet)
+	{
+		FOnAttributeChangeData ManaData;
+		ManaData.NewValue = AttributeSet->GetMana();
+		ManaData.OldValue = AttributeSet->GetMana(); // OldValue 也设为当前值，表示只是 MaxMana 变化
+		OnManaChanged(ManaData);
+	}
+}
+
+void AAutoChessUnitBase::OnRep_CurrentGridPos()
+{
 	SnapToGrid();
 }
 
@@ -162,9 +291,17 @@ void AAutoChessUnitBase::SnapToGrid()
 
 bool AAutoChessUnitBase::CheckCanFight()
 {
+	// 优先使用 GameState (Client & Server 均可用)
+	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
+	{
+		// 需要在 GameState 中暴露 CurrentPhase (已在 GameState.h 中添加 CurrentPhaseIndex)
+		// 暂时假设 CurrentPhaseIndex 1 是 Battle (根据 Enum 定义: Preparation=0, Battle=1)
+		return GS->CurrentPhaseIndex == (uint8)EAutoChessPhase::Battle;
+	}
+	
+	// 回退到 GameMode (仅 Server)
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
-		// 只有战斗阶段且未进入结算时才战斗
 		return GM->CurrentPhase == EAutoChessPhase::Battle;
 	}
 	return false;
@@ -173,6 +310,19 @@ bool AAutoChessUnitBase::CheckCanFight()
 void AAutoChessUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// --- 客户端逻辑 (视觉表现) ---
+	if (GetWorld()->IsNetMode(NM_Client))
+	{
+		// 客户端只负责移动插值
+		if (bIsMoving)
+		{
+			ProcessGridMovement(DeltaTime);
+		}
+		return;
+	}
+
+	// --- 服务器逻辑 (AI & 战斗) ---
 
 	// 只有在战斗阶段才进行逻辑
 	if (!CheckCanFight())
@@ -184,10 +334,19 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	}
 
 	// --- 护盾流失逻辑（优先执行，不受眩晕影响） ---
-	if (HasAuthority() && AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
+	if (AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
 	{
 		float NewShield = AttributeSet->GetShield() - ShieldDecayRate * DeltaTime;
 		AttributeSet->SetShield(FMath::Max(0.0f, NewShield));
+		
+		// 服务器端也需要更新 Widget（护盾衰减不会触发 OnRep）
+		if (HealthBarWidgetComp)
+		{
+			if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+			{
+				UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), AttributeSet->GetShield());
+			}
+		}
 		
 		// 如果护盾归零，重置流失速度
 		if (NewShield <= 0.0f)

@@ -142,7 +142,9 @@
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessgrid.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgrid.generated.h",
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessgamemodebase.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgamemodebase.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgamemodebase.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\engine\\public\\net\\unrealnetwork.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\net\\core\\public\\net\\core\\propertyconditions\\propertyconditions.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

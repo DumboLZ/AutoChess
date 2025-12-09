@@ -15,6 +15,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #define AUTOCHESS_AutoChessCameraPawn_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_10_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execOnRep_TeamID); \
 	DECLARE_FUNCTION(execSetupCameraForPlayer);
 
 
@@ -24,7 +25,14 @@ private: \
 	friend struct Z_Construct_UClass_AAutoChessCameraPawn_Statics; \
 public: \
 	DECLARE_CLASS(AAutoChessCameraPawn, APawn, COMPILED_IN_FLAGS(0 | CLASS_Config), CASTCLASS_None, TEXT("/Script/AutoChess"), NO_API) \
-	DECLARE_SERIALIZER(AAutoChessCameraPawn)
+	DECLARE_SERIALIZER(AAutoChessCameraPawn) \
+	NO_API void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override; \
+	enum class ENetFields_Private : uint16 \
+	{ \
+		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
+		TeamID=NETFIELD_REP_START, \
+		NETFIELD_REP_END=TeamID	}; \
+	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_10_ENHANCED_CONSTRUCTORS \

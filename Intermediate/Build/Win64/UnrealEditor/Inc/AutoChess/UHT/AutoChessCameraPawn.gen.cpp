@@ -18,6 +18,35 @@ ENGINE_API UClass* Z_Construct_UClass_USpringArmComponent_NoRegister();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
 
+// Begin Class AAutoChessCameraPawn Function OnRep_TeamID
+struct Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "AutoChessCameraPawn.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessCameraPawn, nullptr, "OnRep_TeamID", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessCameraPawn::execOnRep_TeamID)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->OnRep_TeamID();
+	P_NATIVE_END;
+}
+// End Class AAutoChessCameraPawn Function OnRep_TeamID
+
 // Begin Class AAutoChessCameraPawn Function SetupCameraForPlayer
 struct Z_Construct_UFunction_AAutoChessCameraPawn_SetupCameraForPlayer_Statics
 {
@@ -72,6 +101,7 @@ void AAutoChessCameraPawn::StaticRegisterNativesAAutoChessCameraPawn()
 {
 	UClass* Class = AAutoChessCameraPawn::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "OnRep_TeamID", &AAutoChessCameraPawn::execOnRep_TeamID },
 		{ "SetupCameraForPlayer", &AAutoChessCameraPawn::execSetupCameraForPlayer },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
@@ -99,12 +129,17 @@ struct Z_Construct_UClass_AAutoChessCameraPawn_Statics
 		{ "EditInline", "true" },
 		{ "ModuleRelativePath", "AutoChessCameraPawn.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TeamID_MetaData[] = {
+		{ "ModuleRelativePath", "AutoChessCameraPawn.h" },
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CameraBoom;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_FollowCamera;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
+		{ &Z_Construct_UFunction_AAutoChessCameraPawn_OnRep_TeamID, "OnRep_TeamID" }, // 3310446525
 		{ &Z_Construct_UFunction_AAutoChessCameraPawn_SetupCameraForPlayer, "SetupCameraForPlayer" }, // 2121037459
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -115,9 +150,11 @@ struct Z_Construct_UClass_AAutoChessCameraPawn_Statics
 };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_CameraBoom = { "CameraBoom", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessCameraPawn, CameraBoom), Z_Construct_UClass_USpringArmComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CameraBoom_MetaData), NewProp_CameraBoom_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_FollowCamera = { "FollowCamera", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessCameraPawn, FollowCamera), Z_Construct_UClass_UCameraComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_FollowCamera_MetaData), NewProp_FollowCamera_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_TeamID = { "TeamID", "OnRep_TeamID", (EPropertyFlags)0x0010000100000020, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessCameraPawn, TeamID), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TeamID_MetaData), NewProp_TeamID_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessCameraPawn_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_CameraBoom,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_FollowCamera,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessCameraPawn_Statics::NewProp_TeamID,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessCameraPawn_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessCameraPawn_Statics::DependentSingletons[])() = {
@@ -152,6 +189,13 @@ template<> AUTOCHESS_API UClass* StaticClass<AAutoChessCameraPawn>()
 {
 	return AAutoChessCameraPawn::StaticClass();
 }
+void AAutoChessCameraPawn::ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const
+{
+	static const FName Name_TeamID(TEXT("TeamID"));
+	const bool bIsValid = true
+		&& Name_TeamID == ClassReps[(int32)ENetFields_Private::TeamID].Property->GetFName();
+	checkf(bIsValid, TEXT("UHT Generated Rep Indices do not match runtime populated Rep Indices for properties in AAutoChessCameraPawn"));
+}
 DEFINE_VTABLE_PTR_HELPER_CTOR(AAutoChessCameraPawn);
 AAutoChessCameraPawn::~AAutoChessCameraPawn() {}
 // End Class AAutoChessCameraPawn
@@ -160,10 +204,10 @@ AAutoChessCameraPawn::~AAutoChessCameraPawn() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessCameraPawn, AAutoChessCameraPawn::StaticClass, TEXT("AAutoChessCameraPawn"), &Z_Registration_Info_UClass_AAutoChessCameraPawn, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessCameraPawn), 2362061817U) },
+		{ Z_Construct_UClass_AAutoChessCameraPawn, AAutoChessCameraPawn::StaticClass, TEXT("AAutoChessCameraPawn"), &Z_Registration_Info_UClass_AAutoChessCameraPawn, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessCameraPawn), 4096096615U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_21711816(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_2806545455(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCameraPawn_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

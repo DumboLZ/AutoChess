@@ -3,10 +3,12 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "AutoChessUnitBase.h"
+#include "Net/UnrealNetwork.h"
 
 AAutoChessProjectile::AAutoChessProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 
 	// 创建碰撞组件
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
@@ -79,5 +81,21 @@ void AAutoChessProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 		
 		// 销毁投射物
 		Destroy();
+	}
+}
+
+void AAutoChessProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAutoChessProjectile, TargetUnit);
+	DOREPLIFETIME(AAutoChessProjectile, InstigatorUnit);
+}
+
+void AAutoChessProjectile::OnRep_TargetUnit()
+{
+	if (MovementComp && TargetUnit)
+	{
+		MovementComp->HomingTargetComponent = TargetUnit->GetRootComponent();
 	}
 }
