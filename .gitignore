@@ -1,8 +1,8 @@
 # 编译生成的二进制文件和中间文件
 DerivedDataCache/
 Binaries/
-Saved/
 Build/
+Save/
 .vs/
 *.sln
 *.vcxproj
