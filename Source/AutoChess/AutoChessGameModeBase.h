@@ -60,6 +60,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	// 是否正在等待玩家加入
+	bool bWaitingForPlayers;
+
+	// 需要的玩家数量
+	int32 RequiredPlayerCount;
+
+	// 检查是否所有玩家都已连接
+	void CheckAllPlayersReady();
 
 private:
 	void UpdateTimer(float DeltaTime);

@@ -3,6 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpectatorPawn.h"
 #include "AutoChessCameraPawn.h"
+#include "AutoChessPlayerController.h"
 #include "Engine/GameViewportClient.h"
 #include "GameMapsSettings.h"
 
@@ -15,56 +16,115 @@ AAutoChessGameModeBase::AAutoChessGameModeBase()
 	PreparationDuration = 30.0f;
 	MaxBattleDuration = 60.0f;
 
-	// 使用 SpectatorPawn，避免 DefaultPawn 消耗鼠标点击进行移动
-	DefaultPawnClass = ASpectatorPawn::StaticClass();
+	// 初始化等待玩家逻辑
+	bWaitingForPlayers = true;
+	RequiredPlayerCount = 2; // 需要 2 个玩家
+
+	// 使用 AutoChessCameraPawn 作为默认 Pawn
+	DefaultPawnClass = AAutoChessCameraPawn::StaticClass();
 }
 
 void AAutoChessGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 创建玩家2
-	UGameplayStatics::CreatePlayer(this, 1, true);
+	// 移除本地分屏创建逻辑，现在完全依赖网络连接
+	// UGameplayStatics::CreatePlayer(this, 1, true);
 
-	// 设置分屏模式 (垂直分屏)
-	if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
-	{
-		Viewport->SetForceDisableSplitscreen(false);
-	}
-	
-	// 修改全局分屏设置
-	if (UGameMapsSettings* Settings = GetMutableDefault<UGameMapsSettings>())
-	{
-		Settings->TwoPlayerSplitscreenLayout = ETwoPlayerSplitScreenType::Vertical;
-	}
+	// 不立即开始游戏，等待玩家加入
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Waiting for %d players to join..."), RequiredPlayerCount);
+}
 
-	// 为两个玩家生成并分配相机 Pawn
-	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+void AAutoChessGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	if (NewPlayer)
 	{
-		APlayerController* PC = Iterator->Get();
-		if (PC)
+		// 获取当前玩家数量来决定 TeamID
+		int32 NumPlayers = GetNumPlayers();
+		int32 TeamID = NumPlayers - 1; // 0-based
+		
+		// 如果 Pawn 已经是 CameraPawn，设置视角
+		if (AAutoChessCameraPawn* CameraPawn = Cast<AAutoChessCameraPawn>(NewPlayer->GetPawn()))
 		{
-			int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PC);
-			
-			// 生成 CameraPawn
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			AAutoChessCameraPawn* CameraPawn = GetWorld()->SpawnActor<AAutoChessCameraPawn>(AAutoChessCameraPawn::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-			
-			if (CameraPawn)
-			{
-				CameraPawn->SetupCameraForPlayer(PlayerIndex);
-				PC->Possess(CameraPawn);
-			}
+			CameraPawn->SetupCameraForPlayer(TeamID);
 		}
+		
+		// 设置 Controller 的 TeamID
+		if (AAutoChessPlayerController* AutoChessPC = Cast<AAutoChessPlayerController>(NewPlayer))
+		{
+			AutoChessPC->TeamID = TeamID;
+			UE_LOG(LogTemp, Warning, TEXT("[GameMode::PostLogin] Player %d connected. Total players: %d/%d"),
+				TeamID, NumPlayers, RequiredPlayerCount);
+		}
+
+		// 检查是否所有玩家都已连接
+		CheckAllPlayersReady();
+	}
+}
+
+void AAutoChessGameModeBase::CheckAllPlayersReady()
+{
+	if (!bWaitingForPlayers)
+	{
+		return; // 已经开始游戏，不再检查
 	}
 
-	SwitchPhase(EAutoChessPhase::Preparation);
+	int32 NumPlayers = GetNumPlayers();
+	if (NumPlayers >= RequiredPlayerCount)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[GameMode] All players ready! Starting game..."));
+		bWaitingForPlayers = false;
+		
+		// 开始游戏：切换到准备阶段
+		SwitchPhase(EAutoChessPhase::Preparation);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[GameMode] Waiting for more players... (%d/%d)"), NumPlayers, RequiredPlayerCount);
+	}
 }
 
 void AAutoChessGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	// 每5秒打印一次所有PlayerController
+	static float DebugTimer = 0.0f;
+	DebugTimer += DeltaTime;
+	if (DebugTimer >= 5.0f)
+	{
+		DebugTimer = 0.0f;
+		UE_LOG(LogTemp, Error, TEXT("=== Server PlayerControllers ==="));
+		int32 Count = 0;
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		{
+			AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get());
+			if (PC)
+			{
+				Count++;
+				UE_LOG(LogTemp, Error, TEXT("  - %s: TeamID=%d, IsLocalController=%d"), 
+					*PC->GetName(), PC->TeamID, PC->IsLocalController() ? 1 : 0);
+			}
+		}
+		UE_LOG(LogTemp, Error, TEXT("=== Total: %d PlayerControllers ==="), Count);
+	}
+	
+	// 测试：在战斗阶段，服务器直接给所有PC增加Mana
+	if (CurrentPhase == EAutoChessPhase::Battle)
+	{
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		{
+			AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get());
+			if (PC)
+			{
+				PC->RegenerateMana(DeltaTime);
+				PC->ProcessAutoDraw(DeltaTime);
+			}
+		}
+	}
+	
 	UpdateTimer(DeltaTime);
 }
 
@@ -73,6 +133,13 @@ void AAutoChessGameModeBase::UpdateTimer(float DeltaTime)
 	if (PhaseTimer > 0.0f)
 	{
 		PhaseTimer -= DeltaTime;
+
+		// 同步到 GameState
+		if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+		{
+			GS->PhaseTimer = PhaseTimer;
+		}
+
 		if (PhaseTimer <= 0.0f)
 		{
 			// 倒计时结束，自动切换阶段逻辑
@@ -84,6 +151,12 @@ void AAutoChessGameModeBase::UpdateTimer(float DeltaTime)
 			{
 				// 战斗超时，进入结算
 				EndRound(-1); // -1 表示平局或超时
+			}
+			else if (CurrentPhase == EAutoChessPhase::Settlement)
+			{
+				// 结算结束，进入下一回合准备
+				CurrentRound++;
+				SwitchPhase(EAutoChessPhase::Preparation);
 			}
 		}
 	}
@@ -107,6 +180,14 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 		break;
 	}
 
+	// 同步到 GameState
+	if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+	{
+		GS->CurrentPhaseIndex = (uint8)CurrentPhase;
+		GS->CurrentRound = CurrentRound;
+		GS->PhaseTimer = PhaseTimer;
+	}
+
 	// 通知蓝图
 	OnPhaseChanged(NewPhase);
 	
@@ -125,8 +206,8 @@ void AAutoChessGameModeBase::EndRound(int32 WinnerTeamID)
 {
 	if (CurrentPhase == EAutoChessPhase::Settlement) return;
 
-	CurrentPhase = EAutoChessPhase::Settlement;
-	PhaseTimer = 5.0f; // 结算阶段持续时间
+	// 使用 SwitchPhase 统一处理
+	SwitchPhase(EAutoChessPhase::Settlement);
 
 	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Round Ended! Winner Team: %d"), WinnerTeamID);
 

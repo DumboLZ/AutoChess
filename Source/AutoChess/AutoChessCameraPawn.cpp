@@ -1,10 +1,12 @@
 #include "AutoChessCameraPawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Net/UnrealNetwork.h"
 
 AAutoChessCameraPawn::AAutoChessCameraPawn()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
 
 	// 创建根组件
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
@@ -28,8 +30,21 @@ void AAutoChessCameraPawn::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AAutoChessCameraPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAutoChessCameraPawn, TeamID);
+}
+
+void AAutoChessCameraPawn::OnRep_TeamID()
+{
+	SetupCameraForPlayer(TeamID);
+}
+
 void AAutoChessCameraPawn::SetupCameraForPlayer(int32 PlayerIndex)
 {
+	TeamID = PlayerIndex; // 确保本地也更新
+
 	// 棋盘中心计算：
 	// GridWidth = 5, TileSize = 100 -> X中心 = 250
 	// GridHeight = 8, TileSize = 100 -> Y中心 = 400

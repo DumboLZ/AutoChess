@@ -3,6 +3,8 @@
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "AutoChessUnitBase.h"
+#include "AutoChessUnitWidget.h"
+#include "Components/WidgetComponent.h"
 
 UAutoChessAttributeSet::UAutoChessAttributeSet()
 {
@@ -103,6 +105,15 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 				// 3秒内流失完当前所有护盾
 				Unit->ShieldDecayRate = GetShield() / 3.0f;
 				UE_LOG(LogTemp, Warning, TEXT("[Shield] Shield increased to %.1f. Decay Rate set to %.1f/s"), GetShield(), Unit->ShieldDecayRate);
+				
+				// 服务器端也需要更新 Widget（因为 OnRep 不会在 Authority 触发）
+				if (Unit->HealthBarWidgetComp)
+				{
+					if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(Unit->HealthBarWidgetComp->GetUserWidgetObject()))
+					{
+						UnitWidget->UpdateHealth(GetHealth(), GetMaxHealth(), GetShield());
+					}
+				}
 			}
 		}
 		SetShield(FMath::Max(GetShield(), 0.0f));
@@ -117,21 +128,58 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 void UAutoChessAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, Health, OldHealth);
+	
+	// 手动触发属性变化委托（GAS 的 OnRep 不会自动触发）
+	if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+	{
+		FOnAttributeChangeData Data;
+		Data.Attribute = GetHealthAttribute();
+		Data.NewValue = Health.GetCurrentValue();
+		Data.OldValue = OldHealth.GetCurrentValue();
+		Unit->OnHealthChanged(Data);
+	}
 }
 
 void UAutoChessAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, MaxHealth, OldMaxHealth);
+	
+	if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+	{
+		FOnAttributeChangeData Data;
+		Data.Attribute = GetMaxHealthAttribute();
+		Data.NewValue = MaxHealth.GetCurrentValue();
+		Data.OldValue = OldMaxHealth.GetCurrentValue();
+		Unit->OnMaxHealthChanged(Data);
+	}
 }
 
 void UAutoChessAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, Mana, OldMana);
+	
+	if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+	{
+		FOnAttributeChangeData Data;
+		Data.Attribute = GetManaAttribute();
+		Data.NewValue = Mana.GetCurrentValue();
+		Data.OldValue = OldMana.GetCurrentValue();
+		Unit->OnManaChanged(Data);
+	}
 }
 
 void UAutoChessAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, MaxMana, OldMaxMana);
+	
+	if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+	{
+		FOnAttributeChangeData Data;
+		Data.Attribute = GetMaxManaAttribute();
+		Data.NewValue = MaxMana.GetCurrentValue();
+		Data.OldValue = OldMaxMana.GetCurrentValue();
+		Unit->OnMaxManaChanged(Data);
+	}
 }
 
 void UAutoChessAttributeSet::OnRep_AttackDamage(const FGameplayAttributeData& OldAttackDamage)
@@ -142,6 +190,18 @@ void UAutoChessAttributeSet::OnRep_AttackDamage(const FGameplayAttributeData& Ol
 void UAutoChessAttributeSet::OnRep_Shield(const FGameplayAttributeData& OldShield)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, Shield, OldShield);
+	
+	// 直接更新 Widget（不要通过 OnHealthChanged，避免时序问题）
+	if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+	{
+		if (Unit->HealthBarWidgetComp)
+		{
+			if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(Unit->HealthBarWidgetComp->GetUserWidgetObject()))
+			{
+				UnitWidget->UpdateHealth(GetHealth(), GetMaxHealth(), GetShield());
+			}
+		}
+	}
 }
 
 void UAutoChessAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed)

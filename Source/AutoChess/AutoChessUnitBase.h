@@ -34,8 +34,18 @@ public:
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	// --- UI 组件 ---
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|UI")
+	class UWidgetComponent* HealthBarWidgetComp;
+
+	// --- 属性变化委托 ---
+	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void OnManaChanged(const FOnAttributeChangeData& Data);
+	virtual void OnMaxManaChanged(const FOnAttributeChangeData& Data);
+
 	// 队伍ID (0: 玩家1, 1: 玩家2)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	int32 TeamID;
 
 	// --- 数据配置 ---
@@ -110,21 +120,24 @@ public:
 	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
 
 	// 当前攻击目标
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
 	AAutoChessUnitBase* CurrentTarget;
 
 	// --- 格子移动相关 ---
 
 	// 当前格子坐标
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentGridPos, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	FIntPoint CurrentGridPos;
 
+	UFUNCTION()
+	void OnRep_CurrentGridPos();
+
 	// 目标格子坐标 (移动中)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	FIntPoint TargetGridPos;
 
 	// 是否正在移动
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	bool bIsMoving;
 
 	// 移动速度 (Unreal Units / sec)

@@ -68,16 +68,20 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 		UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Player already has this ability. Skipping GiveAbility."));
 	}
 
-	// 尝试激活 (通过 Class 激活，如果有多个只会激活一个，但现在我们保证了只有一个)
-	// 注意：如果技能是"被动"或"通过事件触发"，TryActivate 可能不适用，或者需要配合 HandleGameplayEvent
-	// bool bActivated = ASC->TryActivateAbilityByClass(CardAbilityClass, true);
-	// UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] TryActivateAbilityByClass result: %s"), bActivated ? TEXT("true") : TEXT("false"));
-	
-	// 发送事件 (如果技能是靠事件触发的)
-	// 注意：如果技能同时响应 Activate 和 Event，可能会触发两次。建议蓝图里只用一种方式。
-	// 改为纯事件驱动：只发送事件，让 Ability 通过 Trigger Tag 自动激活
-	ASC->HandleGameplayEvent(EventTag, &EventData);
-	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] HandleGameplayEvent called with Tag: %s"), *EventTag.ToString());
+	// 重新获取 Spec (因为 GiveAbility 可能刚添加)
+	FGameplayAbilitySpec* SpecToActivate = ASC->FindAbilitySpecFromClass(CardAbilityClass);
+	if (SpecToActivate)
+	{
+		// 使用 TriggerAbilityFromGameplayEvent 激活
+		// 注意：最后一个参数必须是引用 (*ASC)
+		int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
+		
+		UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] TriggerAbilityFromGameplayEvent called. Result Count: %d"), Count);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] Failed to find Ability Spec after GiveAbility!"));
+	}
 }
 
 // 纯数据类，暂无逻辑实现

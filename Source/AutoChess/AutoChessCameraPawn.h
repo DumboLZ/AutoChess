@@ -22,6 +22,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Camera")
 	void SetupCameraForPlayer(int32 PlayerIndex);
 
+	UPROPERTY(ReplicatedUsing = OnRep_TeamID)
+	int32 TeamID;
+
+	UFUNCTION()
+	void OnRep_TeamID();
+
 protected:
 	virtual void BeginPlay() override;
 };
