@@ -12,8 +12,12 @@ void EmptyLinkFunctionForGeneratedCodeAutoChessGameModeBase() {}
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGameModeBase();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGameModeBase_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
 AUTOCHESS_API UEnum* Z_Construct_UEnum_AutoChess_EAutoChessPhase();
+COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FIntPoint();
+ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_AGameModeBase();
+ENGINE_API UClass* Z_Construct_UClass_APlayerController_NoRegister();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
 
@@ -83,6 +87,70 @@ UEnum* Z_Construct_UEnum_AutoChess_EAutoChessPhase()
 	return Z_Registration_Info_UEnum_EAutoChessPhase.InnerSingleton;
 }
 // End Enum EAutoChessPhase
+
+// Begin Class AAutoChessGameModeBase Function BroadcastCardDisplay
+struct Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics
+{
+	struct AutoChessGameModeBase_eventBroadcastCardDisplay_Parms
+	{
+		UAutoChessCardBase* Card;
+		AActor* Target;
+		FIntPoint TargetGridPos;
+		APlayerController* Caster;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Cards" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\xb9\xbf\xe6\x92\xad\xe5\x8d\xa1\xe7\x89\x8c\xe5\xb1\x95\xe7\xa4\xba\xe5\x88\xb0\xe6\x89\x80\xe6\x9c\x89\xe5\xae\xa2\xe6\x88\xb7\xe7\xab\xaf\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\xb9\xbf\xe6\x92\xad\xe5\x8d\xa1\xe7\x89\x8c\xe5\xb1\x95\xe7\xa4\xba\xe5\x88\xb0\xe6\x89\x80\xe6\x9c\x89\xe5\xae\xa2\xe6\x88\xb7\xe7\xab\xaf" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Card;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_TargetGridPos;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Caster;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Card = { "Card", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventBroadcastCardDisplay_Parms, Card), Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Target = { "Target", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventBroadcastCardDisplay_Parms, Target), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_TargetGridPos = { "TargetGridPos", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventBroadcastCardDisplay_Parms, TargetGridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Caster = { "Caster", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventBroadcastCardDisplay_Parms, Caster), Z_Construct_UClass_APlayerController_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Card,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Target,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_TargetGridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::NewProp_Caster,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameModeBase, nullptr, "BroadcastCardDisplay", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::AutoChessGameModeBase_eventBroadcastCardDisplay_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::AutoChessGameModeBase_eventBroadcastCardDisplay_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameModeBase::execBroadcastCardDisplay)
+{
+	P_GET_OBJECT(UAutoChessCardBase,Z_Param_Card);
+	P_GET_OBJECT(AActor,Z_Param_Target);
+	P_GET_STRUCT(FIntPoint,Z_Param_TargetGridPos);
+	P_GET_OBJECT(APlayerController,Z_Param_Caster);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->BroadcastCardDisplay(Z_Param_Card,Z_Param_Target,Z_Param_TargetGridPos,Z_Param_Caster);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameModeBase Function BroadcastCardDisplay
 
 // Begin Class AAutoChessGameModeBase Function EndRound
 struct Z_Construct_UFunction_AAutoChessGameModeBase_EndRound_Statics
@@ -225,6 +293,7 @@ void AAutoChessGameModeBase::StaticRegisterNativesAAutoChessGameModeBase()
 {
 	UClass* Class = AAutoChessGameModeBase::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "BroadcastCardDisplay", &AAutoChessGameModeBase::execBroadcastCardDisplay },
 		{ "EndRound", &AAutoChessGameModeBase::execEndRound },
 		{ "StartBattle", &AAutoChessGameModeBase::execStartBattle },
 	};
@@ -310,6 +379,7 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
+		{ &Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay, "BroadcastCardDisplay" }, // 1740321225
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_EndRound, "EndRound" }, // 1549376020
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_OnPhaseChanged, "OnPhaseChanged" }, // 65630250
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_StartBattle, "StartBattle" }, // 3840037426
@@ -378,10 +448,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessPhase_StaticEnum, TEXT("EAutoChessPhase"), &Z_Registration_Info_UEnum_EAutoChessPhase, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 877316103U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 1916264124U) },
+		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 79632077U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_3551601298(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_1074733692(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo));

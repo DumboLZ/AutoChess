@@ -25,7 +25,8 @@ class AAutoChessUnitBase;
 	DECLARE_FUNCTION(execAttackTarget); \
 	DECLARE_FUNCTION(execCheckCanFight); \
 	DECLARE_FUNCTION(execOnRep_CurrentGridPos); \
-	DECLARE_FUNCTION(execInitFromUnitData);
+	DECLARE_FUNCTION(execInitFromUnitData); \
+	DECLARE_FUNCTION(execOnRep_TeamID);
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_CALLBACK_WRAPPERS

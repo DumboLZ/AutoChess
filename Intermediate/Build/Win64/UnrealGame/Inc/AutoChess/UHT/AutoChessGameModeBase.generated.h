@@ -9,6 +9,9 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class AActor;
+class APlayerController;
+class UAutoChessCardBase;
 enum class EAutoChessPhase : uint8;
 #ifdef AUTOCHESS_AutoChessGameModeBase_generated_h
 #error "AutoChessGameModeBase.generated.h already included, missing '#pragma once' in AutoChessGameModeBase.h"
@@ -16,6 +19,7 @@ enum class EAutoChessPhase : uint8;
 #define AUTOCHESS_AutoChessGameModeBase_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execBroadcastCardDisplay); \
 	DECLARE_FUNCTION(execEndRound); \
 	DECLARE_FUNCTION(execStartBattle);
 

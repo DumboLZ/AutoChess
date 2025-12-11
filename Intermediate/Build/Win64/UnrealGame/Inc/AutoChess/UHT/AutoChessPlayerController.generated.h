@@ -11,7 +11,9 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
 class AAutoChessUnitBase;
+class APlayerController;
 class UAutoChessCardBase;
+struct FCardDisplayData;
 #ifdef AUTOCHESS_AutoChessPlayerController_generated_h
 #error "AutoChessPlayerController.generated.h already included, missing '#pragma once' in AutoChessPlayerController.h"
 #endif
@@ -25,12 +27,26 @@ AUTOCHESS_API void FOnManaUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnHandUpdate, TArray<UAutoChessCardBase*> const& HandCards);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_20_GENERATED_BODY \
+	friend struct Z_Construct_UScriptStruct_FCardDisplayData_Statics; \
+	AUTOCHESS_API static class UScriptStruct* StaticStruct();
+
+
+template<> AUTOCHESS_API UScriptStruct* StaticStruct<struct FCardDisplayData>();
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_47_DELEGATE \
+AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelegate& OnCardDisplayed, FCardDisplayData const& CardData, APlayerController* Caster, AActor* Target, FIntPoint TargetGridPos);
+
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Server_MoveUnit_Implementation(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY); \
 	virtual void Server_PlayCard_Implementation(UAutoChessCardBase* Card, AActor* Target, int32 GridX, int32 GridY); \
 	virtual void Server_SellUnit_Implementation(AAutoChessUnitBase* Unit); \
 	virtual void Server_PlaceUnit_Implementation(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY); \
 	virtual void Server_BuyCard_Implementation(TSubclassOf<UAutoChessCardBase> CardClass); \
+	virtual void Server_BuyUnit_Implementation(TSubclassOf<AAutoChessUnitBase> UnitClass); \
+	virtual void Client_HideCardDisplay_Implementation(); \
+	virtual void Client_ShowCardDisplay_Implementation(FCardDisplayData const& CardData, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster, int32 AOERadius); \
 	DECLARE_FUNCTION(execJoinGame); \
 	DECLARE_FUNCTION(execHostGame); \
 	DECLARE_FUNCTION(execServer_MoveUnit); \
@@ -47,11 +63,14 @@ AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	DECLARE_FUNCTION(execGetCursorPosition); \
 	DECLARE_FUNCTION(execSellUnit); \
 	DECLARE_FUNCTION(execPlaceUnit); \
-	DECLARE_FUNCTION(execBuyCard);
+	DECLARE_FUNCTION(execBuyCard); \
+	DECLARE_FUNCTION(execServer_BuyUnit); \
+	DECLARE_FUNCTION(execClient_HideCardDisplay); \
+	DECLARE_FUNCTION(execClient_ShowCardDisplay);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessPlayerController(); \
 	friend struct Z_Construct_UClass_AAutoChessPlayerController_Statics; \
@@ -69,7 +88,7 @@ public: \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessPlayerController(AAutoChessPlayerController&&); \
@@ -81,14 +100,14 @@ public: \
 	NO_API virtual ~AAutoChessPlayerController();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_20_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_53_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_23_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

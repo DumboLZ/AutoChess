@@ -1225,11 +1225,33 @@ void AAutoChessPlayerController::Server_BuyUnit_Implementation(TSubclassOf<AAuto
 		NewUnit->CurrentGridPos = GridPos;
 		NewUnit->TeamID = TeamID;
 		
+		// 手动触发 OnRep（因为 Listen Server 不会自动触发 OnRep）
+		NewUnit->OnRep_TeamID();
+		
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] SPAWNED UNIT - Buyer's TeamID=%d, Unit's TeamID=%d, HasAuthority=%d"), 
+			TeamID, NewUnit->TeamID, HasAuthority());
+		
 		// 设置血条 Widget Class（关键！动态生成的单位需要手动设置）
 		if (NewUnit->HealthBarWidgetComp && NewUnit->HealthBarWidgetClass)
 		{
 			NewUnit->HealthBarWidgetComp->SetWidgetClass(NewUnit->HealthBarWidgetClass);
 			NewUnit->HealthBarWidgetComp->InitWidget();
+			
+			// 设置队伍颜色（服务器端需要延迟，等待 Widget 完全初始化）
+			// 客户端会通过 OnRep_TeamID 自动设置
+			FTimerHandle ColorTimer;
+			GetWorld()->GetTimerManager().SetTimerForNextTick([NewUnit, this]()
+			{
+				if (NewUnit && NewUnit->HealthBarWidgetComp)
+				{
+					if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(NewUnit->HealthBarWidgetComp->GetWidget()))
+					{
+						UnitWidget->SetTeamColor(NewUnit->TeamID);
+						UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] Team color set to %d (Server)"), NewUnit->TeamID);
+					}
+				}
+			});
+			
 			UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] Widget Class set for health bar"));
 		}
 		else if (NewUnit->HealthBarWidgetComp && !NewUnit->HealthBarWidgetClass)

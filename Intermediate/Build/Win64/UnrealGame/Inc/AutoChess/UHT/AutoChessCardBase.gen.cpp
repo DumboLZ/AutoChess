@@ -291,6 +291,16 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 		{ "ToolTip", "\xe4\xb8\xb4\xe6\x97\xb6\xe5\xad\x98\xe5\x82\xa8\xef\xbc\x9a\xe8\xa2\xab\xe9\xab\x98\xe4\xba\xae\xe7\x9a\x84\xe6\xa0\xbc\xe5\xad\x90\xe5\x88\x97\xe8\xa1\xa8 (\xe5\x8d\xb3\xe5\xb0\x86\xe7\x94\x9f\xe6\x95\x88\xe7\x9a\x84\xe8\x8c\x83\xe5\x9b\xb4)" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_LastTargetGridPos_MetaData[] = {
+		{ "Category", "Card Info" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe4\xb8\xb4\xe6\x97\xb6\xe5\xad\x98\xe5\x82\xa8\xef\xbc\x9a\xe6\x9c\x80\xe5\x90\x8e\xe4\xb8\x80\xe6\xac\xa1\xe6\x96\xbd\xe6\x94\xbe\xe7\x9a\x84\xe7\x9b\xae\xe6\xa0\x87\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\x94\xa8\xe4\xba\x8e AOE \xe6\x98\xbe\xe7\xa4\xba)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe4\xb8\xb4\xe6\x97\xb6\xe5\xad\x98\xe5\x82\xa8\xef\xbc\x9a\xe6\x9c\x80\xe5\x90\x8e\xe4\xb8\x80\xe6\xac\xa1\xe6\x96\xbd\xe6\x94\xbe\xe7\x9a\x84\xe7\x9b\xae\xe6\xa0\x87\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\x94\xa8\xe4\xba\x8e AOE \xe6\x98\xbe\xe7\xa4\xba)" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TriggerTag_MetaData[] = {
 		{ "Category", "Card Info" },
 #if !UE_BUILD_SHIPPING
@@ -299,6 +309,26 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 		{ "ModuleRelativePath", "AutoChessCardBase.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe8\xa7\xa6\xe5\x8f\x91\xe6\xa0\x87\xe7\xad\xbe (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8c\xba\xe5\x88\x86\xe4\xb8\x8d\xe5\x90\x8c\xe5\x8d\xa1\xe7\x89\x8c\xe7\x9a\x84\xe6\x8a\x80\xe8\x83\xbd\xe4\xba\x8b\xe4\xbb\xb6)\n\xe9\xbb\x98\xe8\xae\xa4\xe4\xb8\xba \"Card.Played\"\xef\xbc\x8c\xe5\xbb\xba\xe8\xae\xae\xe4\xb8\xba\xe6\xaf\x8f\xe5\xbc\xa0\xe5\x8d\xa1\xe8\xae\xbe\xe7\xbd\xae\xe5\x94\xaf\xe4\xb8\x80\xe7\x9a\x84 Tag\xef\xbc\x8c\xe4\xbe\x8b\xe5\xa6\x82 \"Card.Played.Fireball\"" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DisplayDuration_MetaData[] = {
+		{ "Category", "Card Display" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\xa1\xe7\x89\x8c\xe5\xb1\x95\xe7\xa4\xba\xe6\x97\xb6\xe9\x95\xbf\xef\xbc\x88\xe7\xa7\x92\xef\xbc\x89\n// \xe5\x9c\xa8\xe6\xbf\x80\xe6\xb4\xbb\xe6\x8a\x80\xe8\x83\xbd\xe5\x89\x8d\xef\xbc\x8c\xe5\xb1\x95\xe7\xa4\xba\xe7\xbb\x99\xe5\x8f\x8c\xe6\x96\xb9\xe7\x8e\xa9\xe5\xae\xb6\xe7\x9a\x84\xe6\x97\xb6\xe9\x97\xb4\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\xa1\xe7\x89\x8c\xe5\xb1\x95\xe7\xa4\xba\xe6\x97\xb6\xe9\x95\xbf\xef\xbc\x88\xe7\xa7\x92\xef\xbc\x89\n\xe5\x9c\xa8\xe6\xbf\x80\xe6\xb4\xbb\xe6\x8a\x80\xe8\x83\xbd\xe5\x89\x8d\xef\xbc\x8c\xe5\xb1\x95\xe7\xa4\xba\xe7\xbb\x99\xe5\x8f\x8c\xe6\x96\xb9\xe7\x8e\xa9\xe5\xae\xb6\xe7\x9a\x84\xe6\x97\xb6\xe9\x97\xb4" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bSkipDisplay_MetaData[] = {
+		{ "Category", "Card Display" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x98\xaf\xe5\x90\xa6\xe8\xb7\xb3\xe8\xbf\x87\xe5\xb1\x95\xe7\xa4\xba\xef\xbc\x88\xe7\x94\xa8\xe4\xba\x8e\xe5\xbf\xab\xe9\x80\x9f\xe6\x96\xbd\xe6\xb3\x95\xe6\x88\x96\xe8\xa2\xab\xe5\x8a\xa8\xe6\x95\x88\xe6\x9e\x9c\xef\xbc\x89\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x98\xaf\xe5\x90\xa6\xe8\xb7\xb3\xe8\xbf\x87\xe5\xb1\x95\xe7\xa4\xba\xef\xbc\x88\xe7\x94\xa8\xe4\xba\x8e\xe5\xbf\xab\xe9\x80\x9f\xe6\x96\xbd\xe6\xb3\x95\xe6\x88\x96\xe8\xa2\xab\xe5\x8a\xa8\xe6\x95\x88\xe6\x9e\x9c\xef\xbc\x89" },
 #endif
 	};
 #endif // WITH_METADATA
@@ -316,7 +346,11 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 	static const UECodeGen_Private::FIntPropertyParams NewProp_AOERadius;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_HighlightedTiles_Inner;
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_HighlightedTiles;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_LastTargetGridPos;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_TriggerTag;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_DisplayDuration;
+	static void NewProp_bSkipDisplay_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bSkipDisplay;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -345,7 +379,14 @@ const UECodeGen_Private::FEnumPropertyParams Z_Construct_UClass_UAutoChessCardBa
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_AOERadius = { "AOERadius", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, AOERadius), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AOERadius_MetaData), NewProp_AOERadius_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles_Inner = { "HighlightedTiles", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles = { "HighlightedTiles", nullptr, (EPropertyFlags)0x0010000000000014, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, HighlightedTiles), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HighlightedTiles_MetaData), NewProp_HighlightedTiles_MetaData) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_LastTargetGridPos = { "LastTargetGridPos", nullptr, (EPropertyFlags)0x0010000000000014, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, LastTargetGridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_LastTargetGridPos_MetaData), NewProp_LastTargetGridPos_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_TriggerTag = { "TriggerTag", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, TriggerTag), Z_Construct_UScriptStruct_FGameplayTag, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TriggerTag_MetaData), NewProp_TriggerTag_MetaData) }; // 1298103297
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_DisplayDuration = { "DisplayDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, DisplayDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DisplayDuration_MetaData), NewProp_DisplayDuration_MetaData) };
+void Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bSkipDisplay_SetBit(void* Obj)
+{
+	((UAutoChessCardBase*)Obj)->bSkipDisplay = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bSkipDisplay = { "bSkipDisplay", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(UAutoChessCardBase), &Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bSkipDisplay_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bSkipDisplay_MetaData), NewProp_bSkipDisplay_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChessCardBase_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_CardName,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_CardDescription,
@@ -360,7 +401,10 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_AOERadius,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles_Inner,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_LastTargetGridPos,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_TriggerTag,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_DisplayDuration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bSkipDisplay,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_UAutoChessCardBase_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_UAutoChessCardBase_Statics::DependentSingletons[])() = {
@@ -407,10 +451,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3184413060U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 2961306415U) },
+		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 2470936473U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1156131176(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_4051108522(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo));

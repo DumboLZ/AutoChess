@@ -49,8 +49,11 @@ public:
 	virtual void OnMaxManaChanged(const FOnAttributeChangeData& Data);
 
 	// 队伍ID (0: 玩家1, 1: 玩家2)
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
+	UPROPERTY(ReplicatedUsing = OnRep_TeamID, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	int32 TeamID;
+
+	UFUNCTION()
+	void OnRep_TeamID();
 
 	// --- 数据配置 ---
 	

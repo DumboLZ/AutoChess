@@ -812,3 +812,19 @@ void AAutoChessUnitBase::InitFromUnitData()
 		}
 	}
 }
+
+void AAutoChessUnitBase::OnRep_TeamID()
+{
+	UE_LOG(LogTemp, Error, TEXT("[OnRep_TeamID] Unit=%s, TeamID=%d, HasAuthority=%d"), 
+		*GetName(), TeamID, HasAuthority());
+	
+	// 当 TeamID 复制到客户端时，更新血条颜色
+	if (HealthBarWidgetComp)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetWidget()))
+		{
+			UnitWidget->SetTeamColor(TeamID);
+			UE_LOG(LogTemp, Log, TEXT("[OnRep_TeamID] Updated health bar color for Team %d"), TeamID);
+		}
+	}
+}

@@ -19,16 +19,26 @@ class AAutoChessUnitBase;
 static void FOnHealthUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnHealthUpdate, int32 NewHealth, int32 PlayerIndex);
 
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_27_DELEGATE \
+static void FOnPhaseChanged_DelegateWrapper(const FMulticastScriptDelegate& OnPhaseChanged, int32 NewPhaseIndex);
+
+
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
+	virtual void Multicast_HideSpellHighlight_Implementation(int32 TeamID); \
+	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
+	DECLARE_FUNCTION(execMulticast_HideSpellHighlight); \
+	DECLARE_FUNCTION(execMulticast_ShowSpellHighlight); \
 	DECLARE_FUNCTION(execGetUnitAtGrid); \
 	DECLARE_FUNCTION(execIsGridOccupied); \
 	DECLARE_FUNCTION(execGetUnitsByTeam); \
 	DECLARE_FUNCTION(execUnregisterUnit); \
 	DECLARE_FUNCTION(execRegisterUnit); \
+	DECLARE_FUNCTION(execOnRep_CurrentPhaseIndex); \
 	DECLARE_FUNCTION(execOnRep_Player2Health); \
 	DECLARE_FUNCTION(execOnRep_Player1Health);
 
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_CALLBACK_WRAPPERS
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessGameState(); \
@@ -69,6 +79,7 @@ public: \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
 	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_CALLBACK_WRAPPERS \
 	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_INCLASS_NO_PURE_DECLS \
 	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_ENHANCED_CONSTRUCTORS \
 private: \
