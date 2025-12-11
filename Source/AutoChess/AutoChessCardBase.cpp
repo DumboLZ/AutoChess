@@ -93,9 +93,20 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated! Result Count: %d"), Count);
 			
 			// 清除全局高亮
-			if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
+			if (AutoChessController && IsValid(AutoChessController))
 			{
-				GS->HideSpellHighlight();
+				if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
+				{
+					// 获取施法者的 TeamID
+					int32 TeamID = 0;
+					if (AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(AutoChessController))
+					{
+						TeamID = CasterPC->TeamID;
+					}
+					
+					// 使用多播清除对应队伍的高亮
+					GS->Multicast_HideSpellHighlight(TeamID);
+				}
 			}
 		};
 

@@ -1,9 +1,12 @@
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
+#include "AutoChessPlayerController.h"
+#include "AutoChessCardBase.h"
+#include "AutoChessUnitBase.h"
+#include "AutoChessGrid.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpectatorPawn.h"
 #include "AutoChessCameraPawn.h"
-#include "AutoChessPlayerController.h"
 #include "Engine/GameViewportClient.h"
 #include "GameMapsSettings.h"
 
@@ -224,6 +227,47 @@ void AAutoChessGameModeBase::BroadcastCardDisplay(UAutoChessCardBase* Card, AAct
 	FCardDisplayData CardData(Card);
 	int32 AOERadius = Card->AOERadius;
 
+	// --- 1. 处理全局高亮 (服务器端多播) ---
+	if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+	{
+		if (GS->GameGrid)
+		{
+			TArray<FIntPoint> HighlightPoints;
+			int32 CenterX = TargetGridPos.X;
+			int32 CenterY = TargetGridPos.Y;
+
+			// 如果目标是单位，使用单位的格子坐标
+			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Target))
+			{
+				CenterX = Unit->CurrentGridPos.X;
+				CenterY = Unit->CurrentGridPos.Y;
+			}
+
+			// 计算范围
+			for (int32 x = CenterX - AOERadius; x <= CenterX + AOERadius; x++)
+			{
+				for (int32 y = CenterY - AOERadius; y <= CenterY + AOERadius; y++)
+				{
+					if (GS->GameGrid->IsValidGridPosition(x, y))
+					{
+						HighlightPoints.Add(FIntPoint(x, y));
+					}
+				}
+			}
+
+			// 获取施法者队伍 ID
+			int32 TeamID = 0;
+			if (AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(Caster))
+			{
+				TeamID = CasterPC->TeamID;
+			}
+
+			// 调用多播显示高亮
+			GS->Multicast_ShowSpellHighlight(HighlightPoints, TeamID);
+		}
+	}
+
+	// --- 2. 广播 UI 展示 (客户端 RPC) ---
 	// 遍历所有 PlayerController 并通知
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{

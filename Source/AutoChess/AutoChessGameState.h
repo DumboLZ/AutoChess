@@ -102,17 +102,21 @@ public:
 
 	// --- 全局法术高亮系统 ---
 	
-	// 全局法术高亮 Actor（所有人可见）
-	UPROPERTY(Replicated)
-	class AAutoChessHighlightActor* SpellHighlightActor;
+	// 法术高亮 Actor - 队伍 0
+	UPROPERTY()
+	class AAutoChessHighlightActor* SpellHighlightActor_Team0;
 
-	// 显示法术高亮
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Spell")
-	void ShowSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID);
+	// 法术高亮 Actor - 队伍 1
+	UPROPERTY()
+	class AAutoChessHighlightActor* SpellHighlightActor_Team1;
 
-	// 隐藏法术高亮
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Spell")
-	void HideSpellHighlight();
+	// 显示法术高亮 (多播)
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "AutoChess|Spell")
+	void Multicast_ShowSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID);
+
+	// 隐藏法术高亮 (多播)
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "AutoChess|Spell")
+	void Multicast_HideSpellHighlight(int32 TeamID);
 
 
 protected:

@@ -1134,42 +1134,8 @@ void AAutoChessPlayerController::Client_ShowCardDisplay_Implementation(const FCa
 	// 1. 广播 UI 事件（使用传入的 Caster，而不是 this）
 	OnCardDisplayed.Broadcast(CardData, Caster, Target, TargetGridPos);
 
-	// 2. 计算并显示高亮 (AOE)
-	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
-	if (GS && GS->GameGrid)
-	{
-		TArray<FIntPoint> HighlightPoints;
-		int32 Radius = AOERadius;
-		int32 CenterX = TargetGridPos.X;
-		int32 CenterY = TargetGridPos.Y;
-
-		// 如果目标是单位，使用单位的格子坐标
-		if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Target))
-		{
-			CenterX = Unit->CurrentGridPos.X;
-			CenterY = Unit->CurrentGridPos.Y;
-		}
-
-		// 计算范围
-		for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
-		{
-			for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
-			{
-				if (GS->GameGrid->IsValidGridPosition(x, y))
-				{
-					HighlightPoints.Add(FIntPoint(x, y));
-				}
-			}
-		}
-
-		// 使用全局高亮（所有人可见），而不是本地高亮
-		if (Caster)
-		{
-			AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(Caster);
-			int32 CasterTeamID = CasterPC ? CasterPC->TeamID : 0;
-			GS->ShowSpellHighlight(HighlightPoints, CasterTeamID);
-		}
-	}
+	// 2. 高亮逻辑已移至 GameMode::BroadcastCardDisplay 统一处理 (Server Multicast)
+	// 这里只需要处理 UI
 }
 
 void AAutoChessPlayerController::Client_HideCardDisplay_Implementation()

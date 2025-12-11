@@ -6,6 +6,7 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
 
 AAutoChessGameState::AAutoChessGameState()
 {
@@ -38,7 +39,6 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
-	DOREPLIFETIME(AAutoChessGameState, SpellHighlightActor);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)
@@ -138,68 +138,88 @@ AAutoChessUnitBase* AAutoChessGameState::GetUnitAtGrid(int32 GridX, int32 GridY)
 	return nullptr;
 }
 
-void AAutoChessGameState::ShowSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID)
+void AAutoChessGameState::Multicast_ShowSpellHighlight_Implementation(const TArray<FIntPoint>& GridPositions, int32 TeamID)
 {
-	UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] CALLED! GridPositions=%d, TeamID=%d, HasAuthority=%d"), 
+	UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] CALLED! GridPositions=%d, TeamID=%d, IsServer=%d"), 
 		GridPositions.Num(), TeamID, HasAuthority());
 	
 	if (!GameGrid) 
 	{
-		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] GameGrid is NULL!"));
-		return;
+		// 尝试获取 Grid (客户端可能还没同步到)
+		TArray<AActor*> FoundGrids;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAutoChessGrid::StaticClass(), FoundGrids);
+		if (FoundGrids.Num() > 0)
+		{
+			GameGrid = Cast<AAutoChessGrid>(FoundGrids[0]);
+		}
+		
+		if (!GameGrid)
+		{
+			UE_LOG(LogTemp, Error, TEXT("[GameState::Multicast_ShowSpellHighlight] GameGrid is NULL!"));
+			return;
+		}
 	}
 
-	// 创建全局高亮 Actor（如果还没有）
-	if (!SpellHighlightActor)
+	// 根据 TeamID 选择对应的 HighlightActor
+	AAutoChessHighlightActor*& TargetHighlightActor = (TeamID == 0) ? SpellHighlightActor_Team0 : SpellHighlightActor_Team1;
+
+	// 创建队伍专属的高亮 Actor（如果还没有）
+	if (!TargetHighlightActor)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Creating new SpellHighlightActor..."));
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] Creating SpellHighlightActor for Team %d..."), TeamID);
 		FActorSpawnParameters SpawnParams;
-		SpellHighlightActor = GetWorld()->SpawnActor<AAutoChessHighlightActor>(AAutoChessHighlightActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		TargetHighlightActor = GetWorld()->SpawnActor<AAutoChessHighlightActor>(AAutoChessHighlightActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		
-		if (SpellHighlightActor)
+		if (TargetHighlightActor)
 		{
-			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] SpellHighlightActor created successfully!"));
+			UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] SpellHighlightActor for Team %d created successfully!"), TeamID);
 			// 初始化视觉（使用 Grid 的mesh）
-			SpellHighlightActor->InitVisuals(GameGrid->TileMesh, nullptr);
+			TargetHighlightActor->InitVisuals(GameGrid->TileMesh, nullptr);
+			
+			// 关键修复：全局高亮必须所有人可见
+			if (TargetHighlightActor->HighlightISM)
+			{
+				TargetHighlightActor->HighlightISM->bOnlyOwnerSee = false;
+				TargetHighlightActor->HighlightISM->MarkRenderStateDirty(); // 强制刷新渲染状态
+			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] FAILED to create SpellHighlightActor!"));
+			UE_LOG(LogTemp, Error, TEXT("[GameState::Multicast_ShowSpellHighlight] FAILED to create SpellHighlightActor for Team %d!"), TeamID);
 		}
 	}
 
-	if (!SpellHighlightActor) return;
+	if (!TargetHighlightActor) return;
 
-	// 创建动态材质实例，根据 TeamID 设置颜色
-	UMaterialInstanceDynamic* DynamicMat = UMaterialInstanceDynamic::Create(GameGrid->MaterialHighlight, this);
-	if (DynamicMat)
+	// 选择对应队伍的材质
+	UMaterialInterface* SelectedMaterial = (TeamID == 0) ? GameGrid->MaterialSpellHighlight_Team0 : GameGrid->MaterialSpellHighlight_Team1;
+	
+	if (SelectedMaterial && TargetHighlightActor->HighlightISM)
 	{
-		// 设置颜色：TeamID 0 = 蓝色，TeamID 1 = 绿色
-		FLinearColor HighlightColor = (TeamID == 0) ? FLinearColor::Blue : FLinearColor::Green;
-		DynamicMat->SetVectorParameterValue(FName("Color"), HighlightColor);
-		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Set material color to %s"), 
-			TeamID == 0 ? TEXT("BLUE") : TEXT("GREEN"));
-		
-		// 应用材质到高亮 Actor
-		if (SpellHighlightActor->HighlightISM)
-		{
-			SpellHighlightActor->HighlightISM->SetMaterial(0, DynamicMat);
-			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Material applied to HighlightISM"));
-		}
+		TargetHighlightActor->HighlightISM->SetMaterial(0, SelectedMaterial);
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] Applied Team %d material"), TeamID);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[GameState::Multicast_ShowSpellHighlight] Material is NULL for Team %d! Please configure MaterialSpellHighlight_Team%d in Grid BP"), 
+			TeamID, TeamID);
 	}
 
 	// 更新高亮位置
-	SpellHighlightActor->UpdateHighlights(GameGrid, GridPositions);
+	TargetHighlightActor->UpdateHighlights(GameGrid, GridPositions);
 	
-	UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Highlight updated! NumInstances=%d"), 
-		SpellHighlightActor->HighlightISM ? SpellHighlightActor->HighlightISM->GetInstanceCount() : -1);
+	UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] Team %d highlight updated! NumInstances=%d"), 
+		TeamID, TargetHighlightActor->HighlightISM ? TargetHighlightActor->HighlightISM->GetInstanceCount() : -1);
 }
 
-void AAutoChessGameState::HideSpellHighlight()
+void AAutoChessGameState::Multicast_HideSpellHighlight_Implementation(int32 TeamID)
 {
-	if (SpellHighlightActor && SpellHighlightActor->HighlightISM)
+	// 根据 TeamID 选择对应的 HighlightActor
+	AAutoChessHighlightActor* TargetHighlightActor = (TeamID == 0) ? SpellHighlightActor_Team0 : SpellHighlightActor_Team1;
+	
+	if (TargetHighlightActor && TargetHighlightActor->HighlightISM)
 	{
-		SpellHighlightActor->HighlightISM->ClearInstances();
-		UE_LOG(LogTemp, Warning, TEXT("[GameState::HideSpellHighlight] Cleared spell highlight"));
+		TargetHighlightActor->HighlightISM->ClearInstances();
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_HideSpellHighlight] Cleared Team %d spell highlight"), TeamID);
 	}
 }

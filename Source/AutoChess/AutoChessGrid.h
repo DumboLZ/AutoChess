@@ -82,6 +82,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Visuals")
 	UMaterialInterface* MaterialHighlight;
 
+	// 法术高亮材质 - 队伍 0（蓝色）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Visuals")
+	UMaterialInterface* MaterialSpellHighlight_Team0;
+
+	// 法术高亮材质 - 队伍 1（绿色）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Visuals")
+	UMaterialInterface* MaterialSpellHighlight_Team1;
+
 	// 生成棋盘模型
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "AutoChess|Grid")
 	void GenerateGrid();
