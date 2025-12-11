@@ -87,3 +87,10 @@ void AAutoChessHighlightActor::UpdateHighlights(AAutoChessGrid* Grid, const TArr
 		}
 	}
 }
+void AAutoChessHighlightActor::ClearHighlights()
+{
+	if (HighlightISM)
+	{
+		HighlightISM->ClearInstances();
+	}
+}

@@ -964,6 +964,9 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
 		if (Mana >= Card->Cost)
 		{
+			// 设置 LastTargetGridPos，供 OnPlayed 中的展示逻辑使用
+			Card->LastTargetGridPos = TargetGridPos;
+
 			// **先触发效果**（GA可以读到完整的法力值）
 			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
 			Card->OnPlayed(this, Target);
@@ -1103,5 +1106,62 @@ void AAutoChessPlayerController::JoinGame(const FString& Address)
 	
 	// 客户端连接到指定地址
 	ClientTravel(Address, TRAVEL_Absolute);
+}
+
+// --- 客户端展示 RPC 实现 ---
+
+void AAutoChessPlayerController::Client_ShowCardDisplay_Implementation(const FCardDisplayData& CardData, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster, int32 AOERadius)
+{
+	UE_LOG(LogTemp, Error, TEXT("[Client_ShowCardDisplay_Implementation] CALLED! CardName=%s, Caster=%s, IsLocalController=%d"), 
+		*CardData.CardName.ToString(), 
+		Caster ? *Caster->GetName() : TEXT("NULL"),
+		IsLocalController());
+
+	// 1. 广播 UI 事件（使用传入的 Caster，而不是 this）
+	OnCardDisplayed.Broadcast(CardData, Caster, Target, TargetGridPos);
+
+	// 2. 计算并显示高亮 (AOE)
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (GS && GS->GameGrid)
+	{
+		TArray<FIntPoint> HighlightPoints;
+		int32 Radius = AOERadius;
+		int32 CenterX = TargetGridPos.X;
+		int32 CenterY = TargetGridPos.Y;
+
+		// 如果目标是单位，使用单位的格子坐标
+		if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Target))
+		{
+			CenterX = Unit->CurrentGridPos.X;
+			CenterY = Unit->CurrentGridPos.Y;
+		}
+
+		// 计算范围
+		for (int32 x = CenterX - Radius; x <= CenterX + Radius; x++)
+		{
+			for (int32 y = CenterY - Radius; y <= CenterY + Radius; y++)
+			{
+				if (GS->GameGrid->IsValidGridPosition(x, y))
+				{
+					HighlightPoints.Add(FIntPoint(x, y));
+				}
+			}
+		}
+
+		// 更新高亮
+		if (HighlightActor)
+		{
+			HighlightActor->UpdateHighlights(GS->GameGrid, HighlightPoints);
+		}
+	}
+}
+
+void AAutoChessPlayerController::Client_HideCardDisplay_Implementation()
+{
+	// 清除高亮
+	if (HighlightActor)
+	{
+		HighlightActor->ClearHighlights();
+	}
 }
 

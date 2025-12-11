@@ -1,5 +1,6 @@
 #include "AutoChessCardBase.h"
 #include "AutoChessPlayerController.h"
+#include "AutoChessGameModeBase.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
@@ -69,14 +70,40 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 	}
 
 	// 重新获取 Spec (因为 GiveAbility 可能刚添加)
+	// 重新获取 Spec (因为 GiveAbility 可能刚添加)
 	FGameplayAbilitySpec* SpecToActivate = ASC->FindAbilitySpecFromClass(CardAbilityClass);
 	if (SpecToActivate)
 	{
-		// 使用 TriggerAbilityFromGameplayEvent 激活
-		// 注意：最后一个参数必须是引用 (*ASC)
-		int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
-		
-		UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] TriggerAbilityFromGameplayEvent called. Result Count: %d"), Count);
+		// 广播卡牌展示事件到所有客户端
+		if (AutoChessController)
+		{
+			// 通过 GameMode 广播到所有玩家
+			if (AAutoChessGameModeBase* GameMode = Cast<AAutoChessGameModeBase>(AutoChessController->GetWorld()->GetAuthGameMode()))
+			{
+				GameMode->BroadcastCardDisplay(this, Target, LastTargetGridPos, Controller);
+			}
+		}
+
+		// 定义激活逻辑 Lambda
+		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData]() mutable
+		{
+			// 注意：最后一个参数必须是引用 (*ASC)
+			int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
+			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated! Result Count: %d"), Count);
+		};
+
+		if (bSkipDisplay || DisplayDuration <= 0.0f)
+		{
+			// 立即激活
+			ActivateAbilityLambda();
+		}
+		else
+		{
+			// 延迟激活
+			FTimerHandle TimerHandle;
+			Controller->GetWorldTimerManager().SetTimer(TimerHandle, ActivateAbilityLambda, DisplayDuration, false);
+			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability activation delayed by %.2f seconds."), DisplayDuration);
+		}
 	}
 	else
 	{

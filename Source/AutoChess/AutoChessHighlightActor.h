@@ -29,6 +29,9 @@ public:
 	// 更新高亮
 	void UpdateHighlights(AAutoChessGrid* Grid, const TArray<FIntPoint>& GridPositions);
 
+	// 清除高亮
+	void ClearHighlights();
+
 protected:
 	virtual void BeginPlay() override;
 

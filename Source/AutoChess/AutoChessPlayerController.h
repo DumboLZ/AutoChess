@@ -13,6 +13,37 @@ class UAutoChessCardBase;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnManaUpdate, float, CurrentMana, float, MaxMana);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHandUpdate, const TArray<UAutoChessCardBase*>&, HandCards);
 
+// 卡牌展示数据（用于 RPC 传输）
+USTRUCT(BlueprintType)
+struct FCardDisplayData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	FText CardName;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTexture2D* Icon = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	float DisplayDuration = 2.0f;
+
+	FCardDisplayData() {}
+	
+	FCardDisplayData(UAutoChessCardBase* Card)
+	{
+		if (Card)
+		{
+			CardName = Card->CardName;
+			Icon = Card->Icon;
+			DisplayDuration = Card->DisplayDuration;
+		}
+	}
+};
+
+// 卡牌展示事件委托
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnCardDisplayed, const FCardDisplayData&, CardData, APlayerController*, Caster, AActor*, Target, FIntPoint, TargetGridPos);
+
 /**
  * 自动走棋玩家控制器
  * 处理玩家输入、卡牌购买、单位放置
@@ -24,6 +55,16 @@ class AUTOCHESS_API AAutoChessPlayerController : public APlayerController, publi
 	
 public:
 	AAutoChessPlayerController();
+
+	// --- 客户端展示 RPC ---
+	
+	// 客户端显示卡牌展示效果 (高亮格子 + UI)
+	UFUNCTION(Client, Reliable)
+	void Client_ShowCardDisplay(const FCardDisplayData& CardData, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster, int32 AOERadius);
+
+	// 客户端隐藏卡牌展示效果
+	UFUNCTION(Client, Reliable)
+	void Client_HideCardDisplay();
 
 	// --- GAS 组件 ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
@@ -216,6 +257,10 @@ public:
 	// 手牌更新事件
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnHandUpdate OnHandUpdated;
+
+	// 卡牌展示事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnCardDisplayed OnCardDisplayed;
 
 	// --- 联机功能 (控制台命令) ---
 	

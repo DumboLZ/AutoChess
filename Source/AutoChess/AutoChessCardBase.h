@@ -72,10 +72,25 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Card Info")
 	TArray<FIntPoint> HighlightedTiles;
 
+	// 临时存储：最后一次施放的目标格子坐标 (用于 AOE 显示)
+	UPROPERTY(BlueprintReadOnly, Category = "Card Info")
+	FIntPoint LastTargetGridPos;
+
 	// 触发标签 (用于区分不同卡牌的技能事件)
 	// 默认为 "Card.Played"，建议为每张卡设置唯一的 Tag，例如 "Card.Played.Fireball"
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FGameplayTag TriggerTag;
+
+	// --- 卡牌展示设置 ---
+
+	// 卡牌展示时长（秒）
+	// 在激活技能前，展示给双方玩家的时间
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Display")
+	float DisplayDuration = 2.0f;
+
+	// 是否跳过展示（用于快速施法或被动效果）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Display")
+	bool bSkipDisplay = false;
 
 	// --- 卡牌效果 ---
 

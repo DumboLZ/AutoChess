@@ -57,6 +57,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|GameFlow")
 	void OnPhaseChanged(EAutoChessPhase NewPhase);
 
+	// 广播卡牌展示到所有客户端
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Cards")
+	void BroadcastCardDisplay(class UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

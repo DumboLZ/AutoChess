@@ -213,3 +213,38 @@ void AAutoChessGameModeBase::EndRound(int32 WinnerTeamID)
 
 	// TODO: 可以在这里广播事件给 UI 显示胜利/失败画面
 }
+
+void AAutoChessGameModeBase::BroadcastCardDisplay(UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster)
+{
+	if (!Card) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode::BroadcastCardDisplay] Broadcasting card display to all players"));
+
+	// 创建卡牌数据结构（可以通过 RPC 传输）
+	FCardDisplayData CardData(Card);
+	int32 AOERadius = Card->AOERadius;
+
+	// 遍历所有 PlayerController 并通知
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		if (AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[GameMode::BroadcastCardDisplay] Notifying PC: %s, IsLocalController: %d"), 
+				*PC->GetName(), PC->IsLocalController());
+			
+			// 对于本地 PlayerController（监听服务器），直接调用实现函数
+			// 对于远程客户端，调用 Client RPC
+			if (PC->IsLocalController())
+			{
+				// 服务器本地，直接调用实现
+				PC->Client_ShowCardDisplay_Implementation(CardData, Target, TargetGridPos, Caster, AOERadius);
+			}
+			else
+			{
+				// 远程客户端，调用 RPC
+				PC->Client_ShowCardDisplay(CardData, Target, TargetGridPos, Caster, AOERadius);
+			}
+		}
+	}
+}
+
