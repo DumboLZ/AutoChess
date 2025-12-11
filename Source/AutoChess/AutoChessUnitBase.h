@@ -38,6 +38,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|UI")
 	class UWidgetComponent* HealthBarWidgetComp;
 
+	// 血条 Widget 类（在蓝图中设置）
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|UI")
+	TSubclassOf<class UUserWidget> HealthBarWidgetClass;
+
 	// --- 属性变化委托 ---
 	virtual void OnHealthChanged(const FOnAttributeChangeData& Data);
 	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& Data);

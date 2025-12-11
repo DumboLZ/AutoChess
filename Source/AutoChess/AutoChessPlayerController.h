@@ -68,6 +68,12 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_HideCardDisplay();
 
+	// --- 购买单位 Server RPC ---
+	
+	// 服务器端购买并生成单位（自动在己方空位生成）
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Shop")
+	void Server_BuyUnit(TSubclassOf<class AAutoChessUnitBase> UnitClass);
+
 	// --- GAS 组件 ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
 	class UAbilitySystemComponent* AbilitySystemComponent;

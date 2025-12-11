@@ -16,6 +16,21 @@ AAutoChessGameState::AAutoChessGameState()
 	Player2Gold = 0;
 }
 
+void AAutoChessGameState::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	// 延迟一帧后触发初始阶段事件，确保客户端已连接
+	FTimerHandle InitialPhaseTimer;
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	{
+		// 触发当前阶段事件（无论是否有变化）
+		OnRep_CurrentPhaseIndex();
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::BeginPlay] Initial phase event triggered. Phase=%d, Authority=%d"), 
+			CurrentPhaseIndex, HasAuthority());
+	});
+}
+
 void AAutoChessGameState::OnRep_Player1Health()
 {
 	OnHealthUpdated.Broadcast(Player1Health, 0);
@@ -28,6 +43,9 @@ void AAutoChessGameState::OnRep_Player2Health()
 
 void AAutoChessGameState::OnRep_CurrentPhaseIndex()
 {
+	UE_LOG(LogTemp, Error, TEXT("[GameState::OnRep_CurrentPhaseIndex] Called! PhaseIndex=%d, HasAuthority=%d"), 
+		CurrentPhaseIndex, HasAuthority());
+	
 	// 广播通用阶段变化事件
 	OnPhaseChanged.Broadcast(CurrentPhaseIndex);
 	
@@ -35,12 +53,12 @@ void AAutoChessGameState::OnRep_CurrentPhaseIndex()
 	if (CurrentPhaseIndex == 0)
 	{
 		OnPreparationPhaseStarted.Broadcast(CurrentPhaseIndex);
-		UE_LOG(LogTemp, Warning, TEXT("[GameState] Preparation Phase Started"));
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Preparation Phase Started (Authority=%d)"), HasAuthority());
 	}
 	else if (CurrentPhaseIndex == 1)
 	{
 		OnCombatPhaseStarted.Broadcast(CurrentPhaseIndex);
-		UE_LOG(LogTemp, Warning, TEXT("[GameState] Combat Phase Started"));
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Combat Phase Started (Authority=%d)"), HasAuthority());
 	}
 }
 

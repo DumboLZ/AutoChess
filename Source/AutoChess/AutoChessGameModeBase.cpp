@@ -189,6 +189,9 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 		GS->CurrentPhaseIndex = (uint8)CurrentPhase;
 		GS->CurrentRound = CurrentRound;
 		GS->PhaseTimer = PhaseTimer;
+		
+		// 手动触发阶段变化事件（服务器端不会自动触发 OnRep）
+		GS->OnRep_CurrentPhaseIndex();
 	}
 
 	// 通知蓝图

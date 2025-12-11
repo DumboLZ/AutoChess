@@ -11,6 +11,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h" 
 #include "AutoChessHighlightActor.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 
@@ -1144,6 +1145,130 @@ void AAutoChessPlayerController::Client_HideCardDisplay_Implementation()
 	if (HighlightActor)
 	{
 		HighlightActor->ClearHighlights();
+	}
+}
+
+void AAutoChessPlayerController::Server_BuyUnit_Implementation(TSubclassOf<AAutoChessUnitBase> UnitClass)
+{
+	if (!UnitClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] UnitClass is NULL!"));
+		return;
+	}
+
+	// 获取 GameState
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS || !GS->GameGrid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] GameState or Grid is NULL!"));
+		return;
+	}
+
+	// 确定己方半边棋盘的 Y 范围
+	int32 GridWidth = GS->GameGrid->GridWidth;
+	int32 GridHeight = GS->GameGrid->GridHeight;
+	int32 HalfHeight = GridHeight / 2;
+	
+	int32 YMin, YMax;
+	if (TeamID == 0)
+	{
+		// Team0 在下半边 (Y = 0 to HalfHeight-1)
+		YMin = 0;
+		YMax = HalfHeight - 1;
+	}
+	else // TeamID == 1
+	{
+		// Team1 在上半边 (Y = HalfHeight to GridHeight-1)
+		YMin = HalfHeight;
+		YMax = GridHeight - 1;
+	}
+
+	// 收集所有己方半边的空位
+	TArray<FIntPoint> EmptyPositions;
+	for (int32 x = 0; x < GridWidth; x++)
+	{
+		for (int32 y = YMin; y <= YMax; y++)
+		{
+			if (GS->GetUnitAtGrid(x, y) == nullptr)
+			{
+				EmptyPositions.Add(FIntPoint(x, y));
+			}
+		}
+	}
+
+	// 检查是否有空位
+	if (EmptyPositions.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] No empty positions available in Team %d territory!"), TeamID);
+		return;
+	}
+
+	// 随机选择一个空位
+	int32 RandomIndex = FMath::RandRange(0, EmptyPositions.Num() - 1);
+	FIntPoint GridPos = EmptyPositions[RandomIndex];
+
+	// 计算生成位置（添加 Z 轴偏移，避免单位陷入地面）
+	FVector UnitSpawnLocation = GS->GameGrid->GridToWorld(GridPos.X, GridPos.Y);
+	UnitSpawnLocation.Z += 100.0f; // 向上偏移 100 单位（根据您的单位大小调整）
+	FRotator SpawnRotation = FRotator::ZeroRotator;
+
+	// 生成单位
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(UnitClass, UnitSpawnLocation, SpawnRotation, SpawnParams);
+	
+	if (NewUnit)
+	{
+		// 设置单位的格子坐标
+		NewUnit->CurrentGridPos = GridPos;
+		NewUnit->TeamID = TeamID;
+		
+		// 设置血条 Widget Class（关键！动态生成的单位需要手动设置）
+		if (NewUnit->HealthBarWidgetComp && NewUnit->HealthBarWidgetClass)
+		{
+			NewUnit->HealthBarWidgetComp->SetWidgetClass(NewUnit->HealthBarWidgetClass);
+			NewUnit->HealthBarWidgetComp->InitWidget();
+			UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] Widget Class set for health bar"));
+		}
+		else if (NewUnit->HealthBarWidgetComp && !NewUnit->HealthBarWidgetClass)
+		{
+			UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] HealthBarWidgetClass is not set in unit blueprint! Please set it in Class Defaults."));
+		}
+		
+		// 初始化 GAS（关键！动态生成的单位需要手动初始化）
+		if (NewUnit->AbilitySystemComponent && NewUnit->AttributeSet)
+		{
+			NewUnit->AbilitySystemComponent->InitStats(UAutoChessAttributeSet::StaticClass(), nullptr);
+			
+			// 手动触发血条更新（确保血条显示正确的初始值）
+			if (NewUnit->HealthBarWidgetComp)
+			{
+				// 延迟一帧确保 Widget 完全初始化
+				FTimerHandle WidgetInitTimer;
+				GetWorld()->GetTimerManager().SetTimerForNextTick([NewUnit]()
+				{
+					if (NewUnit && NewUnit->AttributeSet)
+					{
+						// 触发一次属性变化，刷新血条
+						NewUnit->OnHealthChanged(FOnAttributeChangeData());
+					}
+				});
+			}
+			
+			UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] GAS initialized for new unit"));
+		}
+		
+		// 注册到 GameState
+		GS->RegisterUnit(NewUnit);
+		
+		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Unit spawned at random position (%d, %d) for Team %d"), 
+			GridPos.X, GridPos.Y, TeamID);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] Failed to spawn unit!"));
 	}
 }
 
