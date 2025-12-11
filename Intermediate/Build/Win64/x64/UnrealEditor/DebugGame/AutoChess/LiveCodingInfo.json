@@ -22,9 +22,9 @@
 			"AutoChess.cpp.obj",
 			"AutoChessAttributeSet.cpp.obj",
 			"AutoChessCameraPawn.cpp.obj",
-			"AutoChessCardBase.cpp.obj",
 			"AutoChessGameModeBase.cpp.obj",
 			"AutoChessGameplayAbility.cpp.obj",
+			"AutoChessGameState.cpp.obj",
 			"AutoChessGhost.cpp.obj",
 			"AutoChessGrid.cpp.obj",
 			"AutoChessHighlightActor.cpp.obj",
@@ -34,7 +34,7 @@
 			"AutoChessUnitBase.cpp.obj",
 			"AutoChessUnitWidget.cpp.obj",
 			"MainMenuPlayerController.cpp.obj",
-			"AutoChessGameState.cpp.obj"
+			"AutoChessCardBase.cpp.obj"
 		]
 	}
 }

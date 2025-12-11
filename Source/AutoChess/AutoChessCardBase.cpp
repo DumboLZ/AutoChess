@@ -88,6 +88,19 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 		// 定义激活逻辑 Lambda
 		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData, AutoChessController]() mutable
 		{
+			// 安全检查：延迟执行时对象可能已失效
+			if (!ASC || !IsValid(ASC))
+			{
+				UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] ASC is invalid at delayed activation!"));
+				return;
+			}
+			
+			if (!SpecToActivate)
+			{
+				UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] SpecToActivate is invalid at delayed activation!"));
+				return;
+			}
+			
 			// 注意：最后一个参数必须是引用 (*ASC)
 			int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
 			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated! Result Count: %d"), Count);
@@ -95,17 +108,20 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 			// 清除全局高亮
 			if (AutoChessController && IsValid(AutoChessController))
 			{
-				if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
+				if (UWorld* World = AutoChessController->GetWorld())
 				{
-					// 获取施法者的 TeamID
-					int32 TeamID = 0;
-					if (AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(AutoChessController))
+					if (AAutoChessGameState* GS = World->GetGameState<AAutoChessGameState>())
 					{
-						TeamID = CasterPC->TeamID;
+						// 获取施法者的 TeamID
+						int32 TeamID = 0;
+						if (AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(AutoChessController))
+						{
+							TeamID = CasterPC->TeamID;
+						}
+						
+						// 使用多播清除对应队伍的高亮
+						GS->Multicast_HideSpellHighlight(TeamID);
 					}
-					
-					// 使用多播清除对应队伍的高亮
-					GS->Multicast_HideSpellHighlight(TeamID);
 				}
 			}
 		};
