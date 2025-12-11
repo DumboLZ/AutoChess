@@ -1,6 +1,7 @@
 #include "AutoChessCardBase.h"
 #include "AutoChessPlayerController.h"
 #include "AutoChessGameModeBase.h"
+#include "AutoChessGameState.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
@@ -85,11 +86,17 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 		}
 
 		// 定义激活逻辑 Lambda
-		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData]() mutable
+		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData, AutoChessController]() mutable
 		{
 			// 注意：最后一个参数必须是引用 (*ASC)
 			int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
 			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated! Result Count: %d"), Count);
+			
+			// 清除全局高亮
+			if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
+			{
+				GS->HideSpellHighlight();
+			}
 		};
 
 		if (bSkipDisplay || DisplayDuration <= 0.0f)

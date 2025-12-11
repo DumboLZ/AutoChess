@@ -23,6 +23,15 @@ struct FCardDisplayData
 	FText CardName;
 
 	UPROPERTY(BlueprintReadOnly)
+	FText CardDescription;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 Cost = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bConsumeAllMana = false;
+
+	UPROPERTY(BlueprintReadOnly)
 	UTexture2D* Icon = nullptr;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -30,15 +39,8 @@ struct FCardDisplayData
 
 	FCardDisplayData() {}
 	
-	FCardDisplayData(UAutoChessCardBase* Card)
-	{
-		if (Card)
-		{
-			CardName = Card->CardName;
-			Icon = Card->Icon;
-			DisplayDuration = Card->DisplayDuration;
-		}
-	}
+	// 构造函数声明（实现在 .cpp 中）
+	FCardDisplayData(class UAutoChessCardBase* Card);
 };
 
 // 卡牌展示事件委托

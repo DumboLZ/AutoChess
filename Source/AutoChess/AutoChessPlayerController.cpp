@@ -14,6 +14,20 @@
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 
+// FCardDisplayData 构造函数实现
+FCardDisplayData::FCardDisplayData(UAutoChessCardBase* Card)
+{
+	if (Card)
+	{
+		CardName = Card->CardName;
+		CardDescription = Card->CardDescription;
+		Cost = Card->Cost;
+		bConsumeAllMana = Card->bConsumeAllMana;
+		Icon = Card->Icon;
+		DisplayDuration = Card->DisplayDuration;
+	}
+}
+
 AAutoChessPlayerController::AAutoChessPlayerController()
 {
 	bShowMouseCursor = true;
@@ -1148,10 +1162,12 @@ void AAutoChessPlayerController::Client_ShowCardDisplay_Implementation(const FCa
 			}
 		}
 
-		// 更新高亮
-		if (HighlightActor)
+		// 使用全局高亮（所有人可见），而不是本地高亮
+		if (Caster)
 		{
-			HighlightActor->UpdateHighlights(GS->GameGrid, HighlightPoints);
+			AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(Caster);
+			int32 CasterTeamID = CasterPC ? CasterPC->TeamID : 0;
+			GS->ShowSpellHighlight(HighlightPoints, CasterTeamID);
 		}
 	}
 }

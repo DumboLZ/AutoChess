@@ -2,6 +2,9 @@
 #include "AutoChessUnitBase.h"
 #include "AutoChessGrid.h"
 #include "AutoChessGameModeBase.h"
+#include "AutoChessHighlightActor.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Net/UnrealNetwork.h"
 
 AAutoChessGameState::AAutoChessGameState()
@@ -35,6 +38,7 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
+	DOREPLIFETIME(AAutoChessGameState, SpellHighlightActor);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)
@@ -132,4 +136,70 @@ AAutoChessUnitBase* AAutoChessGameState::GetUnitAtGrid(int32 GridX, int32 GridY)
 		}
 	}
 	return nullptr;
+}
+
+void AAutoChessGameState::ShowSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID)
+{
+	UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] CALLED! GridPositions=%d, TeamID=%d, HasAuthority=%d"), 
+		GridPositions.Num(), TeamID, HasAuthority());
+	
+	if (!GameGrid) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] GameGrid is NULL!"));
+		return;
+	}
+
+	// 创建全局高亮 Actor（如果还没有）
+	if (!SpellHighlightActor)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Creating new SpellHighlightActor..."));
+		FActorSpawnParameters SpawnParams;
+		SpellHighlightActor = GetWorld()->SpawnActor<AAutoChessHighlightActor>(AAutoChessHighlightActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		
+		if (SpellHighlightActor)
+		{
+			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] SpellHighlightActor created successfully!"));
+			// 初始化视觉（使用 Grid 的mesh）
+			SpellHighlightActor->InitVisuals(GameGrid->TileMesh, nullptr);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] FAILED to create SpellHighlightActor!"));
+		}
+	}
+
+	if (!SpellHighlightActor) return;
+
+	// 创建动态材质实例，根据 TeamID 设置颜色
+	UMaterialInstanceDynamic* DynamicMat = UMaterialInstanceDynamic::Create(GameGrid->MaterialHighlight, this);
+	if (DynamicMat)
+	{
+		// 设置颜色：TeamID 0 = 蓝色，TeamID 1 = 绿色
+		FLinearColor HighlightColor = (TeamID == 0) ? FLinearColor::Blue : FLinearColor::Green;
+		DynamicMat->SetVectorParameterValue(FName("Color"), HighlightColor);
+		UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Set material color to %s"), 
+			TeamID == 0 ? TEXT("BLUE") : TEXT("GREEN"));
+		
+		// 应用材质到高亮 Actor
+		if (SpellHighlightActor->HighlightISM)
+		{
+			SpellHighlightActor->HighlightISM->SetMaterial(0, DynamicMat);
+			UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Material applied to HighlightISM"));
+		}
+	}
+
+	// 更新高亮位置
+	SpellHighlightActor->UpdateHighlights(GameGrid, GridPositions);
+	
+	UE_LOG(LogTemp, Error, TEXT("[GameState::ShowSpellHighlight] Highlight updated! NumInstances=%d"), 
+		SpellHighlightActor->HighlightISM ? SpellHighlightActor->HighlightISM->GetInstanceCount() : -1);
+}
+
+void AAutoChessGameState::HideSpellHighlight()
+{
+	if (SpellHighlightActor && SpellHighlightActor->HighlightISM)
+	{
+		SpellHighlightActor->HighlightISM->ClearInstances();
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::HideSpellHighlight] Cleared spell highlight"));
+	}
 }
