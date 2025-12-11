@@ -26,6 +26,24 @@ void AAutoChessGameState::OnRep_Player2Health()
 	OnHealthUpdated.Broadcast(Player2Health, 1);
 }
 
+void AAutoChessGameState::OnRep_CurrentPhaseIndex()
+{
+	// 广播通用阶段变化事件
+	OnPhaseChanged.Broadcast(CurrentPhaseIndex);
+	
+	// 0 = 准备阶段, 1 = 战斗阶段（根据您的 GameMode 定义）
+	if (CurrentPhaseIndex == 0)
+	{
+		OnPreparationPhaseStarted.Broadcast(CurrentPhaseIndex);
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Preparation Phase Started"));
+	}
+	else if (CurrentPhaseIndex == 1)
+	{
+		OnCombatPhaseStarted.Broadcast(CurrentPhaseIndex);
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Combat Phase Started"));
+	}
+}
+
 void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
