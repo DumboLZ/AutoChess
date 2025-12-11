@@ -23,6 +23,21 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnHealthUpdate OnHealthUpdated;
 
+	// 定义阶段变化委托
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPhaseChanged, int32, NewPhaseIndex);
+
+	// 准备阶段开始事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnPhaseChanged OnPreparationPhaseStarted;
+
+	// 战斗阶段开始事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnPhaseChanged OnCombatPhaseStarted;
+
+	// 通用阶段变化事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnPhaseChanged OnPhaseChanged;
+
 	AAutoChessGameState();
 
 	// 玩家1 血量
@@ -60,8 +75,11 @@ public:
 	// 不，最简单的是：在 AutoChessGameState.h 中包含 AutoChessGameModeBase.h 可能会导致循环。
 	// 让我们先只复制基本类型。
 	
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
-	uint8 CurrentPhaseIndex; 
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentPhaseIndex, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	uint8 CurrentPhaseIndex;
+
+	UFUNCTION()
+	void OnRep_CurrentPhaseIndex(); 
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
 	int32 CurrentRound;
