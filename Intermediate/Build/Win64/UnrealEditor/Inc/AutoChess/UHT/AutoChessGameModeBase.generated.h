@@ -20,6 +20,7 @@ enum class EAutoChessPhase : uint8;
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execBroadcastCardDisplay); \
+	DECLARE_FUNCTION(execRestartGame); \
 	DECLARE_FUNCTION(execEndRound); \
 	DECLARE_FUNCTION(execStartBattle);
 

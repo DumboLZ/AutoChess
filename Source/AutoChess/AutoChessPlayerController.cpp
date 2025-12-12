@@ -1326,3 +1326,56 @@ void AAutoChessPlayerController::Server_SetPlayerReady_Implementation(bool bRead
 	}
 }
 
+void AAutoChessPlayerController::Server_RequestRematch_Implementation(bool bRematch)
+{
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS) return;
+
+	// 更新再来一局请求状态
+	if (TeamID == 0)
+	{
+		GS->bPlayer1Rematch = bRematch;
+		UE_LOG(LogTemp, Log, TEXT("[Server_RequestRematch] Player 1 requests rematch: %d"), bRematch);
+	}
+	else if (TeamID == 1)
+	{
+		GS->bPlayer2Rematch = bRematch;
+		UE_LOG(LogTemp, Log, TEXT("[Server_RequestRematch] Player 2 requests rematch: %d"), bRematch);
+	}
+
+	// 检查是否都请求了再来一局
+	if (GS->bPlayer1Rematch && GS->bPlayer2Rematch)
+	{
+		if (AAutoChessGameModeBase* GM = GetWorld()->GetAuthGameMode<AAutoChessGameModeBase>())
+		{
+			UE_LOG(LogTemp, Log, TEXT("[Server_RequestRematch] Both players requested rematch! Restarting game..."));
+			GM->RestartGame();
+		}
+	}
+}
+
+void AAutoChessPlayerController::Client_ReturnToMainMenu()
+{
+	// 假设主菜单关卡名为 "MainMenu"
+	// 如果是客户端，这会断开连接并加载主菜单
+	// 如果是 Listen Server，这会关闭服务器并加载主菜单（所有客户端断开连接）
+	UGameplayStatics::OpenLevel(this, FName("MainMenu"));
+	UE_LOG(LogTemp, Log, TEXT("[PlayerController] Returning to Main Menu..."));
+}
+
+void AAutoChessPlayerController::ResetState()
+{
+	// 重置法力
+	Mana = 0.0f;
+	OnRep_Mana(); // 手动更新客户端
+
+	// 清空手牌
+	HandCards.Empty();
+	OnRep_HandCards(); // 手动更新客户端
+	
+	// 重置抽牌计时器
+	DrawCardTimer = 0.0f;
+
+	UE_LOG(LogTemp, Log, TEXT("[PlayerController] State Reset (Mana=0, HandCards=0)"));
+}
+

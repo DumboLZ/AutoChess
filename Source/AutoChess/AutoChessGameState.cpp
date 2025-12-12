@@ -77,6 +77,8 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer1Ready);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer2Ready);
+	DOREPLIFETIME(AAutoChessGameState, bPlayer1Rematch);
+	DOREPLIFETIME(AAutoChessGameState, bPlayer2Rematch);
 	DOREPLIFETIME(AAutoChessGameState, WinnerTeamID);
 }
 

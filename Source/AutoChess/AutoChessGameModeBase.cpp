@@ -257,6 +257,57 @@ void AAutoChessGameModeBase::EndRound(int32 WinnerTeamID)
 	}
 }
 
+void AAutoChessGameModeBase::RestartGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Restarting Game..."));
+
+	if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+	{
+		// 1. 清除所有单位
+		TArray<AAutoChessUnitBase*> UnitsToDestroy = GS->AllUnits;
+		for (AAutoChessUnitBase* Unit : UnitsToDestroy)
+		{
+			if (IsValid(Unit))
+			{
+				Unit->Destroy();
+			}
+		}
+		GS->AllUnits.Empty();
+
+		// 2. 重置游戏数据
+		CurrentRound = 1;
+		GS->CurrentRound = 1;
+		
+		GS->Player1Health = 100;
+		GS->Player2Health = 100;
+		GS->Player1Gold = 0;
+		GS->Player2Gold = 0;
+		
+		// 3. 重置玩家状态 (手牌、法力)
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		{
+			if (AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get()))
+			{
+				PC->ResetState();
+			}
+		}
+
+		// 4. 重置状态标志
+		GS->bPlayer1Ready = false;
+		GS->bPlayer2Ready = false;
+		GS->bPlayer1Rematch = false;
+		GS->bPlayer2Rematch = false;
+		// WinnerTeamID 的重置交给 SwitchPhase 处理，避免提前触发 UI
+
+		// 4. 手动触发属性更新 (服务器端)
+		GS->OnRep_Player1Health();
+		GS->OnRep_Player2Health();
+	}
+
+	// 5. 切换回准备阶段
+	SwitchPhase(EAutoChessPhase::Preparation);
+}
+
 void AAutoChessGameModeBase::BroadcastCardDisplay(UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster)
 {
 	if (!Card) return;

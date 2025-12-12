@@ -44,6 +44,7 @@ AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelega
 	virtual void Server_SellUnit_Implementation(AAutoChessUnitBase* Unit); \
 	virtual void Server_PlaceUnit_Implementation(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY); \
 	virtual void Server_BuyCard_Implementation(TSubclassOf<UAutoChessCardBase> CardClass); \
+	virtual void Server_RequestRematch_Implementation(bool bRematch); \
 	virtual void Server_SetPlayerReady_Implementation(bool bReady); \
 	virtual void Server_BuyUnit_Implementation(TSubclassOf<AAutoChessUnitBase> UnitClass); \
 	virtual void Client_HideCardDisplay_Implementation(); \
@@ -65,6 +66,8 @@ AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelega
 	DECLARE_FUNCTION(execSellUnit); \
 	DECLARE_FUNCTION(execPlaceUnit); \
 	DECLARE_FUNCTION(execBuyCard); \
+	DECLARE_FUNCTION(execClient_ReturnToMainMenu); \
+	DECLARE_FUNCTION(execServer_RequestRematch); \
 	DECLARE_FUNCTION(execServer_SetPlayerReady); \
 	DECLARE_FUNCTION(execServer_BuyUnit); \
 	DECLARE_FUNCTION(execClient_HideCardDisplay); \

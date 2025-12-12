@@ -837,6 +837,26 @@ struct Z_Construct_UClass_AAutoChessGameState_Statics
 		{ "ToolTip", "\xe7\x8e\xa9\xe5\xae\xb6""2 \xe5\x87\x86\xe5\xa4\x87\xe7\x8a\xb6\xe6\x80\x81" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bPlayer1Rematch_MetaData[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\x8e\xa9\xe5\xae\xb6""1 \xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80\xe8\xaf\xb7\xe6\xb1\x82\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameState.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\x8e\xa9\xe5\xae\xb6""1 \xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80\xe8\xaf\xb7\xe6\xb1\x82" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bPlayer2Rematch_MetaData[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\x8e\xa9\xe5\xae\xb6""2 \xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80\xe8\xaf\xb7\xe6\xb1\x82\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameState.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\x8e\xa9\xe5\xae\xb6""2 \xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80\xe8\xaf\xb7\xe6\xb1\x82" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_WinnerTeamID_MetaData[] = {
 		{ "Category", "AutoChess|GameFlow" },
 #if !UE_BUILD_SHIPPING
@@ -917,6 +937,10 @@ struct Z_Construct_UClass_AAutoChessGameState_Statics
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bPlayer1Ready;
 	static void NewProp_bPlayer2Ready_SetBit(void* Obj);
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bPlayer2Ready;
+	static void NewProp_bPlayer1Rematch_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bPlayer1Rematch;
+	static void NewProp_bPlayer2Rematch_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bPlayer2Rematch;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_WinnerTeamID;
 	static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentPhaseIndex;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_CurrentRound;
@@ -969,6 +993,16 @@ void Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Ready_SetBi
 	((AAutoChessGameState*)Obj)->bPlayer2Ready = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Ready = { "bPlayer2Ready", nullptr, (EPropertyFlags)0x0010000000000034, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessGameState), &Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Ready_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bPlayer2Ready_MetaData), NewProp_bPlayer2Ready_MetaData) };
+void Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer1Rematch_SetBit(void* Obj)
+{
+	((AAutoChessGameState*)Obj)->bPlayer1Rematch = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer1Rematch = { "bPlayer1Rematch", nullptr, (EPropertyFlags)0x0010000000000034, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessGameState), &Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer1Rematch_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bPlayer1Rematch_MetaData), NewProp_bPlayer1Rematch_MetaData) };
+void Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Rematch_SetBit(void* Obj)
+{
+	((AAutoChessGameState*)Obj)->bPlayer2Rematch = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Rematch = { "bPlayer2Rematch", nullptr, (EPropertyFlags)0x0010000000000034, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessGameState), &Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Rematch_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bPlayer2Rematch_MetaData), NewProp_bPlayer2Rematch_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_WinnerTeamID = { "WinnerTeamID", "OnRep_WinnerTeamID", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameState, WinnerTeamID), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_WinnerTeamID_MetaData), NewProp_WinnerTeamID_MetaData) };
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_CurrentPhaseIndex = { "CurrentPhaseIndex", "OnRep_CurrentPhaseIndex", (EPropertyFlags)0x0010000100000034, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameState, CurrentPhaseIndex), nullptr, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentPhaseIndex_MetaData), NewProp_CurrentPhaseIndex_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_CurrentRound = { "CurrentRound", nullptr, (EPropertyFlags)0x0010000000000034, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameState, CurrentRound), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentRound_MetaData), NewProp_CurrentRound_MetaData) };
@@ -990,6 +1024,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_Player2Gold,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer1Ready,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Ready,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer1Rematch,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_bPlayer2Rematch,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_WinnerTeamID,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_CurrentPhaseIndex,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameState_Statics::NewProp_CurrentRound,
@@ -1041,6 +1077,8 @@ void AAutoChessGameState::ValidateGeneratedRepEnums(const TArray<struct FRepReco
 	static const FName Name_Player2Gold(TEXT("Player2Gold"));
 	static const FName Name_bPlayer1Ready(TEXT("bPlayer1Ready"));
 	static const FName Name_bPlayer2Ready(TEXT("bPlayer2Ready"));
+	static const FName Name_bPlayer1Rematch(TEXT("bPlayer1Rematch"));
+	static const FName Name_bPlayer2Rematch(TEXT("bPlayer2Rematch"));
 	static const FName Name_WinnerTeamID(TEXT("WinnerTeamID"));
 	static const FName Name_CurrentPhaseIndex(TEXT("CurrentPhaseIndex"));
 	static const FName Name_CurrentRound(TEXT("CurrentRound"));
@@ -1054,6 +1092,8 @@ void AAutoChessGameState::ValidateGeneratedRepEnums(const TArray<struct FRepReco
 		&& Name_Player2Gold == ClassReps[(int32)ENetFields_Private::Player2Gold].Property->GetFName()
 		&& Name_bPlayer1Ready == ClassReps[(int32)ENetFields_Private::bPlayer1Ready].Property->GetFName()
 		&& Name_bPlayer2Ready == ClassReps[(int32)ENetFields_Private::bPlayer2Ready].Property->GetFName()
+		&& Name_bPlayer1Rematch == ClassReps[(int32)ENetFields_Private::bPlayer1Rematch].Property->GetFName()
+		&& Name_bPlayer2Rematch == ClassReps[(int32)ENetFields_Private::bPlayer2Rematch].Property->GetFName()
 		&& Name_WinnerTeamID == ClassReps[(int32)ENetFields_Private::WinnerTeamID].Property->GetFName()
 		&& Name_CurrentPhaseIndex == ClassReps[(int32)ENetFields_Private::CurrentPhaseIndex].Property->GetFName()
 		&& Name_CurrentRound == ClassReps[(int32)ENetFields_Private::CurrentRound].Property->GetFName()
@@ -1070,10 +1110,10 @@ AAutoChessGameState::~AAutoChessGameState() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 3267097809U) },
+		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 2382725343U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_2566264140(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_4067866444(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

@@ -77,6 +77,14 @@ public:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
 	bool bPlayer2Ready;
 
+	// 玩家1 再来一局请求
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	bool bPlayer1Rematch;
+
+	// 玩家2 再来一局请求
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	bool bPlayer2Rematch;
+
 	// 获胜队伍ID (-1: 平局/无, 0: 玩家1, 1: 玩家2)
 	UPROPERTY(ReplicatedUsing = OnRep_WinnerTeamID, BlueprintReadOnly, Category = "AutoChess|GameFlow")
 	int32 WinnerTeamID = -1;

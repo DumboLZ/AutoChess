@@ -60,6 +60,8 @@ public: \
 		Player2Gold, \
 		bPlayer1Ready, \
 		bPlayer2Ready, \
+		bPlayer1Rematch, \
+		bPlayer2Rematch, \
 		WinnerTeamID, \
 		CurrentPhaseIndex, \
 		CurrentRound, \

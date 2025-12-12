@@ -78,6 +78,14 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")
 	void Server_SetPlayerReady(bool bReady);
 
+	// 请求再来一局
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")
+	void Server_RequestRematch(bool bRematch);
+
+	// 返回主菜单 (客户端本地调用)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
+	void Client_ReturnToMainMenu();
+
 	// --- GAS 组件 ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
 	class UAbilitySystemComponent* AbilitySystemComponent;
@@ -234,6 +242,9 @@ public:
 
 	// 处理自动抽牌 (Public for GameMode access)
 	void ProcessAutoDraw(float DeltaTime);
+
+	// 重置玩家状态 (清空手牌、重置法力)
+	void ResetState();
 
 protected:
 	// 内部计时器

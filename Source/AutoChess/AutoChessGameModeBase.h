@@ -53,6 +53,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
 	void EndRound(int32 WinnerTeamID);
 
+	// 重新开始游戏 (再来一局)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
+	void RestartGame();
+
 	// 阶段改变时调用 (蓝图可重写)
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|GameFlow")
 	void OnPhaseChanged(EAutoChessPhase NewPhase);
