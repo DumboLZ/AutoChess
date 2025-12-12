@@ -1,6 +1,5 @@
 # 编译生成的二进制文件和中间文件
-DerivedDataCache/
-Binaries/
+
 .vs/
 *.sln
 *.vcxproj
