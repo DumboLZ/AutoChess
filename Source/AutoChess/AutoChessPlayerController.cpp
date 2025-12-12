@@ -1294,3 +1294,35 @@ void AAutoChessPlayerController::Server_BuyUnit_Implementation(TSubclassOf<AAuto
 	}
 }
 
+void AAutoChessPlayerController::Server_SetPlayerReady_Implementation(bool bReady)
+{
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS) return;
+
+	// 更新准备状态
+	if (TeamID == 0)
+	{
+		GS->bPlayer1Ready = bReady;
+		UE_LOG(LogTemp, Log, TEXT("[Server_SetPlayerReady] Player 1 is %s"), bReady ? TEXT("Ready") : TEXT("Not Ready"));
+	}
+	else if (TeamID == 1)
+	{
+		GS->bPlayer2Ready = bReady;
+		UE_LOG(LogTemp, Log, TEXT("[Server_SetPlayerReady] Player 2 is %s"), bReady ? TEXT("Ready") : TEXT("Not Ready"));
+	}
+
+	// 检查是否都准备好了
+	if (GS->bPlayer1Ready && GS->bPlayer2Ready)
+	{
+		// 只有在准备阶段才触发
+		if (GS->CurrentPhaseIndex == 0) // 0 = Preparation
+		{
+			if (AAutoChessGameModeBase* GM = GetWorld()->GetAuthGameMode<AAutoChessGameModeBase>())
+			{
+				UE_LOG(LogTemp, Log, TEXT("[Server_SetPlayerReady] Both players ready! Starting battle..."));
+				GM->StartBattle();
+			}
+		}
+	}
+}
+

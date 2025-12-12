@@ -157,9 +157,32 @@ void AAutoChessGameModeBase::UpdateTimer(float DeltaTime)
 			}
 			else if (CurrentPhase == EAutoChessPhase::Settlement)
 			{
-				// 结算结束，进入下一回合准备
-				CurrentRound++;
-				SwitchPhase(EAutoChessPhase::Preparation);
+				// 如果有获胜者（非平局），则游戏结束，不再进入下一回合
+				// 这里我们需要检查 GameState 的 WinnerTeamID，或者记录在 GameMode 中
+				// 暂时简单处理：如果有明确的 WinnerTeamID != -1，则停止循环
+				
+				bool bGameOver = false;
+				if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+				{
+					if (GS->WinnerTeamID != -1)
+					{
+						bGameOver = true;
+					}
+				}
+
+				if (!bGameOver)
+				{
+					// 只有平局才继续下一回合（或者您可以根据需求修改逻辑）
+					// 结算结束，进入下一回合准备
+					CurrentRound++;
+					SwitchPhase(EAutoChessPhase::Preparation);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("[GameMode] Game Over! Winner is Team %d"), 
+						GetGameState<AAutoChessGameState>()->WinnerTeamID);
+					// 可以在这里触发 Game Over 逻辑，例如返回主菜单
+				}
 			}
 		}
 	}
@@ -192,6 +215,14 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 		
 		// 手动触发阶段变化事件（服务器端不会自动触发 OnRep）
 		GS->OnRep_CurrentPhaseIndex();
+
+		// 如果进入准备阶段，重置玩家准备状态和获胜者
+		if (NewPhase == EAutoChessPhase::Preparation)
+		{
+			GS->bPlayer1Ready = false;
+			GS->bPlayer2Ready = false;
+			GS->WinnerTeamID = -1; // 重置获胜者
+		}
 	}
 
 	// 通知蓝图
@@ -217,7 +248,13 @@ void AAutoChessGameModeBase::EndRound(int32 WinnerTeamID)
 
 	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Round Ended! Winner Team: %d"), WinnerTeamID);
 
-	// TODO: 可以在这里广播事件给 UI 显示胜利/失败画面
+	// 更新 GameState 中的获胜者
+	if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+	{
+		GS->WinnerTeamID = WinnerTeamID;
+		// 手动触发 OnRep (服务器端)
+		GS->OnRep_WinnerTeamID();
+	}
 }
 
 void AAutoChessGameModeBase::BroadcastCardDisplay(UAutoChessCardBase* Card, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster)

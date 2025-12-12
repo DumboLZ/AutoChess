@@ -38,6 +38,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnPhaseChanged OnPhaseChanged;
 
+	// 定义获胜者变化委托
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinnerChanged, int32, WinnerTeamID);
+
+	// 获胜者变化事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnWinnerChanged OnWinnerChanged;
+
 	AAutoChessGameState();
 
 	// 玩家1 血量
@@ -61,6 +68,21 @@ public:
 	// 玩家2 金币
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
 	int32 Player2Gold;
+
+	// 玩家1 准备状态
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	bool bPlayer1Ready;
+
+	// 玩家2 准备状态
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	bool bPlayer2Ready;
+
+	// 获胜队伍ID (-1: 平局/无, 0: 玩家1, 1: 玩家2)
+	UPROPERTY(ReplicatedUsing = OnRep_WinnerTeamID, BlueprintReadOnly, Category = "AutoChess|GameFlow")
+	int32 WinnerTeamID = -1;
+
+	UFUNCTION()
+	void OnRep_WinnerTeamID();
 
 	// --- 游戏流程数据 (从 GameMode 同步) ---
 

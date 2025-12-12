@@ -75,6 +75,15 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
+	DOREPLIFETIME(AAutoChessGameState, bPlayer1Ready);
+	DOREPLIFETIME(AAutoChessGameState, bPlayer2Ready);
+	DOREPLIFETIME(AAutoChessGameState, WinnerTeamID);
+}
+
+void AAutoChessGameState::OnRep_WinnerTeamID()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] Winner Changed: %d (Authority=%d)"), WinnerTeamID, HasAuthority());
+	OnWinnerChanged.Broadcast(WinnerTeamID);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)

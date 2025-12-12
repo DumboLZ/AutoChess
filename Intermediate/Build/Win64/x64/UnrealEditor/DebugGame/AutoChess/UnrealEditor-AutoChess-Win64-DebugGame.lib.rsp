@@ -8,5 +8,11 @@
 /NODEFAULTLIB
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\AutoChessEditor\DebugGame\UnrealEd\SharedPCH.UnrealEd.Project.NonOptimized.ValApi.Cpp20.h.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\Module.AutoChess.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChessGameModeBase.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChessGameState.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChessPlayerController.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChess.init.gen.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChessGameState.gen.cpp.obj"
+"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\AutoChessPlayerController.gen.cpp.obj"
 "D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\Default.rc2.res"
 /OUT:"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\AutoChess\UnrealEditor-AutoChess-Win64-DebugGame.lib"

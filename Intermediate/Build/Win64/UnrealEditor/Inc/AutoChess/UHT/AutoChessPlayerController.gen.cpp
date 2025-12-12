@@ -1276,6 +1276,67 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execServer_SellUnit)
 }
 // End Class AAutoChessPlayerController Function Server_SellUnit
 
+// Begin Class AAutoChessPlayerController Function Server_SetPlayerReady
+struct AutoChessPlayerController_eventServer_SetPlayerReady_Parms
+{
+	bool bReady;
+};
+static FName NAME_AAutoChessPlayerController_Server_SetPlayerReady = FName(TEXT("Server_SetPlayerReady"));
+void AAutoChessPlayerController::Server_SetPlayerReady(bool bReady)
+{
+	AutoChessPlayerController_eventServer_SetPlayerReady_Parms Parms;
+	Parms.bReady=bReady ? true : false;
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessPlayerController_Server_SetPlayerReady),&Parms);
+}
+struct Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\xae\xbe\xe7\xbd\xae\xe7\x8e\xa9\xe5\xae\xb6\xe5\x87\x86\xe5\xa4\x87\xe7\x8a\xb6\xe6\x80\x81\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\xae\xbe\xe7\xbd\xae\xe7\x8e\xa9\xe5\xae\xb6\xe5\x87\x86\xe5\xa4\x87\xe7\x8a\xb6\xe6\x80\x81" },
+#endif
+	};
+#endif // WITH_METADATA
+	static void NewProp_bReady_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bReady;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+void Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::NewProp_bReady_SetBit(void* Obj)
+{
+	((AutoChessPlayerController_eventServer_SetPlayerReady_Parms*)Obj)->bReady = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::NewProp_bReady = { "bReady", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AutoChessPlayerController_eventServer_SetPlayerReady_Parms), &Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::NewProp_bReady_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::NewProp_bReady,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "Server_SetPlayerReady", nullptr, nullptr, Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::PropPointers), sizeof(AutoChessPlayerController_eventServer_SetPlayerReady_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04220CC0, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessPlayerController_eventServer_SetPlayerReady_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execServer_SetPlayerReady)
+{
+	P_GET_UBOOL(Z_Param_bReady);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Server_SetPlayerReady_Implementation(Z_Param_bReady);
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function Server_SetPlayerReady
+
 // Begin Class AAutoChessPlayerController Function TryPlayCardAtPosition
 struct Z_Construct_UFunction_AAutoChessPlayerController_TryPlayCardAtPosition_Statics
 {
@@ -1422,6 +1483,7 @@ void AAutoChessPlayerController::StaticRegisterNativesAAutoChessPlayerController
 		{ "Server_PlaceUnit", &AAutoChessPlayerController::execServer_PlaceUnit },
 		{ "Server_PlayCard", &AAutoChessPlayerController::execServer_PlayCard },
 		{ "Server_SellUnit", &AAutoChessPlayerController::execServer_SellUnit },
+		{ "Server_SetPlayerReady", &AAutoChessPlayerController::execServer_SetPlayerReady },
 		{ "TryPlayCardAtPosition", &AAutoChessPlayerController::execTryPlayCardAtPosition },
 		{ "UpdateDragHighlight", &AAutoChessPlayerController::execUpdateDragHighlight },
 	};
@@ -1697,6 +1759,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_PlaceUnit, "Server_PlaceUnit" }, // 344645829
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_PlayCard, "Server_PlayCard" }, // 4182496431
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_SellUnit, "Server_SellUnit" }, // 996467227
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady, "Server_SetPlayerReady" }, // 4192042800
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_TryPlayCardAtPosition, "TryPlayCardAtPosition" }, // 3449445507
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_UpdateDragHighlight, "UpdateDragHighlight" }, // 4121804145
 	};
@@ -1813,10 +1876,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ FCardDisplayData::StaticStruct, Z_Construct_UScriptStruct_FCardDisplayData_Statics::NewStructOps, TEXT("CardDisplayData"), &Z_Registration_Info_UScriptStruct_CardDisplayData, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCardDisplayData), 1935700650U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 4294518263U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 543302009U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_967354370(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_2199627145(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ScriptStructInfo),
 	nullptr, 0);

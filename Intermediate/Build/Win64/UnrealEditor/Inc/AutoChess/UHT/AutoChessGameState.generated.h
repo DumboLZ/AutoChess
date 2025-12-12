@@ -23,6 +23,10 @@ static void FOnHealthUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnHe
 static void FOnPhaseChanged_DelegateWrapper(const FMulticastScriptDelegate& OnPhaseChanged, int32 NewPhaseIndex);
 
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_42_DELEGATE \
+static void FOnWinnerChanged_DelegateWrapper(const FMulticastScriptDelegate& OnWinnerChanged, int32 WinnerTeamID);
+
+
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Multicast_HideSpellHighlight_Implementation(int32 TeamID); \
 	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
@@ -34,6 +38,7 @@ static void FOnPhaseChanged_DelegateWrapper(const FMulticastScriptDelegate& OnPh
 	DECLARE_FUNCTION(execUnregisterUnit); \
 	DECLARE_FUNCTION(execRegisterUnit); \
 	DECLARE_FUNCTION(execOnRep_CurrentPhaseIndex); \
+	DECLARE_FUNCTION(execOnRep_WinnerTeamID); \
 	DECLARE_FUNCTION(execOnRep_Player2Health); \
 	DECLARE_FUNCTION(execOnRep_Player1Health);
 
@@ -53,6 +58,9 @@ public: \
 		Player2Health, \
 		Player1Gold, \
 		Player2Gold, \
+		bPlayer1Ready, \
+		bPlayer2Ready, \
+		WinnerTeamID, \
 		CurrentPhaseIndex, \
 		CurrentRound, \
 		PhaseTimer, \

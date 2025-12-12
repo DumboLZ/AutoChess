@@ -74,6 +74,10 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Shop")
 	void Server_BuyUnit(TSubclassOf<class AAutoChessUnitBase> UnitClass);
 
+	// 设置玩家准备状态
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")
+	void Server_SetPlayerReady(bool bReady);
+
 	// --- GAS 组件 ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
 	class UAbilitySystemComponent* AbilitySystemComponent;
