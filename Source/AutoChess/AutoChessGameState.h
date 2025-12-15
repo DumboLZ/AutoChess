@@ -69,6 +69,13 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
 	int32 Player2Gold;
 
+	// 初始金币设置 (由房主设置，同步给所有客户端)
+	UPROPERTY(ReplicatedUsing = OnRep_InitialGold, BlueprintReadOnly, Category = "AutoChess|Config")
+	int32 InitialGold = 0;
+
+	UFUNCTION()
+	void OnRep_InitialGold();
+
 	// 玩家1 准备状态
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|GameFlow")
 	bool bPlayer1Ready;

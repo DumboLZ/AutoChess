@@ -25,6 +25,8 @@ class AUTOCHESS_API AAutoChessGameModeBase : public AGameModeBase
 public:
 	AAutoChessGameModeBase();
 
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 	// 当前游戏阶段
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|GameFlow")
 	EAutoChessPhase CurrentPhase;
@@ -44,6 +46,10 @@ public:
 	// 战斗阶段最大持续时间
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Config")
 	float MaxBattleDuration;
+
+	// 初始金币 (由房主在创建房间时设置，默认为 0)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Config", meta = (ExposeOnSpawn = "true"))
+	int32 InitialGold = 0;
 
 	// 开始战斗
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")

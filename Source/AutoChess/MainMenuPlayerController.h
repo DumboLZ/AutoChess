@@ -28,14 +28,13 @@ protected:
 	class UUserWidget* MainMenuWidget;
 
 public:
-	// 创建游戏（作为 Host）
-	// 用法：在 UI 按钮中调用
-	UFUNCTION(BlueprintCallable, Category = "Networking")
-	void HostGame();
+	// 创建游戏 (作为 Listen Server)
+	// InitialGold: 初始金币设置
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Menu")
+	void HostGame(int32 InitialGold = 0);
 
-	// 加入游戏（作为 Client）
-	// 用法：在 UI 按钮中调用
-	UFUNCTION(BlueprintCallable, Category = "Networking")
+	// 加入游戏 (作为 Client)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Menu")
 	void JoinGame(const FString& Address);
 
 	// 退出游戏

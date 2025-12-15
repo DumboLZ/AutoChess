@@ -545,6 +545,12 @@
 			]
 		},
 		{
+			"ShaderMapHash": "C9B2F3F3F020FA8CA4FE95EEFECDC72BE38BEC7F",
+			"Assets": [
+				"/Game/Art/M_UnitIcon"
+			]
+		},
+		{
 			"ShaderMapHash": "E67683F4B772943C36BB36951AE1A2908604343C",
 			"Assets": [
 				"/MeshModelingToolset/Materials/M_DynamicMeshComponentVtxColor"

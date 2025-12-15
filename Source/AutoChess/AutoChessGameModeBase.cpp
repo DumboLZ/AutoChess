@@ -27,9 +27,41 @@ AAutoChessGameModeBase::AAutoChessGameModeBase()
 	DefaultPawnClass = AAutoChessCameraPawn::StaticClass();
 }
 
+void AAutoChessGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode] InitGame Options: %s"), *Options);
+
+	// 解析初始金币参数
+	if (UGameplayStatics::HasOption(Options, TEXT("InitialGold")))
+	{
+		InitialGold = UGameplayStatics::GetIntOption(Options, TEXT("InitialGold"), 0);
+		UE_LOG(LogTemp, Warning, TEXT("[GameMode] Parsed InitialGold from Options: %d"), InitialGold);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[GameMode] No InitialGold option found, using default: %d"), InitialGold);
+	}
+}
+
 void AAutoChessGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 初始化 GameState
+	if (AAutoChessGameState* GS = GetGameState<AAutoChessGameState>())
+	{
+		// 同步初始金币设置
+		GS->InitialGold = InitialGold;
+		GS->Player1Gold = InitialGold;
+		GS->Player2Gold = InitialGold;
+		
+		// 手动触发 OnRep (服务器端)
+		GS->OnRep_InitialGold();
+		
+		UE_LOG(LogTemp, Warning, TEXT("[GameMode] Initialized GameState. InitialGold=%d"), InitialGold);
+	}
 
 	// 移除本地分屏创建逻辑，现在完全依赖网络连接
 	// UGameplayStatics::CreatePlayer(this, 1, true);
@@ -221,6 +253,7 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 		{
 			GS->bPlayer1Ready = false;
 			GS->bPlayer2Ready = false;
+			// WinnerTeamID 的重置交给 SwitchPhase 处理，避免提前触发 UI
 			GS->WinnerTeamID = -1; // 重置获胜者
 		}
 	}
@@ -280,8 +313,8 @@ void AAutoChessGameModeBase::RestartGame()
 		
 		GS->Player1Health = 100;
 		GS->Player2Health = 100;
-		GS->Player1Gold = 0;
-		GS->Player2Gold = 0;
+		GS->Player1Gold = GS->InitialGold;
+		GS->Player2Gold = GS->InitialGold;
 		
 		// 3. 重置玩家状态 (手牌、法力)
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)

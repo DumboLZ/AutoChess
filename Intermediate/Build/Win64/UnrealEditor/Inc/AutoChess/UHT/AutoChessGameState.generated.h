@@ -39,6 +39,7 @@ static void FOnWinnerChanged_DelegateWrapper(const FMulticastScriptDelegate& OnW
 	DECLARE_FUNCTION(execRegisterUnit); \
 	DECLARE_FUNCTION(execOnRep_CurrentPhaseIndex); \
 	DECLARE_FUNCTION(execOnRep_WinnerTeamID); \
+	DECLARE_FUNCTION(execOnRep_InitialGold); \
 	DECLARE_FUNCTION(execOnRep_Player2Health); \
 	DECLARE_FUNCTION(execOnRep_Player1Health);
 
@@ -58,6 +59,7 @@ public: \
 		Player2Health, \
 		Player1Gold, \
 		Player2Gold, \
+		InitialGold, \
 		bPlayer1Ready, \
 		bPlayer2Ready, \
 		bPlayer1Rematch, \

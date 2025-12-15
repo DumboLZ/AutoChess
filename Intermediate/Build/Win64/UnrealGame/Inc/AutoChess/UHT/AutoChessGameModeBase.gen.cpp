@@ -252,6 +252,42 @@ UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_OnPhaseChanged()
 }
 // End Class AAutoChessGameModeBase Function OnPhaseChanged
 
+// Begin Class AAutoChessGameModeBase Function RestartGame
+struct Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe9\x87\x8d\xe6\x96\xb0\xe5\xbc\x80\xe5\xa7\x8b\xe6\xb8\xb8\xe6\x88\x8f (\xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe9\x87\x8d\xe6\x96\xb0\xe5\xbc\x80\xe5\xa7\x8b\xe6\xb8\xb8\xe6\x88\x8f (\xe5\x86\x8d\xe6\x9d\xa5\xe4\xb8\x80\xe5\xb1\x80)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameModeBase, nullptr, "RestartGame", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameModeBase::execRestartGame)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->RestartGame();
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameModeBase Function RestartGame
+
 // Begin Class AAutoChessGameModeBase Function StartBattle
 struct Z_Construct_UFunction_AAutoChessGameModeBase_StartBattle_Statics
 {
@@ -295,6 +331,7 @@ void AAutoChessGameModeBase::StaticRegisterNativesAAutoChessGameModeBase()
 	static const FNameNativePtrPair Funcs[] = {
 		{ "BroadcastCardDisplay", &AAutoChessGameModeBase::execBroadcastCardDisplay },
 		{ "EndRound", &AAutoChessGameModeBase::execEndRound },
+		{ "RestartGame", &AAutoChessGameModeBase::execRestartGame },
 		{ "StartBattle", &AAutoChessGameModeBase::execStartBattle },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
@@ -382,6 +419,7 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay, "BroadcastCardDisplay" }, // 1740321225
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_EndRound, "EndRound" }, // 1549376020
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_OnPhaseChanged, "OnPhaseChanged" }, // 65630250
+		{ &Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame, "RestartGame" }, // 427808689
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_StartBattle, "StartBattle" }, // 3840037426
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -448,10 +486,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessPhase_StaticEnum, TEXT("EAutoChessPhase"), &Z_Registration_Info_UEnum_EAutoChessPhase, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 877316103U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 79632077U) },
+		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 1835806984U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_1074733692(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_2174830272(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo));

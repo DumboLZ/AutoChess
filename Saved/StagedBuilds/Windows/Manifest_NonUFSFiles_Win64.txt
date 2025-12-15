@@ -1,5 +1,5 @@
 Engine/Binaries/Win64/EOSSDK-Win64-Shipping.dll	2025-05-27T03:56:51.545Z
-AutoChess/Binaries/Win64/AutoChess-Win64-Shipping.exe	2025-12-11T13:28:07.323Z
+AutoChess/Binaries/Win64/AutoChess-Win64-Shipping.exe	2025-12-12T09:22:37.782Z
 AutoChess/Binaries/Win64/D3D12/D3D12Core.dll	2025-12-09T13:53:12.311Z
 AutoChess/Binaries/Win64/D3D12/d3d12SDKLayers.dll	2025-12-09T13:53:12.362Z
 AutoChess/Binaries/Win64/OpenImageDenoise.dll	2025-12-09T13:53:12.632Z
@@ -16,4 +16,4 @@ Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll	2025-05-27T0
 Engine/Binaries/ThirdParty/Windows/XAudio2_9/x64/xaudio2_9redist.dll	2025-05-27T03:56:48.753Z
 Engine/Content/Renderer/TessellationTable.bin	2025-05-27T03:59:03.938Z
 Engine/Content/Slate/Cursor/invisible.cur	2025-05-27T03:59:03.982Z
-AutoChess.exe	2025-12-11T13:28:17.824Z
+AutoChess.exe	2025-12-12T09:22:53.157Z

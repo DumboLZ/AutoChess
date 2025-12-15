@@ -406,6 +406,17 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 		{ "ToolTip", "\xe6\x88\x98\xe6\x96\x97\xe9\x98\xb6\xe6\xae\xb5\xe6\x9c\x80\xe5\xa4\xa7\xe6\x8c\x81\xe7\xbb\xad\xe6\x97\xb6\xe9\x97\xb4" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_InitialGold_MetaData[] = {
+		{ "Category", "AutoChess|Config" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x88\x9d\xe5\xa7\x8b\xe9\x87\x91\xe5\xb8\x81 (\xe7\x94\xb1\xe6\x88\xbf\xe4\xb8\xbb\xe5\x9c\xa8\xe5\x88\x9b\xe5\xbb\xba\xe6\x88\xbf\xe9\x97\xb4\xe6\x97\xb6\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe9\xbb\x98\xe8\xae\xa4\xe4\xb8\xba 0)\n" },
+#endif
+		{ "ExposeOnSpawn", "true" },
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x88\x9d\xe5\xa7\x8b\xe9\x87\x91\xe5\xb8\x81 (\xe7\x94\xb1\xe6\x88\xbf\xe4\xb8\xbb\xe5\x9c\xa8\xe5\x88\x9b\xe5\xbb\xba\xe6\x88\xbf\xe9\x97\xb4\xe6\x97\xb6\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe9\xbb\x98\xe8\xae\xa4\xe4\xb8\xba 0)" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentPhase_Underlying;
 	static const UECodeGen_Private::FEnumPropertyParams NewProp_CurrentPhase;
@@ -413,6 +424,7 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_PhaseTimer;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_PreparationDuration;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxBattleDuration;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_InitialGold;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -434,6 +446,7 @@ const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameMod
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PhaseTimer = { "PhaseTimer", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, PhaseTimer), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhaseTimer_MetaData), NewProp_PhaseTimer_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PreparationDuration = { "PreparationDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, PreparationDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PreparationDuration_MetaData), NewProp_PreparationDuration_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_MaxBattleDuration = { "MaxBattleDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, MaxBattleDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxBattleDuration_MetaData), NewProp_MaxBattleDuration_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_InitialGold = { "InitialGold", nullptr, (EPropertyFlags)0x0011000000000005, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, InitialGold), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InitialGold_MetaData), NewProp_InitialGold_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessGameModeBase_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_CurrentPhase_Underlying,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_CurrentPhase,
@@ -441,6 +454,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PhaseTimer,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PreparationDuration,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_MaxBattleDuration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_InitialGold,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessGameModeBase_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessGameModeBase_Statics::DependentSingletons[])() = {
@@ -486,10 +500,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessPhase_StaticEnum, TEXT("EAutoChessPhase"), &Z_Registration_Info_UEnum_EAutoChessPhase, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 877316103U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 1835806984U) },
+		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 2425842545U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_2174830272(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_3218126452(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo));

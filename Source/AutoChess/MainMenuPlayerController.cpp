@@ -37,13 +37,14 @@ void AMainMenuPlayerController::BeginPlay()
 	}
 }
 
-void AMainMenuPlayerController::HostGame()
+void AMainMenuPlayerController::HostGame(int32 InitialGold)
 {
-	UE_LOG(LogTemp, Warning, TEXT("[MainMenuPC::HostGame] Creating game as Listen Server..."));
+	UE_LOG(LogTemp, Warning, TEXT("[MainMenuPC::HostGame] Creating game as Listen Server... InitialGold=%d"), InitialGold);
 	
 	// 加载游戏关卡并开启 Listen Server
+	// 传递 InitialGold 参数
 	FString GameMapName = TEXT("/Game/Map/GameMap");
-	FString TravelURL = FString::Printf(TEXT("%s?listen"), *GameMapName);
+	FString TravelURL = FString::Printf(TEXT("%s?listen?InitialGold=%d"), *GameMapName, InitialGold);
 	
 	UGameplayStatics::OpenLevel(this, FName(*TravelURL));
 }
