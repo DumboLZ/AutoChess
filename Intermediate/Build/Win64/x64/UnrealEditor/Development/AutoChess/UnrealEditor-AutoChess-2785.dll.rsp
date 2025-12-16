@@ -85,7 +85,7 @@
 "synchronization.lib"
 "dwmapi.lib"
 "imm32.lib"
-/OUT:"D:\Project\ue\AutoChess\AutoChess\Binaries\Win64\UnrealEditor-AutoChess.dll"
-/IMPLIB:"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\UnrealEditor-AutoChess.sup.lib"
-/PDB:"D:\Project\ue\AutoChess\AutoChess\Binaries\Win64\UnrealEditor-AutoChess.pdb"
+/OUT:"D:\Project\ue\AutoChess\AutoChess\Binaries\Win64\UnrealEditor-AutoChess-2785.dll"
+/IMPLIB:"D:\Project\ue\AutoChess\AutoChess\Intermediate\Build\Win64\x64\UnrealEditor\Development\AutoChess\UnrealEditor-AutoChess-2785.sup.lib"
+/PDB:"D:\Project\ue\AutoChess\AutoChess\Binaries\Win64\UnrealEditor-AutoChess-2785.pdb"
 /ignore:4078
