@@ -23,6 +23,10 @@ struct FAutoChessUnitRow : public FTableRowBase
 public:
 	// --- 基础信息 ---
 	
+	// 棋子 Blueprint 类 (用于生成)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	TSubclassOf<class AAutoChessUnitBase> UnitClass;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
 

@@ -179,6 +179,69 @@ void AAutoChessGameState::FOnWinnerChanged_DelegateWrapper(const FMulticastScrip
 }
 // End Delegate FOnWinnerChanged
 
+// Begin Class AAutoChessGameState Function FindEmptyBenchSlot
+struct Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics
+{
+	struct AutoChessGameState_eventFindEmptyBenchSlot_Parms
+	{
+		int32 TeamID;
+		FIntPoint OutGridPos;
+		bool ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Grid" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9f\xa5\xe6\x89\xbe\xe7\xa9\xba\xe9\x97\xb2\xe7\x9a\x84\xe5\xa4\x87\xe6\x88\x98\xe5\x8c\xba\xe6\xa0\xbc\xe5\xad\x90\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameState.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9f\xa5\xe6\x89\xbe\xe7\xa9\xba\xe9\x97\xb2\xe7\x9a\x84\xe5\xa4\x87\xe6\x88\x98\xe5\x8c\xba\xe6\xa0\xbc\xe5\xad\x90" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_OutGridPos;
+	static void NewProp_ReturnValue_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_TeamID = { "TeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameState_eventFindEmptyBenchSlot_Parms, TeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_OutGridPos = { "OutGridPos", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameState_eventFindEmptyBenchSlot_Parms, OutGridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+void Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_ReturnValue_SetBit(void* Obj)
+{
+	((AutoChessGameState_eventFindEmptyBenchSlot_Parms*)Obj)->ReturnValue = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AutoChessGameState_eventFindEmptyBenchSlot_Parms), &Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_TeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_OutGridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameState, nullptr, "FindEmptyBenchSlot", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::AutoChessGameState_eventFindEmptyBenchSlot_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04C20401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::AutoChessGameState_eventFindEmptyBenchSlot_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameState::execFindEmptyBenchSlot)
+{
+	P_GET_PROPERTY(FIntProperty,Z_Param_TeamID);
+	P_GET_STRUCT_REF(FIntPoint,Z_Param_Out_OutGridPos);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(bool*)Z_Param__Result=P_THIS->FindEmptyBenchSlot(Z_Param_TeamID,Z_Param_Out_OutGridPos);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameState Function FindEmptyBenchSlot
+
 // Begin Class AAutoChessGameState Function GetUnitAtGrid
 struct Z_Construct_UFunction_AAutoChessGameState_GetUnitAtGrid_Statics
 {
@@ -728,6 +791,7 @@ void AAutoChessGameState::StaticRegisterNativesAAutoChessGameState()
 {
 	UClass* Class = AAutoChessGameState::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "FindEmptyBenchSlot", &AAutoChessGameState::execFindEmptyBenchSlot },
 		{ "GetUnitAtGrid", &AAutoChessGameState::execGetUnitAtGrid },
 		{ "GetUnitsByTeam", &AAutoChessGameState::execGetUnitsByTeam },
 		{ "IsGridOccupied", &AAutoChessGameState::execIsGridOccupied },
@@ -994,6 +1058,7 @@ struct Z_Construct_UClass_AAutoChessGameState_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
+		{ &Z_Construct_UFunction_AAutoChessGameState_FindEmptyBenchSlot, "FindEmptyBenchSlot" }, // 2042908247
 		{ &Z_Construct_UFunction_AAutoChessGameState_GetUnitAtGrid, "GetUnitAtGrid" }, // 246306590
 		{ &Z_Construct_UFunction_AAutoChessGameState_GetUnitsByTeam, "GetUnitsByTeam" }, // 462591683
 		{ &Z_Construct_UFunction_AAutoChessGameState_IsGridOccupied, "IsGridOccupied" }, // 588425901
@@ -1156,10 +1221,10 @@ AAutoChessGameState::~AAutoChessGameState() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 2728263259U) },
+		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 2756032179U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_3357086019(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_2400979510(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

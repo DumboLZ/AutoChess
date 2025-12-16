@@ -33,6 +33,7 @@ static void FOnWinnerChanged_DelegateWrapper(const FMulticastScriptDelegate& OnW
 	DECLARE_FUNCTION(execMulticast_HideSpellHighlight); \
 	DECLARE_FUNCTION(execMulticast_ShowSpellHighlight); \
 	DECLARE_FUNCTION(execGetUnitAtGrid); \
+	DECLARE_FUNCTION(execFindEmptyBenchSlot); \
 	DECLARE_FUNCTION(execIsGridOccupied); \
 	DECLARE_FUNCTION(execGetUnitsByTeam); \
 	DECLARE_FUNCTION(execUnregisterUnit); \

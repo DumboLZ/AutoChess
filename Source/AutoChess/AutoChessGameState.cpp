@@ -276,3 +276,41 @@ void AAutoChessGameState::Multicast_HideSpellHighlight_Implementation(int32 Team
 		UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_HideSpellHighlight] Cleared Team %d spell highlight"), TeamID);
 	}
 }
+
+bool AAutoChessGameState::FindEmptyBenchSlot(int32 TeamID, FIntPoint& OutGridPos)
+{
+	if (!GameGrid) return false;
+
+	int32 GridWidth = GameGrid->GridWidth;
+	int32 GridHeight = GameGrid->GridHeight;
+	int32 HalfHeight = GridHeight / 2;
+
+	int32 YMin, YMax;
+	if (TeamID == 0)
+	{
+		// Team0 在下半边 (Y = 0 to HalfHeight-1)
+		YMin = 0;
+		YMax = HalfHeight - 1;
+	}
+	else // TeamID == 1
+	{
+		// Team1 在上半边 (Y = HalfHeight to GridHeight-1)
+		YMin = HalfHeight;
+		YMax = GridHeight - 1;
+	}
+
+	// 遍历己方半场寻找空位
+	for (int32 y = YMin; y <= YMax; y++)
+	{
+		for (int32 x = 0; x < GridWidth; x++)
+		{
+			if (GetUnitAtGrid(x, y) == nullptr)
+			{
+				OutGridPos = FIntPoint(x, y);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

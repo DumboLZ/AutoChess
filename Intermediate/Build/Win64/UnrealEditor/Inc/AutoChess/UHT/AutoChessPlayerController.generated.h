@@ -46,7 +46,7 @@ AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelega
 	virtual void Server_BuyCard_Implementation(TSubclassOf<UAutoChessCardBase> CardClass); \
 	virtual void Server_RequestRematch_Implementation(bool bRematch); \
 	virtual void Server_SetPlayerReady_Implementation(bool bReady); \
-	virtual void Server_BuyUnit_Implementation(TSubclassOf<AAutoChessUnitBase> UnitClass); \
+	virtual void Server_BuyUnit_Implementation(FName UnitRowName); \
 	virtual void Client_HideCardDisplay_Implementation(); \
 	virtual void Client_ShowCardDisplay_Implementation(FCardDisplayData const& CardData, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster, int32 AOERadius); \
 	DECLARE_FUNCTION(execJoinGame); \

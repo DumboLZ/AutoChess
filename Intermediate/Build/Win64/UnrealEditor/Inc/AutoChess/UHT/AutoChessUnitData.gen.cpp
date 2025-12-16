@@ -12,6 +12,7 @@ void EmptyLinkFunctionForGeneratedCodeAutoChessUnitData() {}
 
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessProjectile_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitData();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitData_NoRegister();
 AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FAutoChessUnitRow();
@@ -56,15 +57,19 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8\xe7\xbb\x93\xe6\x9e\x84\n\xe7\x94\xa8\xe4\xba\x8e\xe5\x9c\xa8 DataTable \xe4\xb8\xad\xe9\x85\x8d\xe7\xbd\xae\xe6\xa3\x8b\xe5\xad\x90\xe5\xb1\x9e\xe6\x80\xa7" },
 #endif
 	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitName_MetaData[] = {
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitClass_MetaData[] = {
 		{ "Category", "Info" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// --- \xe5\x9f\xba\xe7\xa1\x80\xe4\xbf\xa1\xe6\x81\xaf ---\n" },
+		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90 Blueprint \xe7\xb1\xbb (\xe7\x94\xa8\xe4\xba\x8e\xe7\x94\x9f\xe6\x88\x90)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "--- \xe5\x9f\xba\xe7\xa1\x80\xe4\xbf\xa1\xe6\x81\xaf ---" },
+		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90 Blueprint \xe7\xb1\xbb (\xe7\x94\xa8\xe4\xba\x8e\xe7\x94\x9f\xe6\x88\x90)" },
 #endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitName_MetaData[] = {
+		{ "Category", "Info" },
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Icon_MetaData[] = {
 		{ "Category", "Info" },
@@ -157,6 +162,7 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 	};
 #endif // WITH_METADATA
+	static const UECodeGen_Private::FClassPropertyParams NewProp_UnitClass;
 	static const UECodeGen_Private::FTextPropertyParams NewProp_UnitName;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Icon;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkeletalMesh;
@@ -183,6 +189,7 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 	}
 	static const UECodeGen_Private::FStructParams StructParams;
 };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitClass = { "UnitClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, UnitClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitClass_MetaData), NewProp_UnitClass_MetaData) };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitName = { "UnitName", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, UnitName), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitName_MetaData), NewProp_UnitName_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Icon = { "Icon", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, Icon), Z_Construct_UClass_UTexture2D_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Icon_MetaData), NewProp_Icon_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_SkeletalMesh = { "SkeletalMesh", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, SkeletalMesh), Z_Construct_UClass_USkeletalMesh_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkeletalMesh_MetaData), NewProp_SkeletalMesh_MetaData) };
@@ -203,6 +210,7 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FAutoCh
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_SkillNiagaraVFX = { "SkillNiagaraVFX", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, SkillNiagaraVFX), Z_Construct_UClass_UNiagaraSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillNiagaraVFX_MetaData), NewProp_SkillNiagaraVFX_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileClass_MetaData), NewProp_ProjectileClass_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitName,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Icon,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_SkeletalMesh,
@@ -479,13 +487,13 @@ UAutoChessUnitData::~UAutoChessUnitData() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics
 {
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
-		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 4070448152U) },
+		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 1383842615U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
 		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 2228315146U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_1195745088(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_2536493071(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo),
 	nullptr, 0);

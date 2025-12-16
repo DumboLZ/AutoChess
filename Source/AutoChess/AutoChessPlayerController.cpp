@@ -14,6 +14,8 @@
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
+#include "AutoChessUnitData.h"
+#include "AutoChessAttributeSet.h"
 
 // FCardDisplayData 构造函数实现
 FCardDisplayData::FCardDisplayData(UAutoChessCardBase* Card)
@@ -1175,161 +1177,96 @@ void AAutoChessPlayerController::Client_HideCardDisplay_Implementation()
 	}
 }
 
-void AAutoChessPlayerController::Server_BuyUnit_Implementation(TSubclassOf<AAutoChessUnitBase> UnitClass)
+void AAutoChessPlayerController::Server_BuyUnit_Implementation(FName UnitRowName)
 {
-	if (!UnitClass)
-	{
-		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] UnitClass is NULL!"));
-		return;
-	}
-
-	// 获取 GameState
 	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
-	if (!GS || !GS->GameGrid)
+	if (!GS || !GS->GameGrid) return;
+
+	// 1. 检查数据表
+	if (!UnitDataTable)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] GameState or Grid is NULL!"));
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] UnitDataTable is not set in PlayerController!"));
 		return;
 	}
 
-	// 确定己方半边棋盘的 Y 范围
-	int32 GridWidth = GS->GameGrid->GridWidth;
-	int32 GridHeight = GS->GameGrid->GridHeight;
-	int32 HalfHeight = GridHeight / 2;
-	
-	int32 YMin, YMax;
-	if (TeamID == 0)
+	// 2. 查找行数据
+	FAutoChessUnitRow* UnitRow = UnitDataTable->FindRow<FAutoChessUnitRow>(UnitRowName, TEXT("Server_BuyUnit"));
+	if (!UnitRow)
 	{
-		// Team0 在下半边 (Y = 0 to HalfHeight-1)
-		YMin = 0;
-		YMax = HalfHeight - 1;
-	}
-	else // TeamID == 1
-	{
-		// Team1 在上半边 (Y = HalfHeight to GridHeight-1)
-		YMin = HalfHeight;
-		YMax = GridHeight - 1;
-	}
-
-	// 收集所有己方半边的空位
-	TArray<FIntPoint> EmptyPositions;
-	for (int32 x = 0; x < GridWidth; x++)
-	{
-		for (int32 y = YMin; y <= YMax; y++)
-		{
-			if (GS->GetUnitAtGrid(x, y) == nullptr)
-			{
-				EmptyPositions.Add(FIntPoint(x, y));
-			}
-		}
-	}
-
-	// 检查是否有空位
-	if (EmptyPositions.Num() == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] No empty positions available in Team %d territory!"), TeamID);
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] Unit Row '%s' not found in DataTable!"), *UnitRowName.ToString());
 		return;
 	}
 
-	// 随机选择一个空位
-	int32 RandomIndex = FMath::RandRange(0, EmptyPositions.Num() - 1);
-	FIntPoint GridPos = EmptyPositions[RandomIndex];
+	// 3. 获取蓝图类
+	if (!UnitRow->UnitClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] UnitClass is null in Row '%s'!"), *UnitRowName.ToString());
+		return;
+	}
 
-	// 计算生成位置（添加 Z 轴偏移，避免单位陷入地面）
-	FVector UnitSpawnLocation = GS->GameGrid->GridToWorld(GridPos.X, GridPos.Y);
-	UnitSpawnLocation.Z += 100.0f; // 向上偏移 100 单位（根据您的单位大小调整）
-	
+	// 4. 检查金币 (暂时跳过，后续添加)
+	// int32 Cost = UnitRow->Cost; 
+	// if (GetGold() < Cost) return;
+
+	// 5. 寻找空闲备战区格子
+	FIntPoint GridPos;
+	if (!GS->FindEmptyBenchSlot(TeamID, GridPos))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] No empty bench slot for Team %d"), TeamID);
+		return;
+	}
+
+	// 6. 生成单位
+	FVector SpawnLoc = GS->GameGrid->GridToWorld(GridPos.X, GridPos.Y);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
 	// 根据队伍设置初始朝向
-	FRotator SpawnRotation = FRotator::ZeroRotator;
+	FRotator SpawnRot = FRotator::ZeroRotator;
 	if (TeamID == 0)
 	{
-		// Team 0 (下方) 面向 +Y (90度)
-		SpawnRotation = FRotator(0.0f, 90.0f, 0.0f);
+		SpawnRot = FRotator(0.0f, 90.0f, 0.0f); // 玩家1朝向 +90 (面向右/上)
 	}
 	else
 	{
-		// Team 1 (上方) 面向 -Y (-90度)
-		SpawnRotation = FRotator(0.0f, -90.0f, 0.0f);
+		SpawnRot = FRotator(0.0f, -90.0f, 0.0f); // 玩家2朝向 -90 (面向左/下)
 	}
 
-	// 生成单位
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = this;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(UnitClass, UnitSpawnLocation, SpawnRotation, SpawnParams);
-	
-	if (NewUnit)
+	if (AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(UnitRow->UnitClass, SpawnLoc, SpawnRot, SpawnParams))
 	{
-		// 设置单位的格子坐标
-		NewUnit->CurrentGridPos = GridPos;
+		// 设置属性
 		NewUnit->TeamID = TeamID;
+		NewUnit->CurrentGridPos = GridPos;
+		NewUnit->UnitDataHandle.DataTable = UnitDataTable;
+		NewUnit->UnitDataHandle.RowName = UnitRowName;
 		
-		// 手动触发 OnRep（因为 Listen Server 不会自动触发 OnRep）
-		NewUnit->OnRep_TeamID();
-		
-		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] SPAWNED UNIT - Buyer's TeamID=%d, Unit's TeamID=%d, HasAuthority=%d"), 
-			TeamID, NewUnit->TeamID, HasAuthority());
-		
-		// 设置血条 Widget Class（关键！动态生成的单位需要手动设置）
-		if (NewUnit->HealthBarWidgetComp && NewUnit->HealthBarWidgetClass)
-		{
-			NewUnit->HealthBarWidgetComp->SetWidgetClass(NewUnit->HealthBarWidgetClass);
-			NewUnit->HealthBarWidgetComp->InitWidget();
-			
-			// 设置队伍颜色（服务器端需要延迟，等待 Widget 完全初始化）
-			// 客户端会通过 OnRep_TeamID 自动设置
-			FTimerHandle ColorTimer;
-			GetWorld()->GetTimerManager().SetTimerForNextTick([NewUnit, this]()
-			{
-				if (NewUnit && NewUnit->HealthBarWidgetComp)
-				{
-					if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(NewUnit->HealthBarWidgetComp->GetWidget()))
-					{
-						UnitWidget->SetTeamColor(NewUnit->TeamID);
-						UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] Team color set to %d (Server)"), NewUnit->TeamID);
-					}
-				}
-			});
-			
-			UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] Widget Class set for health bar"));
-		}
-		else if (NewUnit->HealthBarWidgetComp && !NewUnit->HealthBarWidgetClass)
-		{
-			UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] HealthBarWidgetClass is not set in unit blueprint! Please set it in Class Defaults."));
-		}
-		
-		// 初始化 GAS（关键！动态生成的单位需要手动初始化）
+		// 初始化数据 (从 DT 读取属性)
+		NewUnit->InitFromUnitData();
+
+		// 初始化 GAS
 		if (NewUnit->AbilitySystemComponent && NewUnit->AttributeSet)
 		{
 			NewUnit->AbilitySystemComponent->InitStats(UAutoChessAttributeSet::StaticClass(), nullptr);
 			
-			// 手动触发血条更新（确保血条显示正确的初始值）
+			// 手动触发血条更新
 			if (NewUnit->HealthBarWidgetComp)
 			{
-				// 延迟一帧确保 Widget 完全初始化
 				FTimerHandle WidgetInitTimer;
 				GetWorld()->GetTimerManager().SetTimerForNextTick([NewUnit]()
 				{
 					if (NewUnit && NewUnit->AttributeSet)
 					{
-						// 触发一次属性变化，刷新血条
 						NewUnit->OnHealthChanged(FOnAttributeChangeData());
 					}
 				});
 			}
-			
-			UE_LOG(LogTemp, Log, TEXT("[Server_BuyUnit] GAS initialized for new unit"));
 		}
 		
 		// 注册到 GameState
 		GS->RegisterUnit(NewUnit);
 		
-		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Unit spawned at random position (%d, %d) for Team %d"), 
-			GridPos.X, GridPos.Y, TeamID);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] Failed to spawn unit!"));
+		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Unit '%s' spawned at (%d, %d) for Team %d"), 
+			*UnitRowName.ToString(), GridPos.X, GridPos.Y, TeamID);
 	}
 }
 

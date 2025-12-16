@@ -70,9 +70,13 @@ public:
 
 	// --- 购买单位 Server RPC ---
 	
-	// 服务器端购买并生成单位（自动在己方空位生成）
+	// 服务器端购买并生成单位 (通过 DataTable RowName)
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Shop")
-	void Server_BuyUnit(TSubclassOf<class AAutoChessUnitBase> UnitClass);
+	void Server_BuyUnit(FName UnitRowName);
+
+	// 单位数据表
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Config")
+	class UDataTable* UnitDataTable;
 
 	// 设置玩家准备状态
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")

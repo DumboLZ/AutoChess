@@ -126,11 +126,11 @@ public:
 
 	// 棋盘引用 (全局唯一)
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|Board")
-	AAutoChessGrid* GameGrid;
+	class AAutoChessGrid* GameGrid;
 
 	// 场上所有单位
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|Board")
-	TArray<AAutoChessUnitBase*> AllUnits;
+	TArray<class AAutoChessUnitBase*> AllUnits;
 
 	// 注册单位到场上
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")
@@ -147,6 +147,10 @@ public:
 	// 检查网格是否被占用
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	bool IsGridOccupied(int32 GridX, int32 GridY);
+
+	// 查找空闲的备战区格子
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	bool FindEmptyBenchSlot(int32 TeamID, FIntPoint& OutGridPos);
 
 	// 检查胜利条件
 	void CheckWinCondition();
