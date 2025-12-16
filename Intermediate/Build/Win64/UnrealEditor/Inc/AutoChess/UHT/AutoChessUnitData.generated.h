@@ -14,7 +14,15 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define AUTOCHESS_AutoChessUnitData_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_20_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_21_GENERATED_BODY \
+	friend struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics; \
+	AUTOCHESS_API static class UScriptStruct* StaticStruct(); \
+	typedef FTableRowBase Super;
+
+
+template<> AUTOCHESS_API UScriptStruct* StaticStruct<struct FAutoChessUnitRow>();
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_96_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUAutoChessUnitData(); \
 	friend struct Z_Construct_UClass_UAutoChessUnitData_Statics; \
@@ -23,7 +31,7 @@ public: \
 	DECLARE_SERIALIZER(UAutoChessUnitData)
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_20_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_96_ENHANCED_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UAutoChessUnitData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 private: \
@@ -37,12 +45,12 @@ public: \
 	NO_API virtual ~UAutoChessUnitData();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_17_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_20_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_93_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_96_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_20_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_20_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_96_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_96_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

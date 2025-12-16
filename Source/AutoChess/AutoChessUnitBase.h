@@ -3,11 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
-#include "AutoChessAttributeSet.h"
-#include "AutoChessAttributeSet.h"
-#include "AutoChessUnitData.h"
-#include "NiagaraSystem.h" // Forward declaration not enough for UPROPERTY sometimes, but let's try class first
+#include "GameplayEffectTypes.h"
+#include "GameplayTagContainer.h"
+#include "Engine/DataTable.h"
 #include "AutoChessUnitBase.generated.h"
 
 class UNiagaraSystem; // Forward declaration
@@ -61,6 +59,10 @@ public:
 	// 如果设置了此项，将优先使用其中的数据初始化棋子
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
 	class UAutoChessUnitData* UnitData;
+
+	// 棋子数据配置 (新方式：引用 DataTable Row)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
+	FDataTableRowHandle UnitDataHandle;
 
 	// 从 DataAsset 初始化属性
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Data")

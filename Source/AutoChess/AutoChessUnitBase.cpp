@@ -5,12 +5,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Components/WidgetComponent.h"
-#include "AutoChessUnitWidget.h"
 #include "AutoChessUnitWidget.h"
 #include "AutoChessProjectile.h"
 #include "AutoChessUnitData.h"
 #include "Net/UnrealNetwork.h"
+#include "AbilitySystemComponent.h"
+#include "AutoChessAttributeSet.h"
+#include "Abilities/GameplayAbility.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
@@ -876,9 +877,55 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 
 void AAutoChessUnitBase::InitFromUnitData()
 {
+	// 1. 优先尝试从 DataTable 初始化
+	if (!UnitDataHandle.IsNull())
+	{
+		FAutoChessUnitRow* Row = UnitDataHandle.GetRow<FAutoChessUnitRow>(TEXT("InitFromUnitData"));
+		if (Row)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from DataTable Row: %s"), *UnitDataHandle.RowName.ToString());
+
+			// 基础属性
+			MaxHealth = Row->MaxHealth;
+			AttackDamage = Row->AttackDamage;
+			AttackSpeed = Row->AttackSpeed;
+			AttackRangeGrid = Row->AttackRangeGrid;
+			MoveSpeed = Row->MoveSpeed;
+
+			// 蓝量属性
+			MaxMana = Row->MaxMana;
+			InitialMana = Row->InitialMana;
+			ManaRegenOnAttack = Row->ManaRegenOnAttack;
+			ManaRegenOnHit = Row->ManaRegenOnHit;
+
+			// 技能与战斗
+			UnitAbilityClass = Row->AbilityClass;
+			PassiveAbilityClass = Row->PassiveAbilityClass;
+			SkillVFX = Row->SkillVFX;
+			SkillNiagaraVFX = Row->SkillNiagaraVFX;
+			ProjectileClass = Row->ProjectileClass;
+
+			// 模型与动画
+			if (GetMesh())
+			{
+				if (Row->SkeletalMesh && GetMesh()->GetSkeletalMeshAsset() != Row->SkeletalMesh)
+				{
+					GetMesh()->SetSkeletalMesh(Row->SkeletalMesh);
+				}
+
+				if (Row->AnimBlueprint && GetMesh()->GetAnimClass() != Row->AnimBlueprint)
+				{
+					GetMesh()->SetAnimInstanceClass(Row->AnimBlueprint);
+				}
+			}
+			return; // 成功从 DT 初始化，直接返回
+		}
+	}
+
+	// 2. 回退到旧的 DataAsset 方式
 	if (!UnitData) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from UnitData: %s"), *UnitData->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from UnitData Asset: %s"), *UnitData->GetName());
 
 	// 基础属性
 	MaxHealth = UnitData->MaxHealth;
