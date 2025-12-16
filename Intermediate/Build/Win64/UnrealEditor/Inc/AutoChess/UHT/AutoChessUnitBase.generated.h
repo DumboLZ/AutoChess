@@ -18,13 +18,19 @@ class AAutoChessUnitBase;
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_22_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void OnDeath_Implementation(); \
 	virtual void UseSkill_Implementation(); \
+	virtual void Multicast_PlaySkillAnimation_Implementation(); \
+	virtual void Multicast_PlayAttackAnimation_Implementation(); \
 	DECLARE_FUNCTION(execSnapToGrid); \
 	DECLARE_FUNCTION(execOnDeath); \
 	DECLARE_FUNCTION(execUseSkill); \
 	DECLARE_FUNCTION(execReceiveDamage); \
 	DECLARE_FUNCTION(execAttackTarget); \
 	DECLARE_FUNCTION(execCheckCanFight); \
+	DECLARE_FUNCTION(execGetUnitVelocity); \
+	DECLARE_FUNCTION(execMulticast_PlaySkillAnimation); \
+	DECLARE_FUNCTION(execMulticast_PlayAttackAnimation); \
 	DECLARE_FUNCTION(execOnRep_CurrentGridPos); \
+	DECLARE_FUNCTION(execSpawnSkillProjectile); \
 	DECLARE_FUNCTION(execInitFromUnitData); \
 	DECLARE_FUNCTION(execOnRep_TeamID);
 

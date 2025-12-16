@@ -126,6 +126,22 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
 
+	// 投射物发射骨骼插槽名称 (如果设置，优先使用插槽位置)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Combat")
+	FName ProjectileSocketName;
+
+	// 投射物发射偏移 (相对于单位，如果插槽无效则使用此偏移)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Combat")
+	FVector ProjectileSpawnOffset = FVector(50.0f, 0.0f, 50.0f);
+
+	// 技能投射物类 (大火球等)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Skill")
+	TSubclassOf<class AAutoChessSkillProjectile> SkillProjectileClass;
+
+	// 发射技能投射物 (供蓝图调用)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Skill")
+	void SpawnSkillProjectile(FVector TargetLocation);
+
 	// 当前攻击目标
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
 	AAutoChessUnitBase* CurrentTarget;
@@ -147,9 +163,31 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	bool bIsMoving;
 
+	// --- 动画系统 ---
+	
+	// 攻击蒙太奇
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
+	class UAnimMontage* AttackMontage;
+
+	// 技能蒙太奇
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
+	class UAnimMontage* SkillMontage;
+
+	// 播放攻击动画 (多播)
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_PlayAttackAnimation();
+
+	// 播放技能动画 (多播)
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_PlaySkillAnimation();
+
 	// 移动速度 (Unreal Units / sec)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	float MoveSpeed;
+
+	// 获取单位当前速度 (用于动画蓝图，因为直接设置位置可能导致 GetVelocity 为 0)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Animation")
+	FVector GetUnitVelocity() const;
 
 	// 检查是否可以战斗 (基于游戏阶段)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
