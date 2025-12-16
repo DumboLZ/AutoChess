@@ -11,13 +11,16 @@ void EmptyLinkFunctionForGeneratedCodeAutoChessUnitBase() {}
 
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessProjectile_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessSkillProjectile_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessAttributeSet_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitData_NoRegister();
 COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FIntPoint();
+COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FVector();
 ENGINE_API UClass* Z_Construct_UClass_ACharacter();
+ENGINE_API UClass* Z_Construct_UClass_UAnimMontage_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UParticleSystem_NoRegister();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UAbilitySystemComponent_NoRegister();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UAbilitySystemInterface_NoRegister();
@@ -130,6 +133,54 @@ DEFINE_FUNCTION(AAutoChessUnitBase::execCheckCanFight)
 }
 // End Class AAutoChessUnitBase Function CheckCanFight
 
+// Begin Class AAutoChessUnitBase Function GetUnitVelocity
+struct Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics
+{
+	struct AutoChessUnitBase_eventGetUnitVelocity_Parms
+	{
+		FVector ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Animation" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe8\x8e\xb7\xe5\x8f\x96\xe5\x8d\x95\xe4\xbd\x8d\xe5\xbd\x93\xe5\x89\x8d\xe9\x80\x9f\xe5\xba\xa6 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8a\xa8\xe7\x94\xbb\xe8\x93\x9d\xe5\x9b\xbe\xef\xbc\x8c\xe5\x9b\xa0\xe4\xb8\xba\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xae\xbe\xe7\xbd\xae\xe4\xbd\x8d\xe7\xbd\xae\xe5\x8f\xaf\xe8\x83\xbd\xe5\xaf\xbc\xe8\x87\xb4 GetVelocity \xe4\xb8\xba 0)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe8\x8e\xb7\xe5\x8f\x96\xe5\x8d\x95\xe4\xbd\x8d\xe5\xbd\x93\xe5\x89\x8d\xe9\x80\x9f\xe5\xba\xa6 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8a\xa8\xe7\x94\xbb\xe8\x93\x9d\xe5\x9b\xbe\xef\xbc\x8c\xe5\x9b\xa0\xe4\xb8\xba\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xae\xbe\xe7\xbd\xae\xe4\xbd\x8d\xe7\xbd\xae\xe5\x8f\xaf\xe8\x83\xbd\xe5\xaf\xbc\xe8\x87\xb4 GetVelocity \xe4\xb8\xba 0)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventGetUnitVelocity_Parms, ReturnValue), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "GetUnitVelocity", nullptr, nullptr, Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::AutoChessUnitBase_eventGetUnitVelocity_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x54820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::AutoChessUnitBase_eventGetUnitVelocity_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execGetUnitVelocity)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(FVector*)Z_Param__Result=P_THIS->GetUnitVelocity();
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function GetUnitVelocity
+
 // Begin Class AAutoChessUnitBase Function InitFromUnitData
 struct Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData_Statics
 {
@@ -165,6 +216,86 @@ DEFINE_FUNCTION(AAutoChessUnitBase::execInitFromUnitData)
 	P_NATIVE_END;
 }
 // End Class AAutoChessUnitBase Function InitFromUnitData
+
+// Begin Class AAutoChessUnitBase Function Multicast_PlayAttackAnimation
+static FName NAME_AAutoChessUnitBase_Multicast_PlayAttackAnimation = FName(TEXT("Multicast_PlayAttackAnimation"));
+void AAutoChessUnitBase::Multicast_PlayAttackAnimation()
+{
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessUnitBase_Multicast_PlayAttackAnimation),NULL);
+}
+struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "Multicast_PlayAttackAnimation", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00024C40, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execMulticast_PlayAttackAnimation)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Multicast_PlayAttackAnimation_Implementation();
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function Multicast_PlayAttackAnimation
+
+// Begin Class AAutoChessUnitBase Function Multicast_PlaySkillAnimation
+static FName NAME_AAutoChessUnitBase_Multicast_PlaySkillAnimation = FName(TEXT("Multicast_PlaySkillAnimation"));
+void AAutoChessUnitBase::Multicast_PlaySkillAnimation()
+{
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessUnitBase_Multicast_PlaySkillAnimation),NULL);
+}
+struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "Multicast_PlaySkillAnimation", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00024C40, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execMulticast_PlaySkillAnimation)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Multicast_PlaySkillAnimation_Implementation();
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function Multicast_PlaySkillAnimation
 
 // Begin Class AAutoChessUnitBase Function OnDeath
 static FName NAME_AAutoChessUnitBase_OnDeath = FName(TEXT("OnDeath"));
@@ -355,6 +486,55 @@ DEFINE_FUNCTION(AAutoChessUnitBase::execSnapToGrid)
 }
 // End Class AAutoChessUnitBase Function SnapToGrid
 
+// Begin Class AAutoChessUnitBase Function SpawnSkillProjectile
+struct Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics
+{
+	struct AutoChessUnitBase_eventSpawnSkillProjectile_Parms
+	{
+		FVector TargetLocation;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Skill" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe4\xbe\x9b\xe8\x93\x9d\xe5\x9b\xbe\xe8\xb0\x83\xe7\x94\xa8)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe4\xbe\x9b\xe8\x93\x9d\xe5\x9b\xbe\xe8\xb0\x83\xe7\x94\xa8)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_TargetLocation;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::NewProp_TargetLocation = { "TargetLocation", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventSpawnSkillProjectile_Parms, TargetLocation), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::NewProp_TargetLocation,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "SpawnSkillProjectile", nullptr, nullptr, Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::AutoChessUnitBase_eventSpawnSkillProjectile_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::AutoChessUnitBase_eventSpawnSkillProjectile_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execSpawnSkillProjectile)
+{
+	P_GET_STRUCT(FVector,Z_Param_TargetLocation);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->SpawnSkillProjectile(Z_Param_TargetLocation);
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function SpawnSkillProjectile
+
 // Begin Class AAutoChessUnitBase Function UseSkill
 static FName NAME_AAutoChessUnitBase_UseSkill = FName(TEXT("UseSkill"));
 void AAutoChessUnitBase::UseSkill()
@@ -403,12 +583,16 @@ void AAutoChessUnitBase::StaticRegisterNativesAAutoChessUnitBase()
 	static const FNameNativePtrPair Funcs[] = {
 		{ "AttackTarget", &AAutoChessUnitBase::execAttackTarget },
 		{ "CheckCanFight", &AAutoChessUnitBase::execCheckCanFight },
+		{ "GetUnitVelocity", &AAutoChessUnitBase::execGetUnitVelocity },
 		{ "InitFromUnitData", &AAutoChessUnitBase::execInitFromUnitData },
+		{ "Multicast_PlayAttackAnimation", &AAutoChessUnitBase::execMulticast_PlayAttackAnimation },
+		{ "Multicast_PlaySkillAnimation", &AAutoChessUnitBase::execMulticast_PlaySkillAnimation },
 		{ "OnDeath", &AAutoChessUnitBase::execOnDeath },
 		{ "OnRep_CurrentGridPos", &AAutoChessUnitBase::execOnRep_CurrentGridPos },
 		{ "OnRep_TeamID", &AAutoChessUnitBase::execOnRep_TeamID },
 		{ "ReceiveDamage", &AAutoChessUnitBase::execReceiveDamage },
 		{ "SnapToGrid", &AAutoChessUnitBase::execSnapToGrid },
+		{ "SpawnSkillProjectile", &AAutoChessUnitBase::execSpawnSkillProjectile },
 		{ "UseSkill", &AAutoChessUnitBase::execUseSkill },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
@@ -639,6 +823,36 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa6\x82\xe6\x9e\x9c\xe4\xb8\xba\xe7\xa9\xba\xe5\x88\x99\xe4\xb8\xba\xe8\xbf\x91\xe6\x88\x98)" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileSocketName_MetaData[] = {
+		{ "Category", "AutoChess|Combat" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe9\xaa\xa8\xe9\xaa\xbc\xe6\x8f\x92\xe6\xa7\xbd\xe5\x90\x8d\xe7\xa7\xb0 (\xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe6\x8f\x92\xe6\xa7\xbd\xe4\xbd\x8d\xe7\xbd\xae)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe9\xaa\xa8\xe9\xaa\xbc\xe6\x8f\x92\xe6\xa7\xbd\xe5\x90\x8d\xe7\xa7\xb0 (\xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe6\x8f\x92\xe6\xa7\xbd\xe4\xbd\x8d\xe7\xbd\xae)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileSpawnOffset_MetaData[] = {
+		{ "Category", "AutoChess|Combat" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x9b\xb8\xe5\xaf\xb9\xe4\xba\x8e\xe5\x8d\x95\xe4\xbd\x8d\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe6\x8f\x92\xe6\xa7\xbd\xe6\x97\xa0\xe6\x95\x88\xe5\x88\x99\xe4\xbd\xbf\xe7\x94\xa8\xe6\xad\xa4\xe5\x81\x8f\xe7\xa7\xbb)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x9b\xb8\xe5\xaf\xb9\xe4\xba\x8e\xe5\x8d\x95\xe4\xbd\x8d\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe6\x8f\x92\xe6\xa7\xbd\xe6\x97\xa0\xe6\x95\x88\xe5\x88\x99\xe4\xbd\xbf\xe7\x94\xa8\xe6\xad\xa4\xe5\x81\x8f\xe7\xa7\xbb)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillProjectileClass_MetaData[] = {
+		{ "Category", "AutoChess|Skill" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa4\xa7\xe7\x81\xab\xe7\x90\x83\xe7\xad\x89)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa4\xa7\xe7\x81\xab\xe7\x90\x83\xe7\xad\x89)" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentTarget_MetaData[] = {
 		{ "Category", "AutoChess|Combat" },
 #if !UE_BUILD_SHIPPING
@@ -677,6 +891,26 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe6\x98\xaf\xe5\x90\xa6\xe6\xad\xa3\xe5\x9c\xa8\xe7\xa7\xbb\xe5\x8a\xa8" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttackMontage_MetaData[] = {
+		{ "Category", "AutoChess|Animation" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillMontage_MetaData[] = {
+		{ "Category", "AutoChess|Animation" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MoveSpeed_MetaData[] = {
@@ -721,11 +955,16 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillVFX;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillNiagaraVFX;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_ProjectileClass;
+	static const UECodeGen_Private::FNamePropertyParams NewProp_ProjectileSocketName;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_ProjectileSpawnOffset;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_SkillProjectileClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CurrentTarget;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_CurrentGridPos;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_TargetGridPos;
 	static void NewProp_bIsMoving_SetBit(void* Obj);
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsMoving;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_AttackMontage;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillMontage;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MoveSpeed;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ShieldDecayRate;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
@@ -733,12 +972,16 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_AttackTarget, "AttackTarget" }, // 2292515219
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_CheckCanFight, "CheckCanFight" }, // 1465676004
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity, "GetUnitVelocity" }, // 3175086555
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData, "InitFromUnitData" }, // 3038107873
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation, "Multicast_PlayAttackAnimation" }, // 3318043391
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation, "Multicast_PlaySkillAnimation" }, // 361902134
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnDeath, "OnDeath" }, // 2050110532
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_CurrentGridPos, "OnRep_CurrentGridPos" }, // 4028093311
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_TeamID, "OnRep_TeamID" }, // 3333258896
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_ReceiveDamage, "ReceiveDamage" }, // 2033339204
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_SnapToGrid, "SnapToGrid" }, // 1754529632
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile, "SpawnSkillProjectile" }, // 2698144236
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_UseSkill, "UseSkill" }, // 2863909705
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -769,6 +1012,9 @@ const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessUnitB
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillVFX = { "SkillVFX", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, SkillVFX), Z_Construct_UClass_UParticleSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillVFX_MetaData), NewProp_SkillVFX_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillNiagaraVFX = { "SkillNiagaraVFX", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, SkillNiagaraVFX), Z_Construct_UClass_UNiagaraSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillNiagaraVFX_MetaData), NewProp_SkillNiagaraVFX_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000020005, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileClass_MetaData), NewProp_ProjectileClass_MetaData) };
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileSocketName = { "ProjectileSocketName", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, ProjectileSocketName), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileSocketName_MetaData), NewProp_ProjectileSocketName_MetaData) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileSpawnOffset = { "ProjectileSpawnOffset", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, ProjectileSpawnOffset), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileSpawnOffset_MetaData), NewProp_ProjectileSpawnOffset_MetaData) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillProjectileClass = { "SkillProjectileClass", nullptr, (EPropertyFlags)0x0014000000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, SkillProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessSkillProjectile_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillProjectileClass_MetaData), NewProp_SkillProjectileClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_CurrentTarget = { "CurrentTarget", nullptr, (EPropertyFlags)0x0010000000020035, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, CurrentTarget), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentTarget_MetaData), NewProp_CurrentTarget_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_CurrentGridPos = { "CurrentGridPos", "OnRep_CurrentGridPos", (EPropertyFlags)0x0010000100020035, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, CurrentGridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentGridPos_MetaData), NewProp_CurrentGridPos_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_TargetGridPos = { "TargetGridPos", nullptr, (EPropertyFlags)0x0010000000020035, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, TargetGridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TargetGridPos_MetaData), NewProp_TargetGridPos_MetaData) };
@@ -777,6 +1023,8 @@ void Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving_SetBit(voi
 	((AAutoChessUnitBase*)Obj)->bIsMoving = 1;
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving = { "bIsMoving", nullptr, (EPropertyFlags)0x0010000000020035, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessUnitBase), &Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsMoving_MetaData), NewProp_bIsMoving_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_AttackMontage = { "AttackMontage", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, AttackMontage), Z_Construct_UClass_UAnimMontage_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackMontage_MetaData), NewProp_AttackMontage_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillMontage = { "SkillMontage", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, SkillMontage), Z_Construct_UClass_UAnimMontage_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillMontage_MetaData), NewProp_SkillMontage_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_MoveSpeed = { "MoveSpeed", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, MoveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MoveSpeed_MetaData), NewProp_MoveSpeed_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ShieldDecayRate = { "ShieldDecayRate", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, ShieldDecayRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ShieldDecayRate_MetaData), NewProp_ShieldDecayRate_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessUnitBase_Statics::PropPointers[] = {
@@ -801,10 +1049,15 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillVFX,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillNiagaraVFX,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileSocketName,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ProjectileSpawnOffset,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillProjectileClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_CurrentTarget,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_CurrentGridPos,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_TargetGridPos,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_AttackMontage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillMontage,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_MoveSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ShieldDecayRate,
 };
@@ -867,10 +1120,10 @@ AAutoChessUnitBase::~AAutoChessUnitBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 728494444U) },
+		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 278099670U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_3579605186(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_573051126(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

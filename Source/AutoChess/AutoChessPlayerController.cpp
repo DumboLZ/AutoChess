@@ -133,9 +133,9 @@ void AAutoChessPlayerController::ReceivedPlayer()
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
 		int32 ControllerId = LocalPlayer->GetControllerId();
-		TeamID = ControllerId;
-		UE_LOG(LogTemp, Warning, TEXT("[PlayerController::ReceivedPlayer] Found LocalPlayer. ControllerId: %d -> TeamID: %d"), 
-			ControllerId, TeamID);
+		// TeamID = ControllerId; // FIX: 不要在这里设置 TeamID，应该由 Server 分配并复制
+		UE_LOG(LogTemp, Warning, TEXT("[PlayerController::ReceivedPlayer] Found LocalPlayer. ControllerId: %d. Waiting for TeamID replication..."), 
+			ControllerId);
 
 		// 生成高亮管理器
 		if (!HighlightActor && GetWorld())
@@ -531,14 +531,29 @@ void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition
 				
 				DragOffset = FVector::ZeroVector;
 
+				// 计算正确的朝向 (基于队伍)
+				FRotator DragRotation = FRotator::ZeroRotator;
+				if (TeamID == 0)
+				{
+					DragRotation = FRotator(0.0f, 90.0f, 0.0f);
+				}
+				else
+				{
+					DragRotation = FRotator(0.0f, -90.0f, 0.0f);
+				}
+
 				// 生成幽灵 Actor
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-				DragGhost = GetWorld()->SpawnActor<AAutoChessGhost>(AAutoChessGhost::StaticClass(), Unit->GetActorLocation(), Unit->GetActorRotation(), SpawnParams);
+				DragGhost = GetWorld()->SpawnActor<AAutoChessGhost>(AAutoChessGhost::StaticClass(), Unit->GetActorLocation(), DragRotation, SpawnParams);
 				
 				if (DragGhost)
 				{
 					DragGhost->InitVisuals(Unit->GetMesh()->GetSkeletalMeshAsset(), nullptr); // 可选：设置半透明材质
+					
+					// 关键：同步 Mesh 的相对旋转 (因为 Unit Blueprint 中可能旋转了 Mesh)
+					DragGhost->Mesh->SetRelativeRotation(Unit->GetMesh()->GetRelativeRotation());
+					DragGhost->Mesh->SetRelativeScale3D(Unit->GetMesh()->GetRelativeScale3D());
 				}
 
 				// 隐藏真实单位 (本地)
@@ -555,17 +570,17 @@ void AAutoChessPlayerController::HandleDragging(const FVector2D& ScreenPosition)
 	FVector WorldLoc, WorldDir;
 	if (DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLoc, WorldDir))
 	{
-		// 射线检测到了地面或棋盘
-		FVector End = WorldLoc + WorldDir * 10000.0f;
-		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
+		// 使用平面相交计算，避免被其他单位遮挡
+		if (FMath::Abs(WorldDir.Z) > KINDA_SMALL_NUMBER)
 		{
-			FVector NewLocation = Hit.Location;
+			// 计算与拖拽平面的交点
+			float t = (DragStartZ - WorldLoc.Z) / WorldDir.Z;
 			
-			// 使用缓存的 Z 高度，防止掉落
-			NewLocation.Z = DragStartZ;
-			
-			DragGhost->SetActorLocation(NewLocation);
+			if (t > 0.0f)
+			{
+				FVector Intersection = WorldLoc + WorldDir * t;
+				DragGhost->SetActorLocation(Intersection);
+			}
 		}
 	}
 }
@@ -677,6 +692,18 @@ void AAutoChessPlayerController::Server_MoveUnit_Implementation(AAutoChessUnitBa
 		Unit->CurrentGridPos = TargetPos;
 		Unit->SnapToGrid();
 	}
+
+	// 移动后重置朝向 (确保面向敌人)
+	FRotator TargetRotation = FRotator::ZeroRotator;
+	if (Unit->TeamID == 0)
+	{
+		TargetRotation = FRotator(0.0f, 90.0f, 0.0f);
+	}
+	else
+	{
+		TargetRotation = FRotator(0.0f, -90.0f, 0.0f);
+	}
+	Unit->SetActorRotation(TargetRotation);
 }
 
 
@@ -1210,7 +1237,19 @@ void AAutoChessPlayerController::Server_BuyUnit_Implementation(TSubclassOf<AAuto
 	// 计算生成位置（添加 Z 轴偏移，避免单位陷入地面）
 	FVector UnitSpawnLocation = GS->GameGrid->GridToWorld(GridPos.X, GridPos.Y);
 	UnitSpawnLocation.Z += 100.0f; // 向上偏移 100 单位（根据您的单位大小调整）
+	
+	// 根据队伍设置初始朝向
 	FRotator SpawnRotation = FRotator::ZeroRotator;
+	if (TeamID == 0)
+	{
+		// Team 0 (下方) 面向 +Y (90度)
+		SpawnRotation = FRotator(0.0f, 90.0f, 0.0f);
+	}
+	else
+	{
+		// Team 1 (上方) 面向 -Y (-90度)
+		SpawnRotation = FRotator(0.0f, -90.0f, 0.0f);
+	}
 
 	// 生成单位
 	FActorSpawnParameters SpawnParams;

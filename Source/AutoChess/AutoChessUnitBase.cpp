@@ -324,6 +324,12 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 
 	// --- 服务器逻辑 (AI & 战斗) ---
 
+	// 优先更新冷却时间 (无论状态如何)
+	if (AttackTimer > 0.0f)
+	{
+		AttackTimer -= DeltaTime;
+	}
+
 	// 只有在战斗阶段才进行逻辑
 	if (!CheckCanFight())
 	{
@@ -385,6 +391,21 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		CurrentPath.Empty();
 		// 不清除 CurrentTarget，眩晕结束后可以继续攻击
 		return;
+	}
+
+	// 如果正在播放非攻击蒙太奇（如技能、受击），则暂停 AI
+	// 这样可以防止普攻打断技能，同时允许普攻打断普攻（高攻速时）
+	if (GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
+		if (AnimInst->IsAnyMontagePlaying())
+		{
+			// 如果当前播放的不是普攻蒙太奇，那就肯定是技能或受击，必须暂停
+			if (!AttackMontage || !AnimInst->Montage_IsPlaying(AttackMontage))
+			{
+				return;
+			}
+		}
 	}
 
 	// 简单的自动攻击逻辑 (仅在有目标时)
@@ -471,11 +492,6 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		// 寻找新目标
 		CurrentTarget = FindNearestEnemy();
 	}
-
-	if (AttackTimer > 0.0f)
-	{
-		AttackTimer -= DeltaTime;
-	}
 }
 
 void AAutoChessUnitBase::ProcessGridMovement(float DeltaTime)
@@ -526,7 +542,19 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 		if (ProjectileClass)
 		{
 			// 远程攻击：生成投射物
-			FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 50.0f; // 稍微靠前一点
+			FVector SpawnLocation;
+			
+			// 优先使用骨骼插槽
+			if (!ProjectileSocketName.IsNone() && GetMesh() && GetMesh()->DoesSocketExist(ProjectileSocketName))
+			{
+				SpawnLocation = GetMesh()->GetSocketLocation(ProjectileSocketName);
+			}
+			else
+			{
+				// 使用相对偏移
+				SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
+			}
+
 			FRotator SpawnRotation = (Target->GetActorLocation() - SpawnLocation).Rotation();
 
 			FActorSpawnParameters SpawnParams;
@@ -544,6 +572,9 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			// 近战攻击：直接造成伤害
 			Target->ReceiveDamage(CurrentAttackDamage, this);
 		}
+
+		// 播放攻击动画
+		Multicast_PlayAttackAnimation();
 
 		// 增加法力值 (通过 AttributeSet)
 		if (AttributeSet)
@@ -655,14 +686,25 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 			else
 			{
 				// 受击回蓝
-				float CurrentMana = AttributeSet->GetMana();
-				float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
-				AttributeSet->SetMana(NewMana);
-
-				// 检查是否可以释放技能
-				if (NewMana >= AttributeSet->GetMaxMana())
+				// 如果正在释放技能（播放技能蒙太奇），则不回蓝
+				// 之前的逻辑误判了受击蒙太奇，导致受击也不回蓝
+				bool bIsCastingSkill = false;
+				if (SkillMontage && GetMesh() && GetMesh()->GetAnimInstance() && GetMesh()->GetAnimInstance()->Montage_IsPlaying(SkillMontage))
 				{
-					UseSkill();
+					bIsCastingSkill = true;
+				}
+
+				if (!bIsCastingSkill)
+				{
+					float CurrentMana = AttributeSet->GetMana();
+					float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
+					AttributeSet->SetMana(NewMana);
+
+					// 检查是否可以释放技能
+					if (NewMana >= AttributeSet->GetMaxMana())
+					{
+						UseSkill();
+					}
 				}
 
 				// 发送受击事件 (用于触发被动技能)
@@ -762,6 +804,9 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 					AttributeSet->SetMana(0.0f);
 				}
 
+				// 播放技能动画
+				Multicast_PlaySkillAnimation();
+
 				// 播放特效
 				if (SkillVFX)
 				{
@@ -769,6 +814,16 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 				}
 			}
 		}
+	}
+	else
+	{
+		// 如果没有 GAS Ability，则直接播放动画和特效（简单模式）
+		if (AttributeSet)
+		{
+			AttributeSet->SetMana(0.0f);
+		}
+		Multicast_PlaySkillAnimation();
+		UE_LOG(LogTemp, Log, TEXT("[UseSkill] No GAS Ability, playing animation directly."));
 	}
 }
 
@@ -813,6 +868,8 @@ void AAutoChessUnitBase::InitFromUnitData()
 	}
 }
 
+
+
 void AAutoChessUnitBase::OnRep_TeamID()
 {
 	UE_LOG(LogTemp, Error, TEXT("[OnRep_TeamID] Unit=%s, TeamID=%d, HasAuthority=%d"), 
@@ -826,5 +883,67 @@ void AAutoChessUnitBase::OnRep_TeamID()
 			UnitWidget->SetTeamColor(TeamID);
 			UE_LOG(LogTemp, Log, TEXT("[OnRep_TeamID] Updated health bar color for Team %d"), TeamID);
 		}
+	}
+}
+
+void AAutoChessUnitBase::Multicast_PlayAttackAnimation_Implementation()
+{
+	if (AttackMontage)
+	{
+		PlayAnimMontage(AttackMontage);
+	}
+}
+
+void AAutoChessUnitBase::Multicast_PlaySkillAnimation_Implementation()
+{
+	if (SkillMontage)
+	{
+		PlayAnimMontage(SkillMontage);
+	}
+}
+
+FVector AAutoChessUnitBase::GetUnitVelocity() const
+{
+	if (bIsMoving)
+	{
+		return GetActorForwardVector() * MoveSpeed;
+	}
+	return FVector::ZeroVector;
+}
+
+#include "AutoChessSkillProjectile.h"
+
+void AAutoChessUnitBase::SpawnSkillProjectile(FVector TargetLocation)
+{
+	if (!SkillProjectileClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[SpawnSkillProjectile] SkillProjectileClass is NULL!"));
+		return;
+	}
+
+	// 计算发射位置 (使用插槽或偏移)
+	FVector SpawnLocation;
+	if (!ProjectileSocketName.IsNone() && GetMesh() && GetMesh()->DoesSocketExist(ProjectileSocketName))
+	{
+		SpawnLocation = GetMesh()->GetSocketLocation(ProjectileSocketName);
+	}
+	else
+	{
+		SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
+	}
+
+	// 计算发射方向
+	FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
+	FRotator SpawnRotation = Direction.Rotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	AAutoChessSkillProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessSkillProjectile>(SkillProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	if (Projectile)
+	{
+		Projectile->InitSkillProjectile(this, Direction);
 	}
 }
