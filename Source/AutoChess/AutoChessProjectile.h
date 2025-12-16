@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "AutoChessProjectile.generated.h"
 
-class USphereComponent;
+class UCapsuleComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class AAutoChessUnitBase;
@@ -26,10 +26,13 @@ public:
 	// 初始化投射物
 	void InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit);
 
+	// 触发命中逻辑
+	void TriggerHit();
+
 protected:
 	// 碰撞组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USphereComponent* SphereComp;
+	UCapsuleComponent* CapsuleComp;
 
 	// 网格体组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")

@@ -5,7 +5,7 @@
 #include "GameplayEffectTypes.h" // FIX: 必须包含此头文件以使用 FGameplayEffectSpecHandle
 #include "AutoChessSkillProjectile.generated.h"
 
-class USphereComponent;
+class UCapsuleComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UNiagaraComponent;
@@ -38,7 +38,7 @@ protected:
 	
 	// 碰撞组件
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USphereComponent* SphereComp;
+	UCapsuleComponent* CapsuleComp;
 
 	// 网格体组件 (可选)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -103,6 +103,10 @@ protected:
 	struct FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 	float LifeTime = 0.0f;
+
+	// 已处理过的 Actor (防止同一单位的多个组件重复触发)
+	UPROPERTY()
+	TSet<AActor*> ProcessedActors;
 
 	// 处理重叠
 	UFUNCTION()

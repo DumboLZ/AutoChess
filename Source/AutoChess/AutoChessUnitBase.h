@@ -173,6 +173,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
 	class UAnimMontage* SkillMontage;
 
+	// 死亡蒙太奇
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
+	class UAnimMontage* DeathMontage;
+
+	// 是否已死亡
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|State")
+	bool bIsDead;
+
 	// 播放攻击动画 (多播)
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_PlayAttackAnimation();
@@ -180,6 +188,10 @@ public:
 	// 播放技能动画 (多播)
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_PlaySkillAnimation();
+
+	// 播放死亡动画 (多播)
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_PlayDeathAnimation();
 
 	// 移动速度 (Unreal Units / sec)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")

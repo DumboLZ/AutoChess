@@ -18,11 +18,11 @@ COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FVector();
 ENGINE_API UClass* Z_Construct_UClass_AActor();
 ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
+ENGINE_API UClass* Z_Construct_UClass_UCapsuleComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UCurveFloat_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UParticleSystem_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UPrimitiveComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UProjectileMovementComponent_NoRegister();
-ENGINE_API UClass* Z_Construct_UClass_USphereComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
 ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FHitResult();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UGameplayEffect_NoRegister();
@@ -199,7 +199,7 @@ struct Z_Construct_UClass_AAutoChessSkillProjectile_Statics
 		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x9f\xba\xe7\xb1\xbb\n\xe6\x94\xaf\xe6\x8c\x81\xef\xbc\x9a\xe7\x9b\xb4\xe7\xba\xbf\xe9\xa3\x9e\xe8\xa1\x8c\xe3\x80\x81\xe7\xa9\xbf\xe9\x80\x8f\xe3\x80\x81""AOE\xe4\xbc\xa4\xe5\xae\xb3\xe3\x80\x81\xe9\x80\x9f\xe5\xba\xa6\xe5\x8f\x98\xe5\x8c\x96\xe3\x80\x81\xe5\xa4\xa7\xe5\xb0\x8f\xe5\x8f\x98\xe5\x8c\x96" },
 #endif
 	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SphereComp_MetaData[] = {
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CapsuleComp_MetaData[] = {
 		{ "Category", "Components" },
 #if !UE_BUILD_SHIPPING
 		{ "Comment", "// \xe7\xa2\xb0\xe6\x92\x9e\xe7\xbb\x84\xe4\xbb\xb6\n" },
@@ -352,8 +352,17 @@ struct Z_Construct_UClass_AAutoChessSkillProjectile_Statics
 		{ "ToolTip", "--- \xe8\xbf\x90\xe8\xa1\x8c\xe6\x97\xb6\xe7\x8a\xb6\xe6\x80\x81 ---" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProcessedActors_MetaData[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\xb7\xb2\xe5\xa4\x84\xe7\x90\x86\xe8\xbf\x87\xe7\x9a\x84 Actor (\xe9\x98\xb2\xe6\xad\xa2\xe5\x90\x8c\xe4\xb8\x80\xe5\x8d\x95\xe4\xbd\x8d\xe7\x9a\x84\xe5\xa4\x9a\xe4\xb8\xaa\xe7\xbb\x84\xe4\xbb\xb6\xe9\x87\x8d\xe5\xa4\x8d\xe8\xa7\xa6\xe5\x8f\x91)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessSkillProjectile.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\xb7\xb2\xe5\xa4\x84\xe7\x90\x86\xe8\xbf\x87\xe7\x9a\x84 Actor (\xe9\x98\xb2\xe6\xad\xa2\xe5\x90\x8c\xe4\xb8\x80\xe5\x8d\x95\xe4\xbd\x8d\xe7\x9a\x84\xe5\xa4\x9a\xe4\xb8\xaa\xe7\xbb\x84\xe4\xbb\xb6\xe9\x87\x8d\xe5\xa4\x8d\xe8\xa7\xa6\xe5\x8f\x91)" },
+#endif
+	};
 #endif // WITH_METADATA
-	static const UECodeGen_Private::FObjectPropertyParams NewProp_SphereComp;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_CapsuleComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MeshComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_NiagaraComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MovementComp;
@@ -368,6 +377,8 @@ struct Z_Construct_UClass_AAutoChessSkillProjectile_Statics
 	static const UECodeGen_Private::FClassPropertyParams NewProp_DamageEffectClass;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_HitVFX;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_InstigatorUnit;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_ProcessedActors_ElementProp;
+	static const UECodeGen_Private::FSetPropertyParams NewProp_ProcessedActors;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -380,7 +391,7 @@ struct Z_Construct_UClass_AAutoChessSkillProjectile_Statics
 	};
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
-const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_SphereComp = { "SphereComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, SphereComp), Z_Construct_UClass_USphereComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SphereComp_MetaData), NewProp_SphereComp_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_CapsuleComp = { "CapsuleComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, CapsuleComp), Z_Construct_UClass_UCapsuleComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CapsuleComp_MetaData), NewProp_CapsuleComp_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_MeshComp = { "MeshComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, MeshComp), Z_Construct_UClass_UStaticMeshComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MeshComp_MetaData), NewProp_MeshComp_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_NiagaraComp = { "NiagaraComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, NiagaraComp), Z_Construct_UClass_UNiagaraComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_NiagaraComp_MetaData), NewProp_NiagaraComp_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_MovementComp = { "MovementComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, MovementComp), Z_Construct_UClass_UProjectileMovementComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MovementComp_MetaData), NewProp_MovementComp_MetaData) };
@@ -395,8 +406,10 @@ const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessSkillPr
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_DamageEffectClass = { "DamageEffectClass", nullptr, (EPropertyFlags)0x0024080000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, DamageEffectClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayEffect_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DamageEffectClass_MetaData), NewProp_DamageEffectClass_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_HitVFX = { "HitVFX", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, HitVFX), Z_Construct_UClass_UParticleSystem_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HitVFX_MetaData), NewProp_HitVFX_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_InstigatorUnit = { "InstigatorUnit", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, InstigatorUnit), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InstigatorUnit_MetaData), NewProp_InstigatorUnit_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_ProcessedActors_ElementProp = { "ProcessedActors", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FSetPropertyParams Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_ProcessedActors = { "ProcessedActors", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Set, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessSkillProjectile, ProcessedActors), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProcessedActors_MetaData), NewProp_ProcessedActors_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessSkillProjectile_Statics::PropPointers[] = {
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_SphereComp,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_CapsuleComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_MeshComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_NiagaraComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_MovementComp,
@@ -411,6 +424,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_DamageEffectClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_HitVFX,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_InstigatorUnit,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_ProcessedActors_ElementProp,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessSkillProjectile_Statics::NewProp_ProcessedActors,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessSkillProjectile_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessSkillProjectile_Statics::DependentSingletons[])() = {
@@ -453,10 +468,10 @@ AAutoChessSkillProjectile::~AAutoChessSkillProjectile() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessSkillProjectile_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessSkillProjectile, AAutoChessSkillProjectile::StaticClass, TEXT("AAutoChessSkillProjectile"), &Z_Registration_Info_UClass_AAutoChessSkillProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessSkillProjectile), 4153540437U) },
+		{ Z_Construct_UClass_AAutoChessSkillProjectile, AAutoChessSkillProjectile::StaticClass, TEXT("AAutoChessSkillProjectile"), &Z_Registration_Info_UClass_AAutoChessSkillProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessSkillProjectile), 2616874727U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessSkillProjectile_h_3696214710(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessSkillProjectile_h_4289487668(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessSkillProjectile_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessSkillProjectile_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

@@ -411,12 +411,21 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	// 简单的自动攻击逻辑 (仅在有目标时)
 	if (IsValid(CurrentTarget))
 	{
-		// 1. 检查是否已经在攻击范围内 (基于当前位置)
-		int32 DistX = FMath::Abs(CurrentGridPos.X - CurrentTarget->CurrentGridPos.X);
-		int32 DistY = FMath::Abs(CurrentGridPos.Y - CurrentTarget->CurrentGridPos.Y);
-		int32 GridDist = DistX + DistY;
+		// 获取 Grid 信息用于计算实际距离
+		float AttackRadius = 100.0f; // 默认值
+		if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
+		{
+			if (GS->GameGrid)
+			{
+				AttackRadius = AttackRangeGrid * GS->GameGrid->TileSize;
+			}
+		}
 
-		if (GridDist <= AttackRangeGrid)
+		// 1. 检查是否已经在攻击范围内 (基于圆形范围，忽略 Z 轴)
+		float DistToTarget = FVector::Dist2D(GetActorLocation(), CurrentTarget->GetActorLocation());
+		
+		// 允许微小误差 (例如 10.0f)
+		if (DistToTarget <= AttackRadius + 10.0f)
 		{
 			// 停止移动
 			bIsMoving = false;
@@ -425,8 +434,9 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 			// 攻击冷却
 			if (AttackTimer <= 0.0f)
 			{
-				// 面向目标
+				// 面向目标 (忽略 Z 轴)
 				FVector Direction = CurrentTarget->GetActorLocation() - GetActorLocation();
+				Direction.Z = 0.0f;
 				SetActorRotation(Direction.Rotation());
 
 				AttackTarget(CurrentTarget);
@@ -446,13 +456,20 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 			bool bShouldWait = false;
 			if (CurrentTarget->bIsMoving)
 			{
-				int32 TargetDistX = FMath::Abs(CurrentGridPos.X - CurrentTarget->TargetGridPos.X);
-				int32 TargetDistY = FMath::Abs(CurrentGridPos.Y - CurrentTarget->TargetGridPos.Y);
-				int32 TargetGridDist = TargetDistX + TargetDistY;
-
-				if (TargetGridDist <= AttackRangeGrid)
+				// 计算目标终点与我的距离
+				if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 				{
-					bShouldWait = true;
+					if (GS->GameGrid)
+					{
+						FVector TargetDestWorld = GS->GameGrid->GridToWorld(CurrentTarget->TargetGridPos.X, CurrentTarget->TargetGridPos.Y);
+						// TargetDestWorld.Z = GetActorLocation().Z; // 不再需要强制高度，直接用 Dist2D
+						
+						float DistToDest = FVector::Dist2D(GetActorLocation(), TargetDestWorld);
+						if (DistToDest <= AttackRadius + 10.0f)
+						{
+							bShouldWait = true;
+						}
+					}
 				}
 			}
 
@@ -462,7 +479,9 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 				bIsMoving = false;
 				CurrentPath.Empty();
 				
+				// 面向目标 (忽略 Z 轴)
 				FVector Direction = CurrentTarget->GetActorLocation() - GetActorLocation();
+				Direction.Z = 0.0f;
 				SetActorRotation(Direction.Rotation());
 			}
 			else
@@ -555,7 +574,10 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 				SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
 			}
 
-			FRotator SpawnRotation = (Target->GetActorLocation() - SpawnLocation).Rotation();
+			// 计算发射方向 (忽略 Z 轴)
+			FVector TargetLocFlat = Target->GetActorLocation();
+			TargetLocFlat.Z = SpawnLocation.Z;
+			FRotator SpawnRotation = (TargetLocFlat - SpawnLocation).Rotation();
 
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
@@ -737,12 +759,39 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 
 void AAutoChessUnitBase::OnDeath_Implementation()
 {
-	// 从 GameState 注销
+	if (bIsDead) return;
+	bIsDead = true;
+
+	// 禁用碰撞
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// 从 GameState 注销 (逻辑上移除，但 Actor 还在播放动画)
 	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 	{
 		GS->UnregisterUnit(this);
 	}
-	Destroy();
+
+	// 播放死亡蒙太奇
+	float DeathAnimDuration = 1.5f; // 默认销毁延迟
+	if (DeathMontage)
+	{
+		// 多播播放死亡动画
+		// 注意：这里我们简单地在 Server 播放并依赖 Replication，或者手动 Multicast
+		// 由于 Montage_Play 默认只在本地播放，我们需要一个 Multicast 函数
+		Multicast_PlayDeathAnimation();
+		DeathAnimDuration = DeathMontage->GetPlayLength();
+	}
+
+	// 延迟销毁
+	SetLifeSpan(DeathAnimDuration + 0.5f);
+}
+
+void AAutoChessUnitBase::Multicast_PlayDeathAnimation_Implementation()
+{
+	if (DeathMontage && GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		GetMesh()->GetAnimInstance()->Montage_Play(DeathMontage);
+	}
 }
 
 AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
@@ -759,10 +808,8 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 	{
 		if (IsValid(Enemy))
 		{
-			// 使用格子距离
-			int32 DistX = FMath::Abs(CurrentGridPos.X - Enemy->CurrentGridPos.X);
-			int32 DistY = FMath::Abs(CurrentGridPos.Y - Enemy->CurrentGridPos.Y);
-			float Dist = DistX + DistY;
+			// 使用世界坐标距离 (欧几里得距离)，与攻击范围逻辑保持一致
+			float Dist = FVector::Dist2D(GetActorLocation(), Enemy->GetActorLocation());
 
 			if (Dist < MinDistance)
 			{
@@ -932,8 +979,10 @@ void AAutoChessUnitBase::SpawnSkillProjectile(FVector TargetLocation)
 		SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
 	}
 
-	// 计算发射方向
-	FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
+	// 计算发射方向 (忽略 Z 轴，水平发射)
+	FVector TargetLocFlat = TargetLocation;
+	TargetLocFlat.Z = SpawnLocation.Z;
+	FVector Direction = (TargetLocFlat - SpawnLocation).GetSafeNormal();
 	FRotator SpawnRotation = Direction.Rotation();
 
 	FActorSpawnParameters SpawnParams;

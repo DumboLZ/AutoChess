@@ -16,7 +16,6 @@
 			"AutoChess.init.gen.cpp.obj"
 		],
 		"Module.AutoChess.2.cpp.obj": [
-			"AutoChessProjectile.gen.cpp.obj",
 			"AutoChessUnitData.gen.cpp.obj",
 			"AutoChessUnitWidget.gen.cpp.obj",
 			"MainMenuPlayerController.gen.cpp.obj",
@@ -31,12 +30,13 @@
 			"AutoChessGrid.cpp.obj",
 			"AutoChessHighlightActor.cpp.obj",
 			"AutoChessHUDWidget.cpp.obj",
-			"AutoChessProjectile.cpp.obj",
+			"AutoChessPlayerController.cpp.obj",
 			"AutoChessUnitWidget.cpp.obj",
 			"MainMenuPlayerController.cpp.obj",
+			"AutoChessProjectile.gen.cpp.obj",
 			"AutoChessSkillProjectile.gen.cpp.obj",
 			"AutoChessUnitBase.gen.cpp.obj",
-			"AutoChessPlayerController.cpp.obj",
+			"AutoChessProjectile.cpp.obj",
 			"AutoChessSkillProjectile.cpp.obj",
 			"AutoChessUnitBase.cpp.obj"
 		]

@@ -257,6 +257,46 @@ DEFINE_FUNCTION(AAutoChessUnitBase::execMulticast_PlayAttackAnimation)
 }
 // End Class AAutoChessUnitBase Function Multicast_PlayAttackAnimation
 
+// Begin Class AAutoChessUnitBase Function Multicast_PlayDeathAnimation
+static FName NAME_AAutoChessUnitBase_Multicast_PlayDeathAnimation = FName(TEXT("Multicast_PlayDeathAnimation"));
+void AAutoChessUnitBase::Multicast_PlayDeathAnimation()
+{
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessUnitBase_Multicast_PlayDeathAnimation),NULL);
+}
+struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\xad\xbb\xe4\xba\xa1\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\xad\xbb\xe4\xba\xa1\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "Multicast_PlayDeathAnimation", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00024C40, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execMulticast_PlayDeathAnimation)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Multicast_PlayDeathAnimation_Implementation();
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function Multicast_PlayDeathAnimation
+
 // Begin Class AAutoChessUnitBase Function Multicast_PlaySkillAnimation
 static FName NAME_AAutoChessUnitBase_Multicast_PlaySkillAnimation = FName(TEXT("Multicast_PlaySkillAnimation"));
 void AAutoChessUnitBase::Multicast_PlaySkillAnimation()
@@ -586,6 +626,7 @@ void AAutoChessUnitBase::StaticRegisterNativesAAutoChessUnitBase()
 		{ "GetUnitVelocity", &AAutoChessUnitBase::execGetUnitVelocity },
 		{ "InitFromUnitData", &AAutoChessUnitBase::execInitFromUnitData },
 		{ "Multicast_PlayAttackAnimation", &AAutoChessUnitBase::execMulticast_PlayAttackAnimation },
+		{ "Multicast_PlayDeathAnimation", &AAutoChessUnitBase::execMulticast_PlayDeathAnimation },
 		{ "Multicast_PlaySkillAnimation", &AAutoChessUnitBase::execMulticast_PlaySkillAnimation },
 		{ "OnDeath", &AAutoChessUnitBase::execOnDeath },
 		{ "OnRep_CurrentGridPos", &AAutoChessUnitBase::execOnRep_CurrentGridPos },
@@ -913,6 +954,26 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DeathMontage_MetaData[] = {
+		{ "Category", "AutoChess|Animation" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\xad\xbb\xe4\xba\xa1\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\xad\xbb\xe4\xba\xa1\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsDead_MetaData[] = {
+		{ "Category", "AutoChess|State" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x98\xaf\xe5\x90\xa6\xe5\xb7\xb2\xe6\xad\xbb\xe4\xba\xa1\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x98\xaf\xe5\x90\xa6\xe5\xb7\xb2\xe6\xad\xbb\xe4\xba\xa1" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MoveSpeed_MetaData[] = {
 		{ "Category", "AutoChess|Grid" },
 #if !UE_BUILD_SHIPPING
@@ -965,6 +1026,9 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsMoving;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_AttackMontage;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkillMontage;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_DeathMontage;
+	static void NewProp_bIsDead_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsDead;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MoveSpeed;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ShieldDecayRate;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
@@ -975,6 +1039,7 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity, "GetUnitVelocity" }, // 3175086555
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData, "InitFromUnitData" }, // 3038107873
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation, "Multicast_PlayAttackAnimation" }, // 3318043391
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation, "Multicast_PlayDeathAnimation" }, // 2169110577
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation, "Multicast_PlaySkillAnimation" }, // 361902134
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnDeath, "OnDeath" }, // 2050110532
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_CurrentGridPos, "OnRep_CurrentGridPos" }, // 4028093311
@@ -1025,6 +1090,12 @@ void Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving_SetBit(voi
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving = { "bIsMoving", nullptr, (EPropertyFlags)0x0010000000020035, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessUnitBase), &Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsMoving_MetaData), NewProp_bIsMoving_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_AttackMontage = { "AttackMontage", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, AttackMontage), Z_Construct_UClass_UAnimMontage_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackMontage_MetaData), NewProp_AttackMontage_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillMontage = { "SkillMontage", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, SkillMontage), Z_Construct_UClass_UAnimMontage_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkillMontage_MetaData), NewProp_SkillMontage_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_DeathMontage = { "DeathMontage", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, DeathMontage), Z_Construct_UClass_UAnimMontage_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DeathMontage_MetaData), NewProp_DeathMontage_MetaData) };
+void Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsDead_SetBit(void* Obj)
+{
+	((AAutoChessUnitBase*)Obj)->bIsDead = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsDead = { "bIsDead", nullptr, (EPropertyFlags)0x0010000000020035, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessUnitBase), &Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsDead_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsDead_MetaData), NewProp_bIsDead_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_MoveSpeed = { "MoveSpeed", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, MoveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MoveSpeed_MetaData), NewProp_MoveSpeed_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ShieldDecayRate = { "ShieldDecayRate", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessUnitBase, ShieldDecayRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ShieldDecayRate_MetaData), NewProp_ShieldDecayRate_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessUnitBase_Statics::PropPointers[] = {
@@ -1058,6 +1129,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsMoving,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_AttackMontage,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_SkillMontage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_DeathMontage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_bIsDead,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_MoveSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessUnitBase_Statics::NewProp_ShieldDecayRate,
 };
@@ -1104,12 +1177,14 @@ void AAutoChessUnitBase::ValidateGeneratedRepEnums(const TArray<struct FRepRecor
 	static const FName Name_CurrentGridPos(TEXT("CurrentGridPos"));
 	static const FName Name_TargetGridPos(TEXT("TargetGridPos"));
 	static const FName Name_bIsMoving(TEXT("bIsMoving"));
+	static const FName Name_bIsDead(TEXT("bIsDead"));
 	const bool bIsValid = true
 		&& Name_TeamID == ClassReps[(int32)ENetFields_Private::TeamID].Property->GetFName()
 		&& Name_CurrentTarget == ClassReps[(int32)ENetFields_Private::CurrentTarget].Property->GetFName()
 		&& Name_CurrentGridPos == ClassReps[(int32)ENetFields_Private::CurrentGridPos].Property->GetFName()
 		&& Name_TargetGridPos == ClassReps[(int32)ENetFields_Private::TargetGridPos].Property->GetFName()
-		&& Name_bIsMoving == ClassReps[(int32)ENetFields_Private::bIsMoving].Property->GetFName();
+		&& Name_bIsMoving == ClassReps[(int32)ENetFields_Private::bIsMoving].Property->GetFName()
+		&& Name_bIsDead == ClassReps[(int32)ENetFields_Private::bIsDead].Property->GetFName();
 	checkf(bIsValid, TEXT("UHT Generated Rep Indices do not match runtime populated Rep Indices for properties in AAutoChessUnitBase"));
 }
 DEFINE_VTABLE_PTR_HELPER_CTOR(AAutoChessUnitBase);
@@ -1120,10 +1195,10 @@ AAutoChessUnitBase::~AAutoChessUnitBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 278099670U) },
+		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 1190157868U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_573051126(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_2649521063(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

@@ -1,5 +1,5 @@
 #include "AutoChessSkillProjectile.h"
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "NiagaraComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -7,17 +7,19 @@
 #include "AutoChessGameState.h"
 #include "AutoChessGrid.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameplayEffectTypes.h"
+#include "AbilitySystemComponent.h"
 
 AAutoChessSkillProjectile::AAutoChessSkillProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 
-	// 碰撞组件
-	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	SphereComp->InitSphereRadius(20.0f);
-	SphereComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-	RootComponent = SphereComp;
+	// 碰撞组件 (使用胶囊体以忽略高度差)
+	CapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComp"));
+	CapsuleComp->InitCapsuleSize(20.0f, 200.0f); // 高度设大一点，确保能打中
+	CapsuleComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	RootComponent = CapsuleComp;
 
 	// 网格体 (可选)
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
@@ -34,19 +36,21 @@ AAutoChessSkillProjectile::AAutoChessSkillProjectile()
 	MovementComp->MaxSpeed = 2000.0f;
 	MovementComp->ProjectileGravityScale = 0.0f;
 	MovementComp->bRotationFollowsVelocity = true;
+	
+	// 强制在水平面上移动 (忽略 Z 轴)
+	MovementComp->bConstrainToPlane = true;
+	MovementComp->SetPlaneConstraintNormal(FVector(0.0f, 0.0f, 1.0f));
 }
-
-#include "GameplayEffectTypes.h"
-#include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-
-// ... (constructor remains same)
 
 void AAutoChessSkillProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAutoChessSkillProjectile::OnOverlapBegin);
+	// 绑定重叠事件
+	if (CapsuleComp)
+	{
+		CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &AAutoChessSkillProjectile::OnOverlapBegin);
+	}
 
 	SetActorScale3D(FVector(InitialScale));
 	SetLifeSpan(MaxLifeTime); // 使用配置的寿命
@@ -92,9 +96,9 @@ void AAutoChessSkillProjectile::InitSkillProjectile(AAutoChessUnitBase* InInstig
 	}
 
 	// 忽略施法者碰撞
-	if (InstigatorUnit)
+	if (InstigatorUnit && CapsuleComp)
 	{
-		SphereComp->IgnoreActorWhenMoving(InstigatorUnit, true);
+		CapsuleComp->IgnoreActorWhenMoving(InstigatorUnit, true);
 		
 		// 创建 GE Spec Handle (快照伤害)
 		if (DamageEffectClass && InstigatorUnit->GetAbilitySystemComponent())
@@ -109,6 +113,13 @@ void AAutoChessSkillProjectile::InitSkillProjectile(AAutoChessUnitBase* InInstig
 void AAutoChessSkillProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!InstigatorUnit || !OtherActor || OtherActor == InstigatorUnit) return;
+
+	// 防止重复处理同一个 Actor (例如同时碰到了 Capsule 和 Mesh)
+	if (ProcessedActors.Contains(OtherActor))
+	{
+		return;
+	}
+	ProcessedActors.Add(OtherActor);
 
 	AAutoChessUnitBase* HitUnit = Cast<AAutoChessUnitBase>(OtherActor);
 	if (HitUnit)
