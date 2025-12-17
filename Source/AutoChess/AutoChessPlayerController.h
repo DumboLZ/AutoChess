@@ -68,6 +68,14 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_HideCardDisplay();
 
+	// 客户端强制结束比赛 (用于确保 UI 弹出)
+	UFUNCTION(Client, Reliable)
+	void Client_MatchEnded(int32 WinnerTeamID);
+
+	// 蓝图实现的比赛结束逻辑 (用于弹出 UI)
+	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
+	void BP_OnMatchEnded(int32 WinnerTeamID);
+
 	// --- 购买单位 Server RPC ---
 	
 	// 服务器端购买并生成单位 (通过 DataTable RowName)
@@ -99,6 +107,9 @@ public:
 	// 队伍ID (0: 玩家1, 1: 玩家2)
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess")
 	int32 TeamID = 0;
+
+	UFUNCTION()
+	void OnDebugMatchWinnerChanged(int32 WinnerTeamID);
 
 	// 金币
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess")

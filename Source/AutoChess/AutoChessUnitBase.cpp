@@ -12,6 +12,7 @@
 #include "AbilitySystemComponent.h"
 #include "AutoChessAttributeSet.h"
 #include "Abilities/GameplayAbility.h"
+#include "AutoChessPlayerController.h"
 
 AAutoChessUnitBase::AAutoChessUnitBase()
 {
@@ -62,7 +63,9 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, TeamID);
 	DOREPLIFETIME(AAutoChessUnitBase, CurrentGridPos);
 	DOREPLIFETIME(AAutoChessUnitBase, TargetGridPos);
+	DOREPLIFETIME(AAutoChessUnitBase, StartGridPos);
 	DOREPLIFETIME(AAutoChessUnitBase, bIsMoving);
+	DOREPLIFETIME(AAutoChessUnitBase, bIsDead);
 	DOREPLIFETIME(AAutoChessUnitBase, CurrentTarget);
 }
 
@@ -176,11 +179,93 @@ void AAutoChessUnitBase::BeginPlay()
 			if (Grid->WorldToGrid(GetActorLocation(), X, Y))
 			{
 				CurrentGridPos = FIntPoint(X, Y);
+				// 记录初始位置 (用于回合重置)
+				StartGridPos = CurrentGridPos;
 			}
 		}
 	}
 	SnapToGrid();
 }
+
+void AAutoChessUnitBase::ResetUnit()
+{
+	// 1. 重置位置
+	CurrentGridPos = StartGridPos;
+	TargetGridPos = StartGridPos;
+	bIsMoving = false;
+	SnapToGrid();
+	
+	// 2. 重置状态
+	bIsDead = false;
+	CurrentTarget = nullptr;
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	
+	// 3. 重置属性 (满血满蓝)
+	if (AttributeSet)
+	{
+		AttributeSet->SetHealth(AttributeSet->GetMaxHealth());
+		AttributeSet->SetMana(InitialMana); // 重置为初始蓝量
+		AttributeSet->SetShield(0.0f);
+	}
+	
+	// 4. 清除临时 GameplayEffects (Buff/Debuff)
+	if (AbilitySystemComponent)
+	{
+		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
+		
+		// 使用迭代器遍历 ActiveGameplayEffects
+		for (auto It = AbilitySystemComponent->GetActiveGameplayEffects().CreateConstIterator(); It; ++It)
+		{
+			const FActiveGameplayEffect& Effect = *It;
+			
+			// 检查是否为临时效果 (DurationPolicy != Infinite)
+			if (Effect.Spec.Def && Effect.Spec.Def->DurationPolicy != EGameplayEffectDurationType::Infinite)
+			{
+				HandlesToRemove.Add(Effect.Handle);
+			}
+		}
+
+		for (const FActiveGameplayEffectHandle& Handle : HandlesToRemove)
+		{
+			AbilitySystemComponent->RemoveActiveGameplayEffect(Handle);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] ResetUnit: %s at (%d, %d)"), *GetName(), StartGridPos.X, StartGridPos.Y);
+}
+
+void AAutoChessUnitBase::OnDeath_Implementation()
+{
+	if (bIsDead) return;
+	bIsDead = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] OnDeath: %s"), *GetName());
+
+	// 播放死亡动画
+	Multicast_PlayDeathAnimation();
+
+	// 隐藏并禁用碰撞 (不销毁，等待复活)
+	// 延迟一会再隐藏，让死亡动画播完
+	FTimerHandle DeathTimer;
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, [this]()
+	{
+		if (this)
+		{
+			SetActorHiddenInGame(true);
+			SetActorEnableCollision(false);
+		}
+	}, 2.0f, false);
+
+	// 不要从 GameState 移除 (保留引用以便复活)
+	// 只触发胜利条件检查
+	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
+	{
+		GS->CheckWinCondition();
+	}
+}
+
+
 
 void AAutoChessUnitBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
@@ -758,34 +843,7 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 	}
 }
 
-void AAutoChessUnitBase::OnDeath_Implementation()
-{
-	if (bIsDead) return;
-	bIsDead = true;
 
-	// 禁用碰撞
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	// 从 GameState 注销 (逻辑上移除，但 Actor 还在播放动画)
-	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
-	{
-		GS->UnregisterUnit(this);
-	}
-
-	// 播放死亡蒙太奇
-	float DeathAnimDuration = 1.5f; // 默认销毁延迟
-	if (DeathMontage)
-	{
-		// 多播播放死亡动画
-		// 注意：这里我们简单地在 Server 播放并依赖 Replication，或者手动 Multicast
-		// 由于 Montage_Play 默认只在本地播放，我们需要一个 Multicast 函数
-		Multicast_PlayDeathAnimation();
-		DeathAnimDuration = DeathMontage->GetPlayLength();
-	}
-
-	// 延迟销毁
-	SetLifeSpan(DeathAnimDuration + 0.5f);
-}
 
 void AAutoChessUnitBase::Multicast_PlayDeathAnimation_Implementation()
 {
@@ -918,6 +976,10 @@ void AAutoChessUnitBase::InitFromUnitData()
 					GetMesh()->SetAnimInstanceClass(Row->AnimBlueprint);
 				}
 			}
+			
+			// 更新队伍颜色 (确保服务器端也能正确显示)
+			UpdateTeamColor();
+			
 			return; // 成功从 DT 初始化，直接返回
 		}
 	}
@@ -960,22 +1022,45 @@ void AAutoChessUnitBase::InitFromUnitData()
 			GetMesh()->SetAnimInstanceClass(UnitData->AnimBlueprint);
 		}
 	}
+
+	
+	// 更新队伍颜色 (确保服务器端也能正确显示)
+	UpdateTeamColor();
 }
 
 
 
 void AAutoChessUnitBase::OnRep_TeamID()
 {
-	UE_LOG(LogTemp, Error, TEXT("[OnRep_TeamID] Unit=%s, TeamID=%d, HasAuthority=%d"), 
-		*GetName(), TeamID, HasAuthority());
-	
-	// 当 TeamID 复制到客户端时，更新血条颜色
+	UpdateTeamColor();
+}
+
+void AAutoChessUnitBase::UpdateTeamColor()
+{
 	if (HealthBarWidgetComp)
 	{
-		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetWidget()))
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
 		{
-			UnitWidget->SetTeamColor(TeamID);
-			UE_LOG(LogTemp, Log, TEXT("[OnRep_TeamID] Updated health bar color for Team %d"), TeamID);
+			// 默认显示为敌对 (红色/0)
+			int32 ColorIndex = 0; 
+			
+			// 获取本地玩家控制器
+			if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+			{
+				if (AAutoChessPlayerController* AutoChessPC = Cast<AAutoChessPlayerController>(PC))
+				{
+					// 如果是己方单位，显示为友好 (绿色/1)
+					if (AutoChessPC->TeamID == TeamID)
+					{
+						ColorIndex = 1;
+					}
+					
+					UE_LOG(LogTemp, Log, TEXT("[UpdateTeamColor] Unit=%s(Team%d), LocalPC(Team%d) -> ColorIndex=%d"), 
+						*GetName(), TeamID, AutoChessPC->TeamID, ColorIndex);
+				}
+			}
+			
+			UnitWidget->SetTeamColor(ColorIndex);
 		}
 	}
 }

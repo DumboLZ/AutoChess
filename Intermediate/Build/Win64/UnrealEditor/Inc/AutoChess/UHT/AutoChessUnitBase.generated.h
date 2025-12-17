@@ -16,13 +16,11 @@ class AAutoChessUnitBase;
 #define AUTOCHESS_AutoChessUnitBase_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_RPC_WRAPPERS_NO_PURE_DECLS \
-	virtual void OnDeath_Implementation(); \
 	virtual void UseSkill_Implementation(); \
 	virtual void Multicast_PlayDeathAnimation_Implementation(); \
 	virtual void Multicast_PlaySkillAnimation_Implementation(); \
 	virtual void Multicast_PlayAttackAnimation_Implementation(); \
-	DECLARE_FUNCTION(execSnapToGrid); \
-	DECLARE_FUNCTION(execOnDeath); \
+	virtual void OnDeath_Implementation(); \
 	DECLARE_FUNCTION(execUseSkill); \
 	DECLARE_FUNCTION(execReceiveDamage); \
 	DECLARE_FUNCTION(execAttackTarget); \
@@ -32,8 +30,12 @@ class AAutoChessUnitBase;
 	DECLARE_FUNCTION(execMulticast_PlaySkillAnimation); \
 	DECLARE_FUNCTION(execMulticast_PlayAttackAnimation); \
 	DECLARE_FUNCTION(execOnRep_CurrentGridPos); \
+	DECLARE_FUNCTION(execSnapToGrid); \
+	DECLARE_FUNCTION(execOnDeath); \
+	DECLARE_FUNCTION(execResetUnit); \
 	DECLARE_FUNCTION(execSpawnSkillProjectile); \
 	DECLARE_FUNCTION(execInitFromUnitData); \
+	DECLARE_FUNCTION(execUpdateTeamColor); \
 	DECLARE_FUNCTION(execOnRep_TeamID);
 
 
@@ -51,6 +53,7 @@ public: \
 	{ \
 		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
 		TeamID=NETFIELD_REP_START, \
+		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \
 		TargetGridPos, \

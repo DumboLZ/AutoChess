@@ -41,9 +41,20 @@ public:
 	// 定义获胜者变化委托
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWinnerChanged, int32, WinnerTeamID);
 
-	// 获胜者变化事件
+	// 定义金币更新委托
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGoldUpdated, int32, NewGold, int32, PlayerIndex);
+
+	// 获胜者变化事件 (单局)
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnWinnerChanged OnWinnerChanged;
+
+	// 比赛获胜者变化事件 (整场)
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnWinnerChanged OnMatchWinnerChanged;
+
+	// 金币更新事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnGoldUpdated OnGoldUpdated;
 
 	AAutoChessGameState();
 
@@ -62,12 +73,18 @@ public:
 	void OnRep_Player2Health();
 
 	// 玩家1 金币
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
+	UPROPERTY(ReplicatedUsing = OnRep_Player1Gold, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
 	int32 Player1Gold;
 
+	UFUNCTION()
+	void OnRep_Player1Gold();
+
 	// 玩家2 金币
-	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
+	UPROPERTY(ReplicatedUsing = OnRep_Player2Gold, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|PlayerStats")
 	int32 Player2Gold;
+
+	UFUNCTION()
+	void OnRep_Player2Gold();
 
 	// 初始金币设置 (由房主设置，同步给所有客户端)
 	UPROPERTY(ReplicatedUsing = OnRep_InitialGold, BlueprintReadOnly, Category = "AutoChess|Config")
@@ -98,6 +115,39 @@ public:
 
 	UFUNCTION()
 	void OnRep_WinnerTeamID();
+
+	// --- 比赛胜负统计 (Best of 5) ---
+
+	// 玩家1 胜场数
+	UPROPERTY(ReplicatedUsing = OnRep_Player1Wins, BlueprintReadOnly, Category = "AutoChess|Match")
+	int32 Player1Wins = 0;
+
+	UFUNCTION()
+	void OnRep_Player1Wins();
+
+	// 玩家2 胜场数
+	UPROPERTY(ReplicatedUsing = OnRep_Player2Wins, BlueprintReadOnly, Category = "AutoChess|Match")
+	int32 Player2Wins = 0;
+
+	UFUNCTION()
+	void OnRep_Player2Wins();
+
+	// 赢得比赛所需胜场数 (默认3)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Match")
+	int32 MaxWinsToWinMatch = 3;
+
+	// 比赛最终获胜者 (-1: 未决出, 0: 玩家1, 1: 玩家2)
+	UPROPERTY(ReplicatedUsing = OnRep_MatchWinnerTeamID, BlueprintReadOnly, Category = "AutoChess|Match")
+	int32 MatchWinnerTeamID = -1;
+
+	UFUNCTION()
+	void OnRep_MatchWinnerTeamID();
+
+	// --- 经济配置 ---
+
+	// 每回合奖励金币
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Economy")
+	int32 GoldPerRound = 5;
 
 	// --- 游戏流程数据 (从 GameMode 同步) ---
 

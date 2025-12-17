@@ -12,12 +12,14 @@ void EmptyLinkFunctionForGeneratedCodeAutoChessGameModeBase() {}
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGameModeBase();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessGameModeBase_NoRegister();
+AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
 AUTOCHESS_API UEnum* Z_Construct_UEnum_AutoChess_EAutoChessPhase();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FIntPoint();
 ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_AGameModeBase();
 ENGINE_API UClass* Z_Construct_UClass_APlayerController_NoRegister();
+ENGINE_API UClass* Z_Construct_UClass_UDataTable_NoRegister();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
 
@@ -252,6 +254,42 @@ UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_OnPhaseChanged()
 }
 // End Class AAutoChessGameModeBase Function OnPhaseChanged
 
+// Begin Class AAutoChessGameModeBase Function ResetBoardForNewRound
+struct Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe9\x87\x8d\xe7\xbd\xae\xe6\xa3\x8b\xe7\x9b\x98\xe4\xbb\xa5\xe5\xbc\x80\xe5\xa7\x8b\xe6\x96\xb0\xe5\x9b\x9e\xe5\x90\x88 (\xe5\xa4\x8d\xe6\xb4\xbb\xe5\x8d\x95\xe4\xbd\x8d)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe9\x87\x8d\xe7\xbd\xae\xe6\xa3\x8b\xe7\x9b\x98\xe4\xbb\xa5\xe5\xbc\x80\xe5\xa7\x8b\xe6\x96\xb0\xe5\x9b\x9e\xe5\x90\x88 (\xe5\xa4\x8d\xe6\xb4\xbb\xe5\x8d\x95\xe4\xbd\x8d)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameModeBase, nullptr, "ResetBoardForNewRound", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameModeBase::execResetBoardForNewRound)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->ResetBoardForNewRound();
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameModeBase Function ResetBoardForNewRound
+
 // Begin Class AAutoChessGameModeBase Function RestartGame
 struct Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame_Statics
 {
@@ -287,6 +325,69 @@ DEFINE_FUNCTION(AAutoChessGameModeBase::execRestartGame)
 	P_NATIVE_END;
 }
 // End Class AAutoChessGameModeBase Function RestartGame
+
+// Begin Class AAutoChessGameModeBase Function SpawnUnit
+struct Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics
+{
+	struct AutoChessGameModeBase_eventSpawnUnit_Parms
+	{
+		FName UnitRowName;
+		int32 TeamID;
+		FIntPoint GridPos;
+		AAutoChessUnitBase* ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|GameFlow" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d (\xe6\x9c\x8d\xe5\x8a\xa1\xe5\x99\xa8\xe7\xab\xaf)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d (\xe6\x9c\x8d\xe5\x8a\xa1\xe5\x99\xa8\xe7\xab\xaf)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FNamePropertyParams NewProp_UnitRowName;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_GridPos;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_UnitRowName = { "UnitRowName", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventSpawnUnit_Parms, UnitRowName), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_TeamID = { "TeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventSpawnUnit_Parms, TeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_GridPos = { "GridPos", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventSpawnUnit_Parms, GridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameModeBase_eventSpawnUnit_Parms, ReturnValue), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_UnitRowName,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_TeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_GridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameModeBase, nullptr, "SpawnUnit", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::AutoChessGameModeBase_eventSpawnUnit_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::AutoChessGameModeBase_eventSpawnUnit_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameModeBase::execSpawnUnit)
+{
+	P_GET_PROPERTY(FNameProperty,Z_Param_UnitRowName);
+	P_GET_PROPERTY(FIntProperty,Z_Param_TeamID);
+	P_GET_STRUCT(FIntPoint,Z_Param_GridPos);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(AAutoChessUnitBase**)Z_Param__Result=P_THIS->SpawnUnit(Z_Param_UnitRowName,Z_Param_TeamID,Z_Param_GridPos);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameModeBase Function SpawnUnit
 
 // Begin Class AAutoChessGameModeBase Function StartBattle
 struct Z_Construct_UFunction_AAutoChessGameModeBase_StartBattle_Statics
@@ -331,7 +432,9 @@ void AAutoChessGameModeBase::StaticRegisterNativesAAutoChessGameModeBase()
 	static const FNameNativePtrPair Funcs[] = {
 		{ "BroadcastCardDisplay", &AAutoChessGameModeBase::execBroadcastCardDisplay },
 		{ "EndRound", &AAutoChessGameModeBase::execEndRound },
+		{ "ResetBoardForNewRound", &AAutoChessGameModeBase::execResetBoardForNewRound },
 		{ "RestartGame", &AAutoChessGameModeBase::execRestartGame },
+		{ "SpawnUnit", &AAutoChessGameModeBase::execSpawnUnit },
 		{ "StartBattle", &AAutoChessGameModeBase::execStartBattle },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
@@ -406,6 +509,20 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 		{ "ToolTip", "\xe6\x88\x98\xe6\x96\x97\xe9\x98\xb6\xe6\xae\xb5\xe6\x9c\x80\xe5\xa4\xa7\xe6\x8c\x81\xe7\xbb\xad\xe6\x97\xb6\xe9\x97\xb4" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SettlementDuration_MetaData[] = {
+		{ "Category", "AutoChess|Config" },
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_GoldRewardPerRound_MetaData[] = {
+		{ "Category", "AutoChess|Config" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\xaf\x8f\xe5\x9b\x9e\xe5\x90\x88\xe5\xa5\x96\xe5\x8a\xb1\xe9\x87\x91\xe5\xb8\x81\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\xaf\x8f\xe5\x9b\x9e\xe5\x90\x88\xe5\xa5\x96\xe5\x8a\xb1\xe9\x87\x91\xe5\xb8\x81" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_InitialGold_MetaData[] = {
 		{ "Category", "AutoChess|Config" },
 #if !UE_BUILD_SHIPPING
@@ -417,6 +534,16 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 		{ "ToolTip", "\xe5\x88\x9d\xe5\xa7\x8b\xe9\x87\x91\xe5\xb8\x81 (\xe7\x94\xb1\xe6\x88\xbf\xe4\xb8\xbb\xe5\x9c\xa8\xe5\x88\x9b\xe5\xbb\xba\xe6\x88\xbf\xe9\x97\xb4\xe6\x97\xb6\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe9\xbb\x98\xe8\xae\xa4\xe4\xb8\xba 0)" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitDataTable_MetaData[] = {
+		{ "Category", "AutoChess|Config" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\x95\xe4\xbd\x8d\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8 (\xe7\x94\xa8\xe4\xba\x8e\xe5\xa4\x8d\xe6\xb4\xbb/\xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameModeBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\x95\xe4\xbd\x8d\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8 (\xe7\x94\xa8\xe4\xba\x8e\xe5\xa4\x8d\xe6\xb4\xbb/\xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d)" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentPhase_Underlying;
 	static const UECodeGen_Private::FEnumPropertyParams NewProp_CurrentPhase;
@@ -424,14 +551,19 @@ struct Z_Construct_UClass_AAutoChessGameModeBase_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_PhaseTimer;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_PreparationDuration;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxBattleDuration;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_SettlementDuration;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_GoldRewardPerRound;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_InitialGold;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitDataTable;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_BroadcastCardDisplay, "BroadcastCardDisplay" }, // 1740321225
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_EndRound, "EndRound" }, // 1549376020
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_OnPhaseChanged, "OnPhaseChanged" }, // 65630250
+		{ &Z_Construct_UFunction_AAutoChessGameModeBase_ResetBoardForNewRound, "ResetBoardForNewRound" }, // 640884340
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_RestartGame, "RestartGame" }, // 427808689
+		{ &Z_Construct_UFunction_AAutoChessGameModeBase_SpawnUnit, "SpawnUnit" }, // 4273897183
 		{ &Z_Construct_UFunction_AAutoChessGameModeBase_StartBattle, "StartBattle" }, // 3840037426
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -446,7 +578,10 @@ const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameMod
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PhaseTimer = { "PhaseTimer", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, PhaseTimer), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhaseTimer_MetaData), NewProp_PhaseTimer_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PreparationDuration = { "PreparationDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, PreparationDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PreparationDuration_MetaData), NewProp_PreparationDuration_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_MaxBattleDuration = { "MaxBattleDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, MaxBattleDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxBattleDuration_MetaData), NewProp_MaxBattleDuration_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_SettlementDuration = { "SettlementDuration", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, SettlementDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SettlementDuration_MetaData), NewProp_SettlementDuration_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_GoldRewardPerRound = { "GoldRewardPerRound", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, GoldRewardPerRound), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_GoldRewardPerRound_MetaData), NewProp_GoldRewardPerRound_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_InitialGold = { "InitialGold", nullptr, (EPropertyFlags)0x0011000000000005, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, InitialGold), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InitialGold_MetaData), NewProp_InitialGold_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_UnitDataTable = { "UnitDataTable", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessGameModeBase, UnitDataTable), Z_Construct_UClass_UDataTable_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitDataTable_MetaData), NewProp_UnitDataTable_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessGameModeBase_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_CurrentPhase_Underlying,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_CurrentPhase,
@@ -454,7 +589,10 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PhaseTimer,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_PreparationDuration,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_MaxBattleDuration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_SettlementDuration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_GoldRewardPerRound,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_InitialGold,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessGameModeBase_Statics::NewProp_UnitDataTable,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessGameModeBase_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessGameModeBase_Statics::DependentSingletons[])() = {
@@ -500,10 +638,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessPhase_StaticEnum, TEXT("EAutoChessPhase"), &Z_Registration_Info_UEnum_EAutoChessPhase, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 877316103U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 2425842545U) },
+		{ Z_Construct_UClass_AAutoChessGameModeBase, AAutoChessGameModeBase::StaticClass, TEXT("AAutoChessGameModeBase"), &Z_Registration_Info_UClass_AAutoChessGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameModeBase), 1226220909U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_3218126452(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_323006254(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_Statics::EnumInfo));

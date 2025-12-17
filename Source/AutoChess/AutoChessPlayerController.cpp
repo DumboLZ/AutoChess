@@ -125,6 +125,16 @@ void AAutoChessPlayerController::BeginPlay()
 	Mana = 0.0f;
 	DrawCardTimer = 0.0f;
 
+	// Debug: 监听比赛结束事件，确认是否收到广播
+	if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+	{
+		GS->OnMatchWinnerChanged.AddDynamic(this, &AAutoChessPlayerController::OnDebugMatchWinnerChanged);
+	}
+}
+
+void AAutoChessPlayerController::OnDebugMatchWinnerChanged(int32 WinnerTeamID)
+{
+	UE_LOG(LogTemp, Error, TEXT("[PC %d] >>> DEBUG: OnMatchWinnerChanged Received! Winner: %d <<<"), TeamID, WinnerTeamID);
 }
 
 void AAutoChessPlayerController::ReceivedPlayer()
@@ -1204,9 +1214,17 @@ void AAutoChessPlayerController::Server_BuyUnit_Implementation(FName UnitRowName
 		return;
 	}
 
-	// 4. 检查金币 (暂时跳过，后续添加)
-	// int32 Cost = UnitRow->Cost; 
-	// if (GetGold() < Cost) return;
+	// 4. 检查金币
+	int32 Cost = UnitRow->Cost;
+	int32 CurrentGold = (TeamID == 0) ? GS->Player1Gold : GS->Player2Gold;
+	
+	UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Checking Gold: Cost=%d, CurrentGold=%d, TeamID=%d"), Cost, CurrentGold, TeamID);
+
+	if (CurrentGold < Cost)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Not enough gold! Cost=%d, Current=%d"), Cost, CurrentGold);
+		return;
+	}
 
 	// 5. 寻找空闲备战区格子
 	FIntPoint GridPos;
@@ -1216,57 +1234,30 @@ void AAutoChessPlayerController::Server_BuyUnit_Implementation(FName UnitRowName
 		return;
 	}
 
-	// 6. 生成单位
-	FVector SpawnLoc = GS->GameGrid->GridToWorld(GridPos.X, GridPos.Y);
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	// 根据队伍设置初始朝向
-	FRotator SpawnRot = FRotator::ZeroRotator;
-	if (TeamID == 0)
+	// 6. 生成单位 (使用 GameMode 的统一接口)
+	if (AAutoChessGameModeBase* GM = GetWorld()->GetAuthGameMode<AAutoChessGameModeBase>())
 	{
-		SpawnRot = FRotator(0.0f, 90.0f, 0.0f); // 玩家1朝向 +90 (面向右/上)
+		if (GM->SpawnUnit(UnitRowName, TeamID, GridPos))
+		{
+			// 扣除金币
+			if (TeamID == 0)
+			{
+				GS->Player1Gold -= Cost;
+				GS->OnRep_Player1Gold(); // 手动通知
+			}
+			else
+			{
+				GS->Player2Gold -= Cost;
+				GS->OnRep_Player2Gold(); // 手动通知
+			}
+			
+			UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Purchase Successful. Deducted %d. New Balance: %d"), 
+				Cost, (TeamID == 0) ? GS->Player1Gold : GS->Player2Gold);
+		}
 	}
 	else
 	{
-		SpawnRot = FRotator(0.0f, -90.0f, 0.0f); // 玩家2朝向 -90 (面向左/下)
-	}
-
-	if (AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(UnitRow->UnitClass, SpawnLoc, SpawnRot, SpawnParams))
-	{
-		// 设置属性
-		NewUnit->TeamID = TeamID;
-		NewUnit->CurrentGridPos = GridPos;
-		NewUnit->UnitDataHandle.DataTable = UnitDataTable;
-		NewUnit->UnitDataHandle.RowName = UnitRowName;
-		
-		// 初始化数据 (从 DT 读取属性)
-		NewUnit->InitFromUnitData();
-
-		// 初始化 GAS
-		if (NewUnit->AbilitySystemComponent && NewUnit->AttributeSet)
-		{
-			NewUnit->AbilitySystemComponent->InitStats(UAutoChessAttributeSet::StaticClass(), nullptr);
-			
-			// 手动触发血条更新
-			if (NewUnit->HealthBarWidgetComp)
-			{
-				FTimerHandle WidgetInitTimer;
-				GetWorld()->GetTimerManager().SetTimerForNextTick([NewUnit]()
-				{
-					if (NewUnit && NewUnit->AttributeSet)
-					{
-						NewUnit->OnHealthChanged(FOnAttributeChangeData());
-					}
-				});
-			}
-		}
-		
-		// 注册到 GameState
-		GS->RegisterUnit(NewUnit);
-		
-		UE_LOG(LogTemp, Warning, TEXT("[Server_BuyUnit] Unit '%s' spawned at (%d, %d) for Team %d"), 
-			*UnitRowName.ToString(), GridPos.X, GridPos.Y, TeamID);
+		UE_LOG(LogTemp, Error, TEXT("[Server_BuyUnit] Failed to get GameMode!"));
 	}
 }
 
@@ -1355,3 +1346,17 @@ void AAutoChessPlayerController::ResetState()
 	UE_LOG(LogTemp, Log, TEXT("[PlayerController] State Reset (Mana=0, HandCards=0)"));
 }
 
+	// 实现 Client_MatchEnded
+	void AAutoChessPlayerController::Client_MatchEnded_Implementation(int32 WinnerTeamID)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] Client_MatchEnded: Winner %d"), TeamID, WinnerTeamID);
+		
+		if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+		{
+			// 强制触发本地事件，确保 UI 响应
+			GS->OnMatchWinnerChanged.Broadcast(WinnerTeamID);
+		}
+		
+		// 触发蓝图事件 (直接给 PC 蓝图)
+		BP_OnMatchEnded(WinnerTeamID);
+	}

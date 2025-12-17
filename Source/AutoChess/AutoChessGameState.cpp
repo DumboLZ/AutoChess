@@ -66,21 +66,28 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AAutoChessGameState, Player1Health);
-	DOREPLIFETIME(AAutoChessGameState, Player2Health);
-	DOREPLIFETIME(AAutoChessGameState, Player1Gold);
-	DOREPLIFETIME(AAutoChessGameState, Player2Gold);
-	DOREPLIFETIME(AAutoChessGameState, InitialGold);
-	DOREPLIFETIME(AAutoChessGameState, CurrentPhaseIndex);
-	DOREPLIFETIME(AAutoChessGameState, CurrentRound);
-	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
-	DOREPLIFETIME(AAutoChessGameState, GameGrid);
-	DOREPLIFETIME(AAutoChessGameState, AllUnits);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer1Ready);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer2Ready);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer1Rematch);
 	DOREPLIFETIME(AAutoChessGameState, bPlayer2Rematch);
 	DOREPLIFETIME(AAutoChessGameState, WinnerTeamID);
+	
+	DOREPLIFETIME(AAutoChessGameState, Player1Health);
+	DOREPLIFETIME(AAutoChessGameState, Player2Health);
+	DOREPLIFETIME(AAutoChessGameState, Player1Gold);
+	DOREPLIFETIME(AAutoChessGameState, Player2Gold);
+	DOREPLIFETIME(AAutoChessGameState, InitialGold);
+	
+	DOREPLIFETIME(AAutoChessGameState, CurrentPhaseIndex);
+	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
+	
+	DOREPLIFETIME(AAutoChessGameState, Player1Wins);
+	DOREPLIFETIME(AAutoChessGameState, Player2Wins);
+	DOREPLIFETIME(AAutoChessGameState, MatchWinnerTeamID);
+	DOREPLIFETIME(AAutoChessGameState, GoldPerRound);
+	
+	DOREPLIFETIME(AAutoChessGameState, GameGrid);
+	DOREPLIFETIME(AAutoChessGameState, AllUnits);
 }
 
 void AAutoChessGameState::OnRep_WinnerTeamID()
@@ -92,6 +99,34 @@ void AAutoChessGameState::OnRep_WinnerTeamID()
 void AAutoChessGameState::OnRep_InitialGold()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[GameState] InitialGold Updated: %d (Authority=%d)"), InitialGold, HasAuthority());
+}
+
+void AAutoChessGameState::OnRep_Player1Wins()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] Player1Wins Updated: %d (Authority=%d)"), Player1Wins, HasAuthority());
+}
+
+void AAutoChessGameState::OnRep_Player2Wins()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] Player2Wins Updated: %d (Authority=%d)"), Player2Wins, HasAuthority());
+}
+
+void AAutoChessGameState::OnRep_Player1Gold()
+{
+	OnGoldUpdated.Broadcast(Player1Gold, 0);
+	UE_LOG(LogTemp, Log, TEXT("[GameState] Player1Gold Updated: %d"), Player1Gold);
+}
+
+void AAutoChessGameState::OnRep_Player2Gold()
+{
+	OnGoldUpdated.Broadcast(Player2Gold, 1);
+	UE_LOG(LogTemp, Log, TEXT("[GameState] Player2Gold Updated: %d"), Player2Gold);
+}
+
+void AAutoChessGameState::OnRep_MatchWinnerTeamID()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] MatchWinnerTeamID Updated: %d (Authority=%d)"), MatchWinnerTeamID, HasAuthority());
+	OnMatchWinnerChanged.Broadcast(MatchWinnerTeamID);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)
@@ -124,7 +159,7 @@ void AAutoChessGameState::CheckWinCondition()
 
 	for (AAutoChessUnitBase* Unit : AllUnits)
 	{
-		if (IsValid(Unit))
+		if (IsValid(Unit) && !Unit->bIsDead)
 		{
 			if (Unit->TeamID == 0) Team0Count++;
 			else if (Unit->TeamID == 1) Team1Count++;

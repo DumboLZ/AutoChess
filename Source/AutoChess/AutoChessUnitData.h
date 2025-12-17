@@ -27,6 +27,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	TSubclassOf<class AAutoChessUnitBase> UnitClass;
 
+	// 购买价格
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	int32 Cost = 1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
 

@@ -188,7 +188,8 @@ FVector AAutoChessGrid::GridToWorld(int32 GridX, int32 GridY)
 	float X = (GridX * TileSize) + (TileSize * 0.5f);
 	float Y = (GridY * TileSize) + (TileSize * 0.5f);
 	// 加上 VisualOffset，确保返回的是视觉中心
-	return GetActorLocation() + FVector(X, Y, 0.0f) + VisualOffset;
+	// 修正：Z轴应该返回瓦片表面高度 (TileHeight)，而不是底部 (0)
+	return GetActorLocation() + FVector(X, Y, TileHeight) + VisualOffset;
 }
 
 bool AAutoChessGrid::IsValidGridPosition(int32 GridX, int32 GridY)

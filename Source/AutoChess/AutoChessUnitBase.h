@@ -53,6 +53,10 @@ public:
 	UFUNCTION()
 	void OnRep_TeamID();
 
+	// 手动更新队伍颜色 (用于服务器端或初始化)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|UI")
+	void UpdateTeamColor();
+
 	// --- 数据配置 ---
 	
 	// 棋子数据配置 (DataAsset)
@@ -144,6 +148,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Skill")
 	void SpawnSkillProjectile(FVector TargetLocation);
 
+	// 初始格子位置 (用于回合重置)
+	UPROPERTY(Replicated)
+	FIntPoint StartGridPos;
+
+	// 重置单位状态 (复活并归位)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|State")
+	void ResetUnit();
+
+	// 死亡处理
+	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|State")
+	void OnDeath();
+
+	// 更新格子坐标 (瞬间)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	void SnapToGrid();
+
 	// 当前攻击目标
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
 	AAutoChessUnitBase* CurrentTarget;
@@ -218,15 +238,6 @@ public:
 	// 使用技能 (C++ 实现基础逻辑，蓝图可扩展)
 	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|Combat")
 	void UseSkill();
-
-	// 死亡处理
-	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|Combat")
-	void OnDeath();
-
-	// 更新格子坐标 (瞬间)
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
-	void SnapToGrid();
-
 	// 护盾流失速度 (每秒)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Attributes")
 	float ShieldDecayRate = 0.0f;
