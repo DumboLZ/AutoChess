@@ -71,11 +71,12 @@ void AAutoChessProjectile::Tick(float DeltaTime)
 	}
 }
 
-void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit)
+void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit)
 {
 	TargetUnit = InTarget;
 	Damage = InDamage;
 	InstigatorUnit = InInstigatorUnit;
+	bIsCrit = bInIsCrit;
 
 	if (MovementComp && TargetUnit)
 	{
@@ -100,7 +101,7 @@ void AAutoChessProjectile::TriggerHit()
 	// 造成伤害
 	if (TargetUnit)
 	{
-		TargetUnit->ReceiveDamage(Damage, InstigatorUnit);
+		TargetUnit->ReceiveDamage(Damage, InstigatorUnit, bIsCrit);
 	}
 
 	// 播放特效等（可以在蓝图中扩展 OnDeath）

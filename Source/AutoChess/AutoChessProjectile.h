@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// 初始化投射物
-	void InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit);
+	void InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit = false);
 
 	// 触发命中逻辑
 	void TriggerHit();
@@ -55,6 +55,9 @@ protected:
 
 	// 伤害值
 	float Damage;
+
+	// 是否暴击
+	bool bIsCrit;
 
 	// 碰撞处理
 	UFUNCTION()

@@ -129,6 +129,26 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 		{ "Category", "Stats" },
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritRate_MetaData[] = {
+		{ "Category", "Stats" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87 (0.0 - 1.0)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87 (0.0 - 1.0)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritDamage_MetaData[] = {
+		{ "Category", "Stats" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3\xe5\x80\x8d\xe7\x8e\x87 (\xe4\xbe\x8b\xe5\xa6\x82 1.5 \xe8\xa1\xa8\xe7\xa4\xba 150%)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3\xe5\x80\x8d\xe7\x8e\x87 (\xe4\xbe\x8b\xe5\xa6\x82 1.5 \xe8\xa1\xa8\xe7\xa4\xba 150%)" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxMana_MetaData[] = {
 		{ "Category", "Mana" },
 #if !UE_BUILD_SHIPPING
@@ -194,6 +214,8 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_AttackSpeed;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_AttackRangeGrid;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MoveSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CritRate;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CritDamage;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxMana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_InitialMana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManaRegenOnAttack;
@@ -223,6 +245,8 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChe
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_AttackSpeed = { "AttackSpeed", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, AttackSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackSpeed_MetaData), NewProp_AttackSpeed_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_AttackRangeGrid = { "AttackRangeGrid", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, AttackRangeGrid), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackRangeGrid_MetaData), NewProp_AttackRangeGrid_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_MoveSpeed = { "MoveSpeed", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, MoveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MoveSpeed_MetaData), NewProp_MoveSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_CritRate = { "CritRate", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, CritRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CritRate_MetaData), NewProp_CritRate_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_CritDamage = { "CritDamage", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, CritDamage), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CritDamage_MetaData), NewProp_CritDamage_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_MaxMana = { "MaxMana", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, MaxMana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxMana_MetaData), NewProp_MaxMana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_InitialMana = { "InitialMana", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, InitialMana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InitialMana_MetaData), NewProp_InitialMana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_ManaRegenOnAttack = { "ManaRegenOnAttack", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, ManaRegenOnAttack), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManaRegenOnAttack_MetaData), NewProp_ManaRegenOnAttack_MetaData) };
@@ -246,6 +270,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FA
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_AttackSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_AttackRangeGrid,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_MoveSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_CritRate,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_CritDamage,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_MaxMana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_InitialMana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_ManaRegenOnAttack,
@@ -362,6 +388,26 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 		{ "Category", "Stats" },
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritRate_MetaData[] = {
+		{ "Category", "Stats" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87 (0.0 - 1.0)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87 (0.0 - 1.0)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritDamage_MetaData[] = {
+		{ "Category", "Stats" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3\xe5\x80\x8d\xe7\x8e\x87 (\xe4\xbe\x8b\xe5\xa6\x82 1.5 \xe8\xa1\xa8\xe7\xa4\xba 150%)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3\xe5\x80\x8d\xe7\x8e\x87 (\xe4\xbe\x8b\xe5\xa6\x82 1.5 \xe8\xa1\xa8\xe7\xa4\xba 150%)" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxMana_MetaData[] = {
 		{ "Category", "Mana" },
 #if !UE_BUILD_SHIPPING
@@ -425,6 +471,8 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_AttackSpeed;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_AttackRangeGrid;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MoveSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CritRate;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CritDamage;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxMana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_InitialMana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManaRegenOnAttack;
@@ -452,6 +500,8 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitD
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AttackSpeed = { "AttackSpeed", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, AttackSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackSpeed_MetaData), NewProp_AttackSpeed_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AttackRangeGrid = { "AttackRangeGrid", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, AttackRangeGrid), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttackRangeGrid_MetaData), NewProp_AttackRangeGrid_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_MoveSpeed = { "MoveSpeed", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, MoveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MoveSpeed_MetaData), NewProp_MoveSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_CritRate = { "CritRate", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, CritRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CritRate_MetaData), NewProp_CritRate_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_CritDamage = { "CritDamage", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, CritDamage), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CritDamage_MetaData), NewProp_CritDamage_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_MaxMana = { "MaxMana", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, MaxMana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxMana_MetaData), NewProp_MaxMana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_InitialMana = { "InitialMana", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, InitialMana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InitialMana_MetaData), NewProp_InitialMana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnAttack = { "ManaRegenOnAttack", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, ManaRegenOnAttack), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManaRegenOnAttack_MetaData), NewProp_ManaRegenOnAttack_MetaData) };
@@ -473,6 +523,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AttackSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_AttackRangeGrid,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_MoveSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_CritRate,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_CritDamage,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_MaxMana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_InitialMana,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ManaRegenOnAttack,
@@ -526,13 +578,13 @@ UAutoChessUnitData::~UAutoChessUnitData() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics
 {
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
-		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 192693410U) },
+		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 4155381071U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 4117248055U) },
+		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 1202759214U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_340172121(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_1130877892(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo),
 	nullptr, 0);

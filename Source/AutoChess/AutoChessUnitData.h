@@ -64,6 +64,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	float MoveSpeed = 300.0f;
 
+	// 暴击率 (0.0 - 1.0)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	float CritRate = 0.0f;
+
+	// 暴击伤害倍率 (例如 1.5 表示 150%)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	float CritDamage = 1.5f;
+
 	// --- 技能与蓝量 ---
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mana")
@@ -142,6 +150,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	float MoveSpeed = 300.0f;
+
+	// 暴击率 (0.0 - 1.0)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	float CritRate = 0.0f;
+
+	// 暴击伤害倍率 (例如 1.5 表示 150%)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	float CritDamage = 1.5f;
 
 	// --- 技能与蓝量 ---
 

@@ -65,6 +65,16 @@ public:
 	FGameplayAttributeData AttackSpeed;
 	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, AttackSpeed)
 
+	// 暴击率 (0.0 - 1.0)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_CritRate)
+	FGameplayAttributeData CritRate;
+	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, CritRate)
+
+	// 暴击伤害倍率 (例如 1.5 表示 150% 伤害)
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_CritDamage)
+	FGameplayAttributeData CritDamage;
+	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, CritDamage)
+
 protected:
 	// --- 网络同步回调 ---
 	
@@ -88,4 +98,10 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed);
+
+	UFUNCTION()
+	virtual void OnRep_CritRate(const FGameplayAttributeData& OldCritRate);
+
+	UFUNCTION()
+	virtual void OnRep_CritDamage(const FGameplayAttributeData& OldCritDamage);
 };

@@ -2,10 +2,8 @@
 	"RemapUnityFiles": 
 	{
 		"Module.AutoChess.1.cpp.obj": [
-			"AutoChess.init.gen.cpp.obj",
 			"AutoChessAttributeSet.gen.cpp.obj",
 			"AutoChessCameraPawn.gen.cpp.obj",
-			"AutoChessCardBase.gen.cpp.obj",
 			"AutoChessGameModeBase.gen.cpp.obj",
 			"AutoChessGameplayAbility.gen.cpp.obj",
 			"AutoChessGameState.gen.cpp.obj",
@@ -13,6 +11,8 @@
 			"AutoChessGrid.gen.cpp.obj",
 			"AutoChessHighlightActor.gen.cpp.obj",
 			"AutoChessHUDWidget.gen.cpp.obj",
+			"AutoChess.init.gen.cpp.obj",
+			"AutoChessCardBase.gen.cpp.obj",
 			"AutoChessPlayerController.gen.cpp.obj"
 		],
 		"Module.AutoChess.2.cpp.obj": [

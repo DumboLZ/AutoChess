@@ -8,6 +8,8 @@
 
 UAutoChessAttributeSet::UAutoChessAttributeSet()
 {
+	InitCritRate(0.0f);
+	InitCritDamage(1.5f);
 }
 
 void UAutoChessAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -21,6 +23,8 @@ void UAutoChessAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, Shield, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, CritRate, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
 }
 
 void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -207,4 +211,14 @@ void UAutoChessAttributeSet::OnRep_Shield(const FGameplayAttributeData& OldShiel
 void UAutoChessAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, AttackSpeed, OldAttackSpeed);
+}
+
+void UAutoChessAttributeSet::OnRep_CritRate(const FGameplayAttributeData& OldCritRate)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, CritRate, OldCritRate);
+}
+
+void UAutoChessAttributeSet::OnRep_CritDamage(const FGameplayAttributeData& OldCritDamage)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, CritDamage, OldCritDamage);
 }

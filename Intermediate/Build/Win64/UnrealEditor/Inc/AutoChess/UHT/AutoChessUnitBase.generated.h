@@ -66,6 +66,8 @@ public: \
 		InitialMana, \
 		ManaRegenOnAttack, \
 		ManaRegenOnHit, \
+		CritRate, \
+		CritDamage, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \

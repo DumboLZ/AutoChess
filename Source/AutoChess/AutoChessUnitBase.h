@@ -123,6 +123,14 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float ManaRegenOnHit;
 
+	// 暴击率
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	float CritRate;
+
+	// 暴击伤害
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	float CritDamage;
+
 	// 技能 Ability 类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> UnitAbilityClass;
@@ -248,7 +256,7 @@ public:
 
 	// 受到伤害
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
-	void ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker);
+	void ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit = false);
 
 	// 使用技能 (C++ 实现基础逻辑，蓝图可扩展)
 	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|Combat")

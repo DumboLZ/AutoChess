@@ -80,6 +80,8 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, ManaRegenOnAttack);
 	DOREPLIFETIME(AAutoChessUnitBase, ManaRegenOnHit);
 	DOREPLIFETIME(AAutoChessUnitBase, MoveSpeed);
+	DOREPLIFETIME(AAutoChessUnitBase, CritRate);
+	DOREPLIFETIME(AAutoChessUnitBase, CritDamage);
 	DOREPLIFETIME(AAutoChessUnitBase, UnitDataHandle);
 }
 
@@ -632,9 +634,22 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 	if (Target && !Target->bIsDead)
 	{
 		float CurrentAttackDamage = AttackDamage;
+		float CurrentCritRate = 0.0f;
+		float CurrentCritDamage = 1.5f;
+
 		if (AttributeSet)
 		{
 			CurrentAttackDamage = AttributeSet->GetAttackDamage();
+			CurrentCritRate = AttributeSet->GetCritRate();
+			CurrentCritDamage = AttributeSet->GetCritDamage();
+		}
+
+		// 暴击判定
+		bool bIsCrit = FMath::FRand() < CurrentCritRate;
+		if (bIsCrit)
+		{
+			CurrentAttackDamage *= CurrentCritDamage;
+			UE_LOG(LogTemp, Warning, TEXT("[Combat] CRITICAL HIT! Damage: %f"), CurrentAttackDamage);
 		}
 
 		if (ProjectileClass)
@@ -660,12 +675,12 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			AAutoChessProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 			if (Projectile)
 			{
-				Projectile->InitProjectile(Target, CurrentAttackDamage, this);
+				Projectile->InitProjectile(Target, CurrentAttackDamage, this, bIsCrit);
 			}
 		}
 		else
 		{
-			Target->ReceiveDamage(CurrentAttackDamage, this);
+			Target->ReceiveDamage(CurrentAttackDamage, this, bIsCrit);
 		}
 
 		Multicast_PlayAttackAnimation();
@@ -697,7 +712,7 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 	}
 }
 
-void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
+void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit)
 {
 	if (bIsDead) return;
 
@@ -888,6 +903,8 @@ void AAutoChessUnitBase::InitFromUnitData()
         InitialMana = Row->InitialMana;
         ManaRegenOnAttack = Row->ManaRegenOnAttack;
         ManaRegenOnHit = Row->ManaRegenOnHit;
+        CritRate = Row->CritRate;
+        CritDamage = Row->CritDamage;
 
         UnitAbilityClass = Row->AbilityClass;
         PassiveAbilityClass = Row->PassiveAbilityClass;
@@ -916,6 +933,8 @@ void AAutoChessUnitBase::InitFromUnitData()
             AttributeSet->InitMaxMana(MaxMana);
             AttributeSet->InitAttackDamage(AttackDamage);
             AttributeSet->InitAttackSpeed(AttackSpeed);
+            AttributeSet->InitCritRate(CritRate);
+            AttributeSet->InitCritDamage(CritDamage);
         }
         
         UpdateTeamColor();
