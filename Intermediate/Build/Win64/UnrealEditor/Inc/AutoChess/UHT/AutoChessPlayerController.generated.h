@@ -52,13 +52,14 @@ AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelega
 	virtual void Client_ShowCardDisplay_Implementation(FCardDisplayData const& CardData, AActor* Target, FIntPoint TargetGridPos, APlayerController* Caster, int32 AOERadius); \
 	DECLARE_FUNCTION(execJoinGame); \
 	DECLARE_FUNCTION(execHostGame); \
+	DECLARE_FUNCTION(execDrawCards); \
+	DECLARE_FUNCTION(execDrawCard); \
 	DECLARE_FUNCTION(execServer_MoveUnit); \
 	DECLARE_FUNCTION(execServer_PlayCard); \
 	DECLARE_FUNCTION(execServer_SellUnit); \
 	DECLARE_FUNCTION(execServer_PlaceUnit); \
 	DECLARE_FUNCTION(execServer_BuyCard); \
 	DECLARE_FUNCTION(execAddMana); \
-	DECLARE_FUNCTION(execDrawCard); \
 	DECLARE_FUNCTION(execUpdateDragHighlight); \
 	DECLARE_FUNCTION(execTryPlayCardAtPosition); \
 	DECLARE_FUNCTION(execPlayCard); \

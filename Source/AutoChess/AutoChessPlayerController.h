@@ -247,9 +247,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
 	void UpdateDragHighlight(UAutoChessCardBase* Card, const FVector2D& ScreenPosition);
 
-	// 抽一张牌
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
-	void DrawCard();
 
 public:
 	// 回复法力 (Public for GameMode access)
@@ -290,7 +287,15 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_MoveUnit(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY);
 
+
 public:
+	// 抽牌接口
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	void DrawCard();
+
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	void DrawCards(int32 Count);
+
 	// --- UI 事件 ---
 	
 	// 法力值更新事件

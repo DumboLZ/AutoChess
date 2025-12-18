@@ -779,6 +779,14 @@ void AAutoChessPlayerController::DrawCard()
 	}
 }
 
+void AAutoChessPlayerController::DrawCards(int32 Count)
+{
+	for (int32 i = 0; i < Count; i++)
+	{
+		DrawCard();
+	}
+}
+
 bool AAutoChessPlayerController::TryPlayCardAtPosition(UAutoChessCardBase* Card, const FVector2D& ScreenPosition)
 {
 	UE_LOG(LogTemp, Warning, TEXT("[TryPlayCardAtPosition] Called with Card: %s"), Card ? *Card->CardName.ToString() : TEXT("NULL"));
