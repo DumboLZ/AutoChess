@@ -82,6 +82,7 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, MoveSpeed);
 	DOREPLIFETIME(AAutoChessUnitBase, CritRate);
 	DOREPLIFETIME(AAutoChessUnitBase, CritDamage);
+	DOREPLIFETIME(AAutoChessUnitBase, SellPrice);
 	DOREPLIFETIME(AAutoChessUnitBase, UnitDataHandle);
 }
 
@@ -905,6 +906,7 @@ void AAutoChessUnitBase::InitFromUnitData()
         ManaRegenOnHit = Row->ManaRegenOnHit;
         CritRate = Row->CritRate;
         CritDamage = Row->CritDamage;
+        SellPrice = Row->SellPrice;
 
         UnitAbilityClass = Row->AbilityClass;
         PassiveAbilityClass = Row->PassiveAbilityClass;

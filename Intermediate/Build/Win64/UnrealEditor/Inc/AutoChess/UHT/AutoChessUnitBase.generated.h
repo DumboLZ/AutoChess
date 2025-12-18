@@ -68,6 +68,7 @@ public: \
 		ManaRegenOnHit, \
 		CritRate, \
 		CritDamage, \
+		SellPrice, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \

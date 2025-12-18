@@ -159,7 +159,9 @@
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessattributeset.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessattributeset.generated.h",
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessghost.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessghost.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessghost.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesstrashcan.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochesstrashcan.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

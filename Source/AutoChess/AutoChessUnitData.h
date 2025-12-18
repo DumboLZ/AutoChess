@@ -31,6 +31,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	int32 Cost = 1;
 
+	// 卖出价格
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	int32 SellPrice = 1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
 
@@ -120,6 +124,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
+
+	// 卖出价格
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	int32 SellPrice = 1;
 
 	// 棋子描述
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")

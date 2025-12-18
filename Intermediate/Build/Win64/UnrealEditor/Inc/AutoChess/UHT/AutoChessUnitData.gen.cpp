@@ -77,6 +77,16 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 		{ "ToolTip", "\xe8\xb4\xad\xe4\xb9\xb0\xe4\xbb\xb7\xe6\xa0\xbc" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SellPrice_MetaData[] = {
+		{ "Category", "Info" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitName_MetaData[] = {
 		{ "Category", "Info" },
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
@@ -204,6 +214,7 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FClassPropertyParams NewProp_UnitClass;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_Cost;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_SellPrice;
 	static const UECodeGen_Private::FTextPropertyParams NewProp_UnitName;
 	static const UECodeGen_Private::FTextPropertyParams NewProp_Description;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Icon;
@@ -235,6 +246,7 @@ struct Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics
 };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitClass = { "UnitClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, UnitClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitClass_MetaData), NewProp_UnitClass_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Cost = { "Cost", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, Cost), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Cost_MetaData), NewProp_Cost_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_SellPrice = { "SellPrice", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, SellPrice), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SellPrice_MetaData), NewProp_SellPrice_MetaData) };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitName = { "UnitName", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, UnitName), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitName_MetaData), NewProp_UnitName_MetaData) };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Description = { "Description", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, Description), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Description_MetaData), NewProp_Description_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Icon = { "Icon", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FAutoChessUnitRow, Icon), Z_Construct_UClass_UTexture2D_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Icon_MetaData), NewProp_Icon_MetaData) };
@@ -260,6 +272,7 @@ const UECodeGen_Private::FClassPropertyParams Z_Construct_UScriptStruct_FAutoChe
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Cost,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_SellPrice,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_UnitName,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Description,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewProp_Icon,
@@ -338,6 +351,16 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 		{ "ModuleRelativePath", "AutoChessUnitData.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "--- \xe5\x9f\xba\xe7\xa1\x80\xe4\xbf\xa1\xe6\x81\xaf ---" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SellPrice_MetaData[] = {
+		{ "Category", "Info" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitData.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Description_MetaData[] = {
@@ -462,6 +485,7 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FTextPropertyParams NewProp_UnitName;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_SellPrice;
 	static const UECodeGen_Private::FTextPropertyParams NewProp_Description;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Icon;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_SkeletalMesh;
@@ -491,6 +515,7 @@ struct Z_Construct_UClass_UAutoChessUnitData_Statics
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_UnitName = { "UnitName", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, UnitName), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitName_MetaData), NewProp_UnitName_MetaData) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SellPrice = { "SellPrice", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, SellPrice), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SellPrice_MetaData), NewProp_SellPrice_MetaData) };
 const UECodeGen_Private::FTextPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_Description = { "Description", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Text, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, Description), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Description_MetaData), NewProp_Description_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_Icon = { "Icon", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, Icon), Z_Construct_UClass_UTexture2D_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Icon_MetaData), NewProp_Icon_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkeletalMesh = { "SkeletalMesh", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, SkeletalMesh), Z_Construct_UClass_USkeletalMesh_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkeletalMesh_MetaData), NewProp_SkeletalMesh_MetaData) };
@@ -514,6 +539,7 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessUnit
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000000015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessUnitData, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileClass_MetaData), NewProp_ProjectileClass_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UAutoChessUnitData_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_UnitName,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SellPrice,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_Description,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_Icon,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UAutoChessUnitData_Statics::NewProp_SkeletalMesh,
@@ -578,13 +604,13 @@ UAutoChessUnitData::~UAutoChessUnitData() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics
 {
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
-		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 4155381071U) },
+		{ FAutoChessUnitRow::StaticStruct, Z_Construct_UScriptStruct_FAutoChessUnitRow_Statics::NewStructOps, TEXT("AutoChessUnitRow"), &Z_Registration_Info_UScriptStruct_AutoChessUnitRow, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FAutoChessUnitRow), 1347059580U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 1202759214U) },
+		{ Z_Construct_UClass_UAutoChessUnitData, UAutoChessUnitData::StaticClass, TEXT("UAutoChessUnitData"), &Z_Registration_Info_UClass_UAutoChessUnitData, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitData), 1884938840U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_1130877892(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_1092350643(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_Statics::ScriptStructInfo),
 	nullptr, 0);

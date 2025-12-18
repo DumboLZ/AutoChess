@@ -489,17 +489,28 @@ void AAutoChessPlayerController::SellUnit(AAutoChessUnitBase* Unit)
 {
 	if (HasAuthority())
 	{
-		// Server Logic
 		if (Unit)
 		{
-			// 返还金币逻辑...
-			
-			// 从 GameState 注销
+			// 增加金币
+			int32 Price = Unit->SellPrice;
 			if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
 			{
 				GS->UnregisterUnit(Unit);
+				
+				if (TeamID == 0)
+				{
+					GS->Player1Gold += Price;
+					GS->OnRep_Player1Gold(); // 触发 UI 更新
+				}
+				else
+				{
+					GS->Player2Gold += Price;
+					GS->OnRep_Player2Gold(); // 触发 UI 更新
+				}
+				UE_LOG(LogTemp, Warning, TEXT("[PC %d] Sold unit for %d gold. New Balance: %d"), 
+					TeamID, Price, (TeamID == 0) ? GS->Player1Gold : GS->Player2Gold);
 			}
-			
+
 			Unit->Destroy();
 		}
 	}
@@ -516,6 +527,7 @@ void AAutoChessPlayerController::Server_SellUnit_Implementation(AAutoChessUnitBa
 }
 
 #include "AutoChessGhost.h"
+#include "AutoChessTrashCan.h"
 
 void AAutoChessPlayerController::HandleDragStart(const FVector2D& ScreenPosition)
 {
@@ -592,6 +604,17 @@ void AAutoChessPlayerController::HandleDragging(const FVector2D& ScreenPosition)
 			{
 				FVector Intersection = WorldLoc + WorldDir * t;
 				DragGhost->SetActorLocation(Intersection);
+
+				// 检查是否在垃圾桶上方，提供视觉反馈
+				FHitResult Hit;
+				FVector End = WorldLoc + WorldDir * 10000.0f;
+				if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
+				{
+					if (AAutoChessTrashCan* TrashCan = Cast<AAutoChessTrashCan>(Hit.GetActor()))
+					{
+						TrashCan->SetHighlight(true);
+					}
+				}
 			}
 		}
 	}
@@ -618,6 +641,31 @@ void AAutoChessPlayerController::HandleDragEnd()
 	
 	if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
 	{
+		// 1. 检查是否丢到了垃圾桶上
+		FVector WorldLoc, WorldDir;
+		if (DeprojectScreenPositionToWorld(GetCursorPosition().X, GetCursorPosition().Y, WorldLoc, WorldDir))
+		{
+			FVector End = WorldLoc + WorldDir * 10000.0f;
+			FHitResult Hit;
+			if (GetWorld()->LineTraceSingleByChannel(Hit, WorldLoc, End, ECC_Visibility))
+			{
+				if (AAutoChessTrashCan* TrashCan = Cast<AAutoChessTrashCan>(Hit.GetActor()))
+				{
+					// 卖出单位
+					SellUnit(DraggedUnit);
+					
+					if (DragGhost)
+					{
+						DragGhost->Destroy();
+						DragGhost = nullptr;
+					}
+					bIsDragging = false;
+					DraggedUnit = nullptr;
+					return;
+				}
+			}
+		}
+
 		if (AAutoChessGrid* Grid = GS->GameGrid)
 		{
 			int32 X, Y;

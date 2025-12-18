@@ -131,6 +131,10 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float CritDamage;
 
+	// 卖出价格
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	int32 SellPrice;
+
 	// 技能 Ability 类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> UnitAbilityClass;

@@ -45,11 +45,7 @@ struct FCardDisplayData
 
 // 卡牌展示事件委托
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnCardDisplayed, const FCardDisplayData&, CardData, APlayerController*, Caster, AActor*, Target, FIntPoint, TargetGridPos);
-
-/**
- * 自动走棋玩家控制器
- * 处理玩家输入、卡牌购买、单位放置
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGoldUpdate, int32, CurrentGold, int32, Delta);
 UCLASS()
 class AUTOCHESS_API AAutoChessPlayerController : public APlayerController, public IAbilitySystemInterface
 {
@@ -110,10 +106,6 @@ public:
 
 	UFUNCTION()
 	void OnDebugMatchWinnerChanged(int32 WinnerTeamID);
-
-	// 金币
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess")
-	int32 Gold;
 
 	// 当前选中的卡牌类 (准备放置)
 	UPROPERTY(BlueprintReadWrite, Category = "AutoChess|Input")
