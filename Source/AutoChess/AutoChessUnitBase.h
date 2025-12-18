@@ -73,31 +73,31 @@ public:
 	void InitFromUnitData();
 
 	// 最大生命值
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float MaxHealth;
 
 	// 当前生命值
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float Health;
 
 	// 攻击力
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float AttackDamage;
 
 	// 攻击范围 (格子数)
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	int32 AttackRangeGrid;
 
 	// 攻击速度 (次/秒)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float AttackSpeed;
 
 	// 最大法力值
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float MaxMana;
 
 	// 当前法力值
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float Mana;
 
 	// 初始法力值
@@ -216,7 +216,7 @@ public:
 	void Multicast_PlayDeathAnimation();
 
 	// 移动速度 (Unreal Units / sec)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	float MoveSpeed;
 
 	// 获取单位当前速度 (用于动画蓝图，因为直接设置位置可能导致 GetVelocity 为 0)

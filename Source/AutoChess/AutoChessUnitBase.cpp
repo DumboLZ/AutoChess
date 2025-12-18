@@ -67,6 +67,16 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, bIsMoving);
 	DOREPLIFETIME(AAutoChessUnitBase, bIsDead);
 	DOREPLIFETIME(AAutoChessUnitBase, CurrentTarget);
+
+	// Stats Replication
+	DOREPLIFETIME(AAutoChessUnitBase, MaxHealth);
+	DOREPLIFETIME(AAutoChessUnitBase, Health);
+	DOREPLIFETIME(AAutoChessUnitBase, AttackDamage);
+	DOREPLIFETIME(AAutoChessUnitBase, AttackRangeGrid);
+	DOREPLIFETIME(AAutoChessUnitBase, AttackSpeed);
+	DOREPLIFETIME(AAutoChessUnitBase, MaxMana);
+	DOREPLIFETIME(AAutoChessUnitBase, Mana);
+	DOREPLIFETIME(AAutoChessUnitBase, MoveSpeed);
 }
 
 UAbilitySystemComponent* AAutoChessUnitBase::GetAbilitySystemComponent() const
@@ -950,6 +960,8 @@ void AAutoChessUnitBase::InitFromUnitData()
 			AttackRangeGrid = Row->AttackRangeGrid;
 			MoveSpeed = Row->MoveSpeed;
 
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Loaded Stats: Health=%f, Attack=%f, Speed=%f"), MaxHealth, AttackDamage, AttackSpeed);
+
 			// 蓝量属性
 			MaxMana = Row->MaxMana;
 			InitialMana = Row->InitialMana;
@@ -980,24 +992,17 @@ void AAutoChessUnitBase::InitFromUnitData()
 			// 更新队伍颜色 (确保服务器端也能正确显示)
 			UpdateTeamColor();
 			
-			return; // 成功从 DT 初始化，直接返回
+			return; // 成功从 DT 初始化
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[UnitBase] Failed to find row '%s' in DataTable!"), *UnitDataHandle.RowName.ToString());
 		}
 	}
-
-	// 2. 回退到旧的 DataAsset 方式
-	if (!UnitData) return;
-
-	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from UnitData Asset: %s"), *UnitData->GetName());
-
-	// 基础属性
-	MaxHealth = UnitData->MaxHealth;
-	AttackDamage = UnitData->AttackDamage;
-	AttackSpeed = UnitData->AttackSpeed;
-	AttackRangeGrid = UnitData->AttackRangeGrid;
-	MoveSpeed = UnitData->MoveSpeed;
-
-	// 蓝量属性
-	MaxMana = UnitData->MaxMana;
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("[UnitBase] UnitDataTable is not set!"));
+	}
 	InitialMana = UnitData->InitialMana;
 	ManaRegenOnAttack = UnitData->ManaRegenOnAttack;
 	ManaRegenOnHit = UnitData->ManaRegenOnHit;

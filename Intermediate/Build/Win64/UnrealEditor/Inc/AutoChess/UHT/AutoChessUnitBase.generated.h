@@ -53,13 +53,21 @@ public: \
 	{ \
 		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
 		TeamID=NETFIELD_REP_START, \
+		MaxHealth, \
+		Health, \
+		AttackDamage, \
+		AttackRangeGrid, \
+		AttackSpeed, \
+		MaxMana, \
+		Mana, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \
 		TargetGridPos, \
 		bIsMoving, \
 		bIsDead, \
-		NETFIELD_REP_END=bIsDead	}; \
+		MoveSpeed, \
+		NETFIELD_REP_END=MoveSpeed	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
