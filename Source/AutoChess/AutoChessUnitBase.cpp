@@ -76,7 +76,11 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, AttackSpeed);
 	DOREPLIFETIME(AAutoChessUnitBase, MaxMana);
 	DOREPLIFETIME(AAutoChessUnitBase, Mana);
+	DOREPLIFETIME(AAutoChessUnitBase, InitialMana);
+	DOREPLIFETIME(AAutoChessUnitBase, ManaRegenOnAttack);
+	DOREPLIFETIME(AAutoChessUnitBase, ManaRegenOnHit);
 	DOREPLIFETIME(AAutoChessUnitBase, MoveSpeed);
+	DOREPLIFETIME(AAutoChessUnitBase, UnitDataHandle);
 }
 
 UAbilitySystemComponent* AAutoChessUnitBase::GetAbilitySystemComponent() const
@@ -141,14 +145,11 @@ void AAutoChessUnitBase::BeginPlay()
 				AbilitySystemComponent->AddLooseGameplayTags(UnitData->InitialTags);
 			}
 			
-			// 初始更新 UI（传入正确的初始值）
-			FOnAttributeChangeData HealthData;
-			HealthData.NewValue = AttributeSet->GetHealth();
-			OnHealthChanged(HealthData);
-			
-			FOnAttributeChangeData ManaData;
-			ManaData.NewValue = AttributeSet->GetMana();
-			OnManaChanged(ManaData);
+			// 初始更新 UI (仅当已初始化时)
+			if (!UnitDataHandle.IsNull())
+			{
+				RefreshUI();
+			}
 		}
 	}
 
@@ -162,16 +163,18 @@ void AAutoChessUnitBase::BeginPlay()
 			{
 				UnitWidget->SetTeamColor(TeamID);
 				
-				// 立即更新一次显示
-				if (AttributeSet)
+				// 如果已初始化，立即刷新一次显示
+				if (!UnitDataHandle.IsNull())
 				{
-					UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), AttributeSet->GetShield());
-					UnitWidget->UpdateMana(AttributeSet->GetMana(), AttributeSet->GetMaxMana());
+					RefreshUI();
+				}
+				else
+				{
+					// 尚未初始化，先隐藏血条
+					HealthBarWidgetComp->SetVisibility(false);
 				}
 			}
-
 		}
-
 	}
 
 	// 注册到 GameState
@@ -275,10 +278,10 @@ void AAutoChessUnitBase::OnDeath_Implementation()
 	}
 }
 
-
-
 void AAutoChessUnitBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
+	if (UnitDataHandle.IsNull()) return;
+
 	// 优先使用传入的 Data.NewValue（来自 OnRep），否则从 AttributeSet 读取
 	float NewHealth = 0.0f;
 	float NewMaxHealth = 0.0f;
@@ -300,8 +303,6 @@ void AAutoChessUnitBase::OnHealthChanged(const FOnAttributeChangeData& Data)
 	// 同步旧的 float 变量
 	Health = NewHealth;
 	MaxHealth = NewMaxHealth;
-	
-
 
 	if (HealthBarWidgetComp && AttributeSet)
 	{
@@ -319,6 +320,8 @@ void AAutoChessUnitBase::OnMaxHealthChanged(const FOnAttributeChangeData& Data)
 
 void AAutoChessUnitBase::OnManaChanged(const FOnAttributeChangeData& Data)
 {
+	if (UnitDataHandle.IsNull()) return;
+
 	// 优先使用传入的 Data.NewValue（来自 OnRep），否则从 AttributeSet 读取
 	float NewMana = 0.0f;
 	float NewMaxMana = 0.0f;
@@ -375,7 +378,6 @@ void AAutoChessUnitBase::SnapToGrid()
 		if (AAutoChessGrid* Grid = GS->GameGrid)
 		{
 			// 直接使用 CurrentGridPos 计算世界坐标，而不是反过来
-			// 这样我们可以先修改 CurrentGridPos，再调用 SnapToGrid 来移动单位
 			FVector NewLoc = Grid->GridToWorld(CurrentGridPos.X, CurrentGridPos.Y);
 			
 			// 保持当前的 Z 高度 (或者根据 Grid 高度调整)
@@ -390,8 +392,6 @@ bool AAutoChessUnitBase::CheckCanFight()
 	// 优先使用 GameState (Client & Server 均可用)
 	if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 	{
-		// 需要在 GameState 中暴露 CurrentPhase (已在 GameState.h 中添加 CurrentPhaseIndex)
-		// 暂时假设 CurrentPhaseIndex 1 是 Battle (根据 Enum 定义: Preparation=0, Battle=1)
 		return GS->CurrentPhaseIndex == (uint8)EAutoChessPhase::Battle;
 	}
 	
@@ -419,6 +419,7 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	}
 
 	// --- 服务器逻辑 (AI & 战斗) ---
+	if (bIsDead) return;
 
 	// 优先更新冷却时间 (无论状态如何)
 	if (AttackTimer > 0.0f)
@@ -490,13 +491,11 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	}
 
 	// 如果正在播放非攻击蒙太奇（如技能、受击），则暂停 AI
-	// 这样可以防止普攻打断技能，同时允许普攻打断普攻（高攻速时）
 	if (GetMesh() && GetMesh()->GetAnimInstance())
 	{
 		UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
 		if (AnimInst->IsAnyMontagePlaying())
 		{
-			// 如果当前播放的不是普攻蒙太奇，那就肯定是技能或受击，必须暂停
 			if (!AttackMontage || !AnimInst->Montage_IsPlaying(AttackMontage))
 			{
 				return;
@@ -505,7 +504,7 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 	}
 
 	// 简单的自动攻击逻辑 (仅在有目标时)
-	if (IsValid(CurrentTarget))
+	if (IsValid(CurrentTarget) && !CurrentTarget->bIsDead)
 	{
 		// 获取 Grid 信息用于计算实际距离
 		float AttackRadius = 100.0f; // 默认值
@@ -517,49 +516,41 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 			}
 		}
 
-		// 1. 检查是否已经在攻击范围内 (基于圆形范围，忽略 Z 轴)
+		// 1. 检查是否已经在攻击范围内
 		float DistToTarget = FVector::Dist2D(GetActorLocation(), CurrentTarget->GetActorLocation());
 		
-		// 允许微小误差 (例如 10.0f)
 		if (DistToTarget <= AttackRadius + 10.0f)
 		{
-			// 停止移动
 			bIsMoving = false;
 			CurrentPath.Empty();
 
-			// 攻击冷却
 			if (AttackTimer <= 0.0f)
 			{
-				// 面向目标 (忽略 Z 轴)
 				FVector Direction = CurrentTarget->GetActorLocation() - GetActorLocation();
 				Direction.Z = 0.0f;
 				SetActorRotation(Direction.Rotation());
 
 				AttackTarget(CurrentTarget);
 				
-				// 从 AttributeSet 获取攻击速度
-				float CurrentAttackSpeed = AttackSpeed; // 默认值
+				float CurrentAttackSpeed = AttackSpeed;
 				if (AttributeSet)
 				{
 					CurrentAttackSpeed = AttributeSet->GetAttackSpeed();
 				}
-				AttackTimer = 1.0f / FMath::Max(0.1f, CurrentAttackSpeed); // 防止除0
+				AttackTimer = 1.0f / FMath::Max(0.1f, CurrentAttackSpeed);
 			}
 		}
 		else
 		{
-			// 2. 预测逻辑：如果目标正在移动，且目标即将到达的位置在我的攻击范围内，则原地等待
+			// 2. 预测逻辑
 			bool bShouldWait = false;
 			if (CurrentTarget->bIsMoving)
 			{
-				// 计算目标终点与我的距离
 				if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 				{
 					if (GS->GameGrid)
 					{
 						FVector TargetDestWorld = GS->GameGrid->GridToWorld(CurrentTarget->TargetGridPos.X, CurrentTarget->TargetGridPos.Y);
-						// TargetDestWorld.Z = GetActorLocation().Z; // 不再需要强制高度，直接用 Dist2D
-						
 						float DistToDest = FVector::Dist2D(GetActorLocation(), TargetDestWorld);
 						if (DistToDest <= AttackRadius + 10.0f)
 						{
@@ -571,11 +562,9 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 
 			if (bShouldWait)
 			{
-				// 停止移动，面向目标，等待目标走过来
 				bIsMoving = false;
 				CurrentPath.Empty();
 				
-				// 面向目标 (忽略 Z 轴)
 				FVector Direction = CurrentTarget->GetActorLocation() - GetActorLocation();
 				Direction.Z = 0.0f;
 				SetActorRotation(Direction.Rotation());
@@ -587,12 +576,11 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 				{
 					if (AAutoChessGrid* Grid = GS->GameGrid)
 					{
-						// 尝试寻路到目标
 						if (Grid->FindPath(CurrentGridPos, CurrentTarget->CurrentGridPos, CurrentPath))
 						{
 							if (CurrentPath.Num() > 0)
 							{
-								TargetGridPos = CurrentPath[0]; // 取第一步
+								TargetGridPos = CurrentPath[0];
 								bIsMoving = true;
 								CurrentPath.RemoveAt(0);
 							}
@@ -611,31 +599,27 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 
 void AAutoChessUnitBase::ProcessGridMovement(float DeltaTime)
 {
-	// 优化：从 GameState 获取 Grid
 	AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState());
 	if (!GS || !GS->GameGrid) return;
 	
 	AAutoChessGrid* Grid = GS->GameGrid;
 
 	FVector TargetWorldPos = Grid->GridToWorld(TargetGridPos.X, TargetGridPos.Y);
-	TargetWorldPos.Z = GetActorLocation().Z; // 保持高度
+	TargetWorldPos.Z = GetActorLocation().Z;
 
 	FVector CurrentLoc = GetActorLocation();
 	FVector Direction = (TargetWorldPos - CurrentLoc).GetSafeNormal();
 	float Distance = FVector::Dist(CurrentLoc, TargetWorldPos);
 
-	// 面向移动方向
 	SetActorRotation(Direction.Rotation());
 
-	// 移动一步
 	float MoveStep = MoveSpeed * DeltaTime;
 
 	if (Distance <= MoveStep)
 	{
-		// 到达目标
 		SetActorLocation(TargetWorldPos);
 		CurrentGridPos = TargetGridPos;
-		bIsMoving = false; // 停止移动，下一帧重新决策
+		bIsMoving = false;
 	}
 	else
 	{
@@ -645,10 +629,9 @@ void AAutoChessUnitBase::ProcessGridMovement(float DeltaTime)
 
 void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 {
-	if (Target)
+	if (Target && !Target->bIsDead)
 	{
-		// 获取当前攻击力（从 AttributeSet）
-		float CurrentAttackDamage = AttackDamage; // 默认值
+		float CurrentAttackDamage = AttackDamage;
 		if (AttributeSet)
 		{
 			CurrentAttackDamage = AttributeSet->GetAttackDamage();
@@ -656,21 +639,16 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 
 		if (ProjectileClass)
 		{
-			// 远程攻击：生成投射物
 			FVector SpawnLocation;
-			
-			// 优先使用骨骼插槽
 			if (!ProjectileSocketName.IsNone() && GetMesh() && GetMesh()->DoesSocketExist(ProjectileSocketName))
 			{
 				SpawnLocation = GetMesh()->GetSocketLocation(ProjectileSocketName);
 			}
 			else
 			{
-				// 使用相对偏移
 				SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
 			}
 
-			// 计算发射方向 (忽略 Z 轴)
 			FVector TargetLocFlat = Target->GetActorLocation();
 			TargetLocFlat.Z = SpawnLocation.Z;
 			FRotator SpawnRotation = (TargetLocFlat - SpawnLocation).Rotation();
@@ -687,43 +665,32 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 		}
 		else
 		{
-			// 近战攻击：直接造成伤害
 			Target->ReceiveDamage(CurrentAttackDamage, this);
 		}
 
-		// 播放攻击动画
 		Multicast_PlayAttackAnimation();
 
-		// 增加法力值 (通过 AttributeSet)
 		if (AttributeSet)
 		{
 			float CurrentMana = AttributeSet->GetMana();
 			float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnAttack, 0.0f, AttributeSet->GetMaxMana());
 			AttributeSet->SetMana(NewMana);
 			
-			// 检查是否可以释放技能
 			if (NewMana >= AttributeSet->GetMaxMana())
 			{
 				UseSkill();
 			}
 		}
 
-		// 发送攻击事件 (用于触发被动技能)
 		if (AbilitySystemComponent)
 		{
 			FGameplayEventData EventData;
 			EventData.Instigator = this;
 			EventData.Target = Target;
-			// EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Attack")); // 需要在某处定义 Tag，或者直接用 Name
-			// 为了简单，我们这里直接发送 Tag，假设 Tag 已经在 Editor 中创建
-			// 如果 Tag 不存在，SendGameplayEventToActor 可能会失败，或者我们需要用 FGameplayTag::RequestGameplayTag
 			
-			// 注意：为了避免硬编码 Tag 导致的查找失败，建议在 DefaultGameplayTags.ini 中配置
-			// 这里我们暂时使用 FindTag，如果找不到就不发
 			FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Attack"), false);
 			if (AttackTag.IsValid())
 			{
-				// 发送给自己的 ASC，触发拥有该 Tag 触发器的 Ability
 				AbilitySystemComponent->HandleGameplayEvent(AttackTag, &EventData);
 			}
 		}
@@ -732,16 +699,15 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 
 void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker)
 {
-	// 结算阶段免疫伤害
+	if (bIsDead) return;
+
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
 		if (GM->CurrentPhase == EAutoChessPhase::Settlement) return;
 	}
 
-	// 改用 GAS 系统应用伤害
 	if (AbilitySystemComponent && AttributeSet)
 	{
-		// 创建即时 Gameplay Effect 来应用伤害
 		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(Attacker);
 
@@ -750,37 +716,22 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 
 		if (SpecHandle.IsValid())
 		{
-			// 设置即时伤害修改器
-			FGameplayModifierInfo ModifierInfo;
-			ModifierInfo.Attribute = UAutoChessAttributeSet::GetHealthAttribute();
-			ModifierInfo.ModifierOp = EGameplayModOp::Additive;
-			
-			// 创建一个临时的 Gameplay Effect 来应用伤害
-			// 注意：这里我们需要用负值来减血
 			SpecHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), -DamageAmount);
-			
-			// 简化版：直接修改 AttributeSet 的 Health
-			// 注意：直接调用 SetHealth 不会触发 PostGameplayEffectExecute，所以需要手动检查死亡
 			
 			float CurrentShield = AttributeSet->GetShield();
 			float ActualDamageToHealth = DamageAmount;
 
-			// 优先扣除护盾
 			if (CurrentShield > 0.0f)
 			{
 				if (CurrentShield >= DamageAmount)
 				{
-					// 护盾完全抵挡
 					AttributeSet->SetShield(CurrentShield - DamageAmount);
 					ActualDamageToHealth = 0.0f;
-					// UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed all damage. Remaining Shield: %.1f"), AttributeSet->GetShield());
 				}
 				else
 				{
-					// 护盾抵挡部分
 					ActualDamageToHealth = DamageAmount - CurrentShield;
 					AttributeSet->SetShield(0.0f);
-					// UE_LOG(LogTemp, Warning, TEXT("[ReceiveDamage] Shield absorbed %.1f damage. Remaining Damage: %.1f"), CurrentShield, ActualDamageToHealth);
 				}
 			}
 
@@ -789,23 +740,14 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 				float OldHealth = AttributeSet->GetHealth();
 				float NewHealth = OldHealth - ActualDamageToHealth;
 				AttributeSet->SetHealth(FMath::Max(0.0f, NewHealth));
-				
-				// UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s received %.1f damage (Health). Health: %.1f -> %.1f"), 
-				// 	*GetName(), ActualDamageToHealth, 
-				// 	OldHealth, AttributeSet->GetHealth());
 			}
 			
-			// 手动检查死亡
 			if (AttributeSet->GetHealth() <= 0.0f)
 			{
-				// UE_LOG(LogTemp, Warning, TEXT("[UnitBase::ReceiveDamage] %s health reached 0, triggering OnDeath"), *GetName());
 				OnDeath();
 			}
 			else
 			{
-				// 受击回蓝
-				// 如果正在释放技能（播放技能蒙太奇），则不回蓝
-				// 之前的逻辑误判了受击蒙太奇，导致受击也不回蓝
 				bool bIsCastingSkill = false;
 				if (SkillMontage && GetMesh() && GetMesh()->GetAnimInstance() && GetMesh()->GetAnimInstance()->Montage_IsPlaying(SkillMontage))
 				{
@@ -818,19 +760,16 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 					float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
 					AttributeSet->SetMana(NewMana);
 
-					// 检查是否可以释放技能
 					if (NewMana >= AttributeSet->GetMaxMana())
 					{
 						UseSkill();
 					}
 				}
 
-				// 发送受击事件 (用于触发被动技能)
-				// Tag: AutoChess.Event.Hit
 				FGameplayEventData EventData;
 				EventData.Instigator = Attacker;
 				EventData.Target = this;
-				EventData.EventMagnitude = ActualDamageToHealth; // 可选：传递伤害值
+				EventData.EventMagnitude = ActualDamageToHealth;
 
 				FGameplayTag HitTag = FGameplayTag::RequestGameplayTag(FName("AutoChess.Event.Hit"), false);
 				if (HitTag.IsValid())
@@ -842,18 +781,13 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 	}
 	else
 	{
-		// 回退到旧方式（不应该发生）
 		Health -= DamageAmount;
-		UE_LOG(LogTemp, Error, TEXT("[UnitBase::ReceiveDamage] ASC or AttributeSet is NULL! Falling back to old Health system."));
-		
 		if (Health <= 0.0f)
 		{
 			OnDeath();
 		}
 	}
 }
-
-
 
 void AAutoChessUnitBase::Multicast_PlayDeathAnimation_Implementation()
 {
@@ -868,16 +802,15 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 	AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState());
 	if (!GS) return nullptr;
 
-	TArray<AAutoChessUnitBase*> Enemies = GS->GetUnitsByTeam(1 - TeamID); // 假设只有 0 和 1 两个队伍
+	TArray<AAutoChessUnitBase*> Enemies = GS->GetUnitsByTeam(1 - TeamID);
 	
 	AAutoChessUnitBase* NearestEnemy = nullptr;
 	float MinDistance = FLT_MAX;
 
 	for (AAutoChessUnitBase* Enemy : Enemies)
 	{
-		if (IsValid(Enemy))
+		if (IsValid(Enemy) && !Enemy->bIsDead)
 		{
-			// 使用世界坐标距离 (欧几里得距离)，与攻击范围逻辑保持一致
 			float Dist = FVector::Dist2D(GetActorLocation(), Enemy->GetActorLocation());
 
 			if (Dist < MinDistance)
@@ -892,38 +825,28 @@ AAutoChessUnitBase* AAutoChessUnitBase::FindNearestEnemy()
 
 void AAutoChessUnitBase::UseSkill_Implementation()
 {
-	// 检查眩晕状态 - 眩晕时无法释放技能
 	if (AbilitySystemComponent)
 	{
 		FGameplayTag StunTag = FGameplayTag::RequestGameplayTag(FName("State.CC.Stunned"), false);
 		if (StunTag.IsValid() && AbilitySystemComponent->HasMatchingGameplayTag(StunTag))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[UseSkill] %s is stunned, cannot use skill!"), *GetName());
 			return;
 		}
 	}
 
-	// 默认实现：如果有配置 Ability，则激活它
 	if (UnitAbilityClass && AbilitySystemComponent)
 	{
-		// 给予 Ability (如果还没给) - 简化起见，这里假设已经给了或者每次给
-		// 更好的做法是在 BeginPlay 给一次
 		FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
 		
 		if (SpecHandle.IsValid())
 		{
 			if (AbilitySystemComponent->TryActivateAbility(SpecHandle))
 			{
-				// 技能释放成功，扣除蓝量
 				if (AttributeSet)
 				{
 					AttributeSet->SetMana(0.0f);
 				}
-
-				// 播放技能动画
 				Multicast_PlaySkillAnimation();
-
-				// 播放特效
 				if (SkillVFX)
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SkillVFX, GetActorLocation(), GetActorRotation(), true);
@@ -933,111 +856,98 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 	}
 	else
 	{
-		// 如果没有 GAS Ability，则直接播放动画和特效（简单模式）
 		if (AttributeSet)
 		{
 			AttributeSet->SetMana(0.0f);
 		}
 		Multicast_PlaySkillAnimation();
-		UE_LOG(LogTemp, Log, TEXT("[UseSkill] No GAS Ability, playing animation directly."));
 	}
 }
 
 void AAutoChessUnitBase::InitFromUnitData()
 {
-	// 1. 优先尝试从 DataTable 初始化
-	if (!UnitDataHandle.IsNull())
-	{
-		FAutoChessUnitRow* Row = UnitDataHandle.GetRow<FAutoChessUnitRow>(TEXT("InitFromUnitData"));
-		if (Row)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Initializing from DataTable Row: %s"), *UnitDataHandle.RowName.ToString());
+    if (!this) return;
 
-			// 基础属性
-			MaxHealth = Row->MaxHealth;
-			AttackDamage = Row->AttackDamage;
-			AttackSpeed = Row->AttackSpeed;
-			AttackRangeGrid = Row->AttackRangeGrid;
-			MoveSpeed = Row->MoveSpeed;
+    if (UnitDataHandle.IsNull())
+    {
+        return;
+    }
 
-			UE_LOG(LogTemp, Warning, TEXT("[UnitBase] Loaded Stats: Health=%f, Attack=%f, Speed=%f"), MaxHealth, AttackDamage, AttackSpeed);
+    FAutoChessUnitRow* Row = UnitDataHandle.GetRow<FAutoChessUnitRow>(TEXT("InitFromUnitData"));
+    if (Row)
+    {
+        MaxHealth = Row->MaxHealth;
+        AttackDamage = Row->AttackDamage;
+        AttackSpeed = Row->AttackSpeed;
+        AttackRangeGrid = Row->AttackRangeGrid;
+        MoveSpeed = Row->MoveSpeed;
+        
+        MaxMana = Row->MaxMana;
+        InitialMana = Row->InitialMana;
+        ManaRegenOnAttack = Row->ManaRegenOnAttack;
+        ManaRegenOnHit = Row->ManaRegenOnHit;
 
-			// 蓝量属性
-			MaxMana = Row->MaxMana;
-			InitialMana = Row->InitialMana;
-			ManaRegenOnAttack = Row->ManaRegenOnAttack;
-			ManaRegenOnHit = Row->ManaRegenOnHit;
+        UnitAbilityClass = Row->AbilityClass;
+        PassiveAbilityClass = Row->PassiveAbilityClass;
+        SkillVFX = Row->SkillVFX;
+        SkillNiagaraVFX = Row->SkillNiagaraVFX;
+        ProjectileClass = Row->ProjectileClass;
 
-			// 技能与战斗
-			UnitAbilityClass = Row->AbilityClass;
-			PassiveAbilityClass = Row->PassiveAbilityClass;
-			SkillVFX = Row->SkillVFX;
-			SkillNiagaraVFX = Row->SkillNiagaraVFX;
-			ProjectileClass = Row->ProjectileClass;
+        if (GetMesh())
+        {
+            if (Row->SkeletalMesh && GetMesh()->GetSkeletalMeshAsset() != Row->SkeletalMesh)
+            {
+                GetMesh()->SetSkeletalMesh(Row->SkeletalMesh);
+            }
 
-			// 模型与动画
-			if (GetMesh())
-			{
-				if (Row->SkeletalMesh && GetMesh()->GetSkeletalMeshAsset() != Row->SkeletalMesh)
-				{
-					GetMesh()->SetSkeletalMesh(Row->SkeletalMesh);
-				}
+            if (Row->AnimBlueprint && GetMesh()->GetAnimClass() != Row->AnimBlueprint)
+            {
+                GetMesh()->SetAnimInstanceClass(Row->AnimBlueprint);
+            }
+        }
 
-				if (Row->AnimBlueprint && GetMesh()->GetAnimClass() != Row->AnimBlueprint)
-				{
-					GetMesh()->SetAnimInstanceClass(Row->AnimBlueprint);
-				}
-			}
-			
-			// 更新队伍颜色 (确保服务器端也能正确显示)
-			UpdateTeamColor();
-			
-			return; // 成功从 DT 初始化
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("[UnitBase] Failed to find row '%s' in DataTable!"), *UnitDataHandle.RowName.ToString());
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("[UnitBase] UnitDataTable is not set!"));
-	}
-	InitialMana = UnitData->InitialMana;
-	ManaRegenOnAttack = UnitData->ManaRegenOnAttack;
-	ManaRegenOnHit = UnitData->ManaRegenOnHit;
-
-	// 技能与战斗
-	UnitAbilityClass = UnitData->AbilityClass;
-	PassiveAbilityClass = UnitData->PassiveAbilityClass;
-	SkillVFX = UnitData->SkillVFX;
-	SkillNiagaraVFX = UnitData->SkillNiagaraVFX;
-	ProjectileClass = UnitData->ProjectileClass;
-
-	// 模型与动画 (如果还没设置)
-	if (GetMesh())
-	{
-		if (UnitData->SkeletalMesh && GetMesh()->GetSkeletalMeshAsset() != UnitData->SkeletalMesh)
-		{
-			GetMesh()->SetSkeletalMesh(UnitData->SkeletalMesh);
-		}
-
-		if (UnitData->AnimBlueprint && GetMesh()->GetAnimClass() != UnitData->AnimBlueprint)
-		{
-			GetMesh()->SetAnimInstanceClass(UnitData->AnimBlueprint);
-		}
-	}
-
-	
-	// 更新队伍颜色 (确保服务器端也能正确显示)
-	UpdateTeamColor();
+        if (AttributeSet)
+        {
+            AttributeSet->InitHealth(MaxHealth);
+            AttributeSet->InitMaxHealth(MaxHealth);
+            AttributeSet->InitMana(InitialMana);
+            AttributeSet->InitMaxMana(MaxMana);
+            AttributeSet->InitAttackDamage(AttackDamage);
+            AttributeSet->InitAttackSpeed(AttackSpeed);
+        }
+        
+        UpdateTeamColor();
+        RefreshUI();
+    }
 }
 
+void AAutoChessUnitBase::RefreshUI()
+{
+	if (UnitDataHandle.IsNull()) return;
 
+	if (HealthBarWidgetComp)
+	{
+		HealthBarWidgetComp->SetVisibility(true);
+
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			if (AttributeSet)
+			{
+				UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), AttributeSet->GetShield());
+				UnitWidget->UpdateMana(AttributeSet->GetMana(), AttributeSet->GetMaxMana());
+			}
+		}
+	}
+}
 
 void AAutoChessUnitBase::OnRep_TeamID()
 {
 	UpdateTeamColor();
+}
+
+void AAutoChessUnitBase::OnRep_UnitDataHandle()
+{
+	InitFromUnitData();
 }
 
 void AAutoChessUnitBase::UpdateTeamColor()
@@ -1046,25 +956,20 @@ void AAutoChessUnitBase::UpdateTeamColor()
 	{
 		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
 		{
-			// 默认显示为敌对 (红色/0)
 			int32 ColorIndex = 0; 
-			
-			// 获取本地玩家控制器
-			if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+			if (UWorld* World = GetWorld())
 			{
-				if (AAutoChessPlayerController* AutoChessPC = Cast<AAutoChessPlayerController>(PC))
+				if (APlayerController* PC = World->GetFirstPlayerController())
 				{
-					// 如果是己方单位，显示为友好 (绿色/1)
-					if (AutoChessPC->TeamID == TeamID)
+					if (AAutoChessPlayerController* AutoChessPC = Cast<AAutoChessPlayerController>(PC))
 					{
-						ColorIndex = 1;
+						if (AutoChessPC->TeamID == TeamID)
+						{
+							ColorIndex = 1;
+						}
 					}
-					
-					UE_LOG(LogTemp, Log, TEXT("[UpdateTeamColor] Unit=%s(Team%d), LocalPC(Team%d) -> ColorIndex=%d"), 
-						*GetName(), TeamID, AutoChessPC->TeamID, ColorIndex);
 				}
 			}
-			
 			UnitWidget->SetTeamColor(ColorIndex);
 		}
 	}
@@ -1101,11 +1006,9 @@ void AAutoChessUnitBase::SpawnSkillProjectile(FVector TargetLocation)
 {
 	if (!SkillProjectileClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[SpawnSkillProjectile] SkillProjectileClass is NULL!"));
 		return;
 	}
 
-	// 计算发射位置 (使用插槽或偏移)
 	FVector SpawnLocation;
 	if (!ProjectileSocketName.IsNone() && GetMesh() && GetMesh()->DoesSocketExist(ProjectileSocketName))
 	{
@@ -1116,7 +1019,6 @@ void AAutoChessUnitBase::SpawnSkillProjectile(FVector TargetLocation)
 		SpawnLocation = GetActorLocation() + GetActorRotation().RotateVector(ProjectileSpawnOffset);
 	}
 
-	// 计算发射方向 (忽略 Z 轴，水平发射)
 	FVector TargetLocFlat = TargetLocation;
 	TargetLocFlat.Z = SpawnLocation.Z;
 	FVector Direction = (TargetLocFlat - SpawnLocation).GetSafeNormal();

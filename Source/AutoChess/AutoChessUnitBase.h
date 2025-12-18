@@ -65,8 +65,11 @@ public:
 	class UAutoChessUnitData* UnitData;
 
 	// 棋子数据配置 (新方式：引用 DataTable Row)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
+	UPROPERTY(ReplicatedUsing = OnRep_UnitDataHandle, EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
 	FDataTableRowHandle UnitDataHandle;
+
+	UFUNCTION()
+	void OnRep_UnitDataHandle();
 
 	// 从 DataAsset 初始化属性
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Data")
@@ -101,15 +104,15 @@ public:
 	float Mana;
 
 	// 初始法力值
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float InitialMana;
 
 	// 攻击回蓝
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float ManaRegenOnAttack;
 
 	// 受击回蓝
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float ManaRegenOnHit;
 
 	// 技能 Ability 类
@@ -163,6 +166,10 @@ public:
 	// 更新格子坐标 (瞬间)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	void SnapToGrid();
+
+	// 刷新 UI 显示 (血条、蓝条)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|UI")
+	void RefreshUI();
 
 	// 当前攻击目标
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")

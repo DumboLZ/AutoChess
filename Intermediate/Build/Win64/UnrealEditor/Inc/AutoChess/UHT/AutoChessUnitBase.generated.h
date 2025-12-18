@@ -30,11 +30,13 @@ class AAutoChessUnitBase;
 	DECLARE_FUNCTION(execMulticast_PlaySkillAnimation); \
 	DECLARE_FUNCTION(execMulticast_PlayAttackAnimation); \
 	DECLARE_FUNCTION(execOnRep_CurrentGridPos); \
+	DECLARE_FUNCTION(execRefreshUI); \
 	DECLARE_FUNCTION(execSnapToGrid); \
 	DECLARE_FUNCTION(execOnDeath); \
 	DECLARE_FUNCTION(execResetUnit); \
 	DECLARE_FUNCTION(execSpawnSkillProjectile); \
 	DECLARE_FUNCTION(execInitFromUnitData); \
+	DECLARE_FUNCTION(execOnRep_UnitDataHandle); \
 	DECLARE_FUNCTION(execUpdateTeamColor); \
 	DECLARE_FUNCTION(execOnRep_TeamID);
 
@@ -53,6 +55,7 @@ public: \
 	{ \
 		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
 		TeamID=NETFIELD_REP_START, \
+		UnitDataHandle, \
 		MaxHealth, \
 		Health, \
 		AttackDamage, \
@@ -60,6 +63,9 @@ public: \
 		AttackSpeed, \
 		MaxMana, \
 		Mana, \
+		InitialMana, \
+		ManaRegenOnAttack, \
+		ManaRegenOnHit, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \
