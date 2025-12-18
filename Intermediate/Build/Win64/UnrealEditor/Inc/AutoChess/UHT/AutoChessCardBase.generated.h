@@ -16,14 +16,18 @@ class APlayerController;
 #endif
 #define AUTOCHESS_AutoChessCardBase_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_21_DELEGATE \
+AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDelegate& OnCardCostChanged, int32 NewFinalCost);
+
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execOnPlayed); \
 	DECLARE_FUNCTION(execModifyCost); \
 	DECLARE_FUNCTION(execGetFinalCost);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUAutoChessCardBase(); \
 	friend struct Z_Construct_UClass_UAutoChessCardBase_Statics; \
@@ -32,7 +36,7 @@ public: \
 	DECLARE_SERIALIZER(UAutoChessCardBase)
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	UAutoChessCardBase(UAutoChessCardBase&&); \
@@ -44,14 +48,14 @@ public: \
 	NO_API virtual ~UAutoChessCardBase();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_25_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_27_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
