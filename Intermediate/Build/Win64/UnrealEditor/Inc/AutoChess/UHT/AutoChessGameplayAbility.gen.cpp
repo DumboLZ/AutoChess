@@ -29,10 +29,12 @@ struct Z_Construct_UClass_UAutoChessGameplayAbility_Statics
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Class_MetaDataParams[] = {
+		{ "BlueprintType", "true" },
 #if !UE_BUILD_SHIPPING
 		{ "Comment", "/**\n * \xe8\x87\xaa\xe5\x8a\xa8\xe8\xb5\xb0\xe6\xa3\x8b\xe6\x8a\x80\xe8\x83\xbd\xe5\x9f\xba\xe7\xb1\xbb\n */" },
 #endif
 		{ "IncludePath", "AutoChessGameplayAbility.h" },
+		{ "IsBlueprintBase", "true" },
 		{ "ModuleRelativePath", "AutoChessGameplayAbility.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe8\x87\xaa\xe5\x8a\xa8\xe8\xb5\xb0\xe6\xa3\x8b\xe6\x8a\x80\xe8\x83\xbd\xe5\x9f\xba\xe7\xb1\xbb" },
@@ -85,10 +87,10 @@ UAutoChessGameplayAbility::~UAutoChessGameplayAbility() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameplayAbility_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessGameplayAbility, UAutoChessGameplayAbility::StaticClass, TEXT("UAutoChessGameplayAbility"), &Z_Registration_Info_UClass_UAutoChessGameplayAbility, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessGameplayAbility), 2509725233U) },
+		{ Z_Construct_UClass_UAutoChessGameplayAbility, UAutoChessGameplayAbility::StaticClass, TEXT("UAutoChessGameplayAbility"), &Z_Registration_Info_UClass_UAutoChessGameplayAbility, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessGameplayAbility), 2426068933U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameplayAbility_h_1007456669(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameplayAbility_h_4166929499(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameplayAbility_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameplayAbility_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

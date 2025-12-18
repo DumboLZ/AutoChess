@@ -28,6 +28,7 @@ class AUTOCHESS_API UAutoChessCardBase : public UObject
 	GENERATED_BODY()
 	
 public:
+	UAutoChessCardBase();
 	// 卡牌名称
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FText CardName;

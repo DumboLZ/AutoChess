@@ -6,6 +6,17 @@
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
 
+UAutoChessCardBase::UAutoChessCardBase()
+{
+	CardName = FText::FromString(TEXT("新卡牌"));
+	Cost = 0;
+	Rarity = 1;
+	TargetType = EAutoChessCardTargetType::None;
+	AOERadius = 0;
+	DisplayDuration = 1.0f;
+	bSkipDisplay = false;
+}
+
 void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, AActor* Target)
 {
 	UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Card: %s, Target: %s"), 

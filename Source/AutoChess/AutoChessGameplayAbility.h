@@ -7,7 +7,7 @@
 /**
  * 自动走棋技能基类
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class AUTOCHESS_API UAutoChessGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()

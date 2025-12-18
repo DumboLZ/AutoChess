@@ -31,8 +31,6 @@ public: \
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_ENHANCED_CONSTRUCTORS \
-	/** Standard constructor, called after all reflected properties have been initialized */ \
-	NO_API UAutoChessCardBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	UAutoChessCardBase(UAutoChessCardBase&&); \
@@ -40,7 +38,7 @@ private: \
 public: \
 	DECLARE_VTABLE_PTR_HELPER_CTOR(NO_API, UAutoChessCardBase); \
 	DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UAutoChessCardBase); \
-	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UAutoChessCardBase) \
+	DEFINE_DEFAULT_CONSTRUCTOR_CALL(UAutoChessCardBase) \
 	NO_API virtual ~UAutoChessCardBase();
 
 

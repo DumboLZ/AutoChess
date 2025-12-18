@@ -439,7 +439,6 @@ template<> AUTOCHESS_API UClass* StaticClass<UAutoChessCardBase>()
 {
 	return UAutoChessCardBase::StaticClass();
 }
-UAutoChessCardBase::UAutoChessCardBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {}
 DEFINE_VTABLE_PTR_HELPER_CTOR(UAutoChessCardBase);
 UAutoChessCardBase::~UAutoChessCardBase() {}
 // End Class UAutoChessCardBase
