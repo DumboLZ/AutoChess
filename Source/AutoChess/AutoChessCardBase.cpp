@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
+#include "Net/UnrealNetwork.h"
 
 UAutoChessCardBase::UAutoChessCardBase()
 {
@@ -25,7 +26,20 @@ int32 UAutoChessCardBase::GetFinalCost() const
 
 void UAutoChessCardBase::ModifyCost(int32 Amount)
 {
-	CostModifier += Amount;
+	if (GetWorld() && GetWorld()->GetNetMode() != NM_Client)
+	{
+		CostModifier += Amount;
+		OnCostChanged.Broadcast(GetFinalCost());
+	}
+}
+
+void UAutoChessCardBase::OnRep_Cost()
+{
+	OnCostChanged.Broadcast(GetFinalCost());
+}
+
+void UAutoChessCardBase::OnRep_CostModifier()
+{
 	OnCostChanged.Broadcast(GetFinalCost());
 }
 
@@ -168,4 +182,13 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 	}
 }
 
-// 纯数据类，暂无逻辑实现
+void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UAutoChessCardBase, CardName);
+	DOREPLIFETIME(UAutoChessCardBase, CardDescription);
+	DOREPLIFETIME(UAutoChessCardBase, Cost);
+	DOREPLIFETIME(UAutoChessCardBase, CostModifier);
+	DOREPLIFETIME(UAutoChessCardBase, Icon);
+}

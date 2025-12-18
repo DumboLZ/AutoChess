@@ -36,11 +36,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Card Info")
 	FOnCardCostChanged OnCostChanged;
 	// 卡牌名称
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FText CardName;
 
 	// 卡牌描述
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FText CardDescription;
 
 	// 是否消耗所有法力值 (用于可变强度技能)
@@ -48,12 +48,18 @@ public:
 	bool bConsumeAllMana = false;
 
 	// 金币消耗 (如果勾选"消耗所有法力"，此项将被忽略)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Info", meta=(EditCondition="!bConsumeAllMana"))
+	UPROPERTY(ReplicatedUsing = OnRep_Cost, EditAnywhere, BlueprintReadWrite, Category = "Card Info", meta=(EditCondition="!bConsumeAllMana"))
 	int32 Cost;
 
 	// 费用修正值 (例如 -1 表示减 1 费)
-	UPROPERTY(BlueprintReadWrite, Category = "Card Info")
+	UPROPERTY(ReplicatedUsing = OnRep_CostModifier, BlueprintReadWrite, Category = "Card Info")
 	int32 CostModifier = 0;
+
+	UFUNCTION()
+	void OnRep_Cost();
+
+	UFUNCTION()
+	void OnRep_CostModifier();
 
 	// 获取最终费用 (基础费用 + 修正值，最小为 0)
 	UFUNCTION(BlueprintPure, Category = "Card Info")
@@ -68,7 +74,7 @@ public:
 	TSubclassOf<AAutoChessUnitBase> UnitClass;
 
 	// 卡牌图标 (UI显示)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	UTexture2D* Icon;
 
 	// 稀有度 (1-5)
@@ -125,4 +131,5 @@ public:
 
 	// 支持网络复制
 	virtual bool IsSupportedForNetworking() const override { return true; }
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

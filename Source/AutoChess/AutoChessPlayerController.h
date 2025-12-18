@@ -26,7 +26,10 @@ struct FCardDisplayData
 	FText CardDescription;
 
 	UPROPERTY(BlueprintReadOnly)
-	int32 Cost = 0;
+	int32 BaseCost = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 FinalCost = 0;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bConsumeAllMana = false;

@@ -24,7 +24,8 @@ FCardDisplayData::FCardDisplayData(UAutoChessCardBase* Card)
 	{
 		CardName = Card->CardName;
 		CardDescription = Card->CardDescription;
-		Cost = Card->Cost;
+		BaseCost = Card->Cost;
+		FinalCost = Card->GetFinalCost();
 		bConsumeAllMana = Card->bConsumeAllMana;
 		Icon = Card->Icon;
 		DisplayDuration = Card->DisplayDuration;
@@ -52,27 +53,24 @@ void AAutoChessPlayerController::OnRep_HandCards()
 {
 	// 过滤掉尚未复制完成的空指针
 	TArray<UAutoChessCardBase*> ValidCards;
+	bool bHasNulls = false;
 	for (UAutoChessCardBase* Card : HandCards)
 	{
 		if (Card)
 		{
 			ValidCards.Add(Card);
 		}
+		else
+		{
+			bHasNulls = true;
+		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] OnRep_HandCards: %d cards (Valid: %d)"), 
-		TeamID, HandCards.Num(), ValidCards.Num());
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] OnRep_HandCards: %d cards (Valid: %d, HasNulls: %s)"), 
+		TeamID, HandCards.Num(), ValidCards.Num(), bHasNulls ? TEXT("TRUE") : TEXT("FALSE"));
 	
 	// 广播委托 (使用过滤后的列表)
 	OnHandUpdated.Broadcast(ValidCards);
-	
-	// 如果HUD已创建，直接调用更新
-	if (MainHUDWidget)
-	{
-		// 注意：这里需要包含 HUD 头文件才能 Cast，或者使用 Interface
-		// 为了避免循环依赖，我们暂时只广播委托。
-		// 如果蓝图绑定了 OnHandUpdated，应该能收到。
-	}
 }
 
 void AAutoChessPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -362,18 +360,32 @@ void AAutoChessPlayerController::PlayerTick(float DeltaTime)
 	}
 
 	// 战斗阶段逻辑：回蓝和抽牌
-	// 注意：这部分逻辑已移至 GameMode 统一调用，避免 Host 执行两次
-	/*
-	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	// ... (省略)
+
+	// --- 客户端子对象同步补丁 ---
+	// 如果手牌中存在尚未同步完成的空指针，每帧检查一次是否已到达
+	if (IsLocalController() && HandCards.Num() > 0)
 	{
-		if (GM->CurrentPhase == EAutoChessPhase::Battle)
+		static int32 LastValidCount = -1;
+		int32 CurrentValidCount = 0;
+		bool bHasNulls = false;
+		
+		for (UAutoChessCardBase* Card : HandCards)
 		{
-			RegenerateMana(DeltaTime);
-			ProcessAutoDraw(DeltaTime);
+			if (Card) CurrentValidCount++;
+			else bHasNulls = true;
+		}
+
+		if (bHasNulls && CurrentValidCount != LastValidCount)
+		{
+			LastValidCount = CurrentValidCount;
+			OnRep_HandCards(); // 重新广播有效卡牌列表
+		}
+		else if (!bHasNulls)
+		{
+			LastValidCount = CurrentValidCount;
 		}
 	}
-	*/
-
 }
 
 void AAutoChessPlayerController::HandleClick(const FVector2D& ScreenPosition)

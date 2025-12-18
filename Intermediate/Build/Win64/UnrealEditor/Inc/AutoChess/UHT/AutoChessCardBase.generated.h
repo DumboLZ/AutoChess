@@ -7,6 +7,7 @@
 // IWYU pragma: private, include "AutoChessCardBase.h"
 #include "UObject/ObjectMacros.h"
 #include "UObject/ScriptMacros.h"
+#include "Net/Core/PushModel/PushModelMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
@@ -23,7 +24,9 @@ AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDele
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execOnPlayed); \
 	DECLARE_FUNCTION(execModifyCost); \
-	DECLARE_FUNCTION(execGetFinalCost);
+	DECLARE_FUNCTION(execGetFinalCost); \
+	DECLARE_FUNCTION(execOnRep_CostModifier); \
+	DECLARE_FUNCTION(execOnRep_Cost);
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_CALLBACK_WRAPPERS
@@ -33,7 +36,20 @@ private: \
 	friend struct Z_Construct_UClass_UAutoChessCardBase_Statics; \
 public: \
 	DECLARE_CLASS(UAutoChessCardBase, UObject, COMPILED_IN_FLAGS(0), CASTCLASS_None, TEXT("/Script/AutoChess"), NO_API) \
-	DECLARE_SERIALIZER(UAutoChessCardBase)
+	DECLARE_SERIALIZER(UAutoChessCardBase) \
+	enum class ENetFields_Private : uint16 \
+	{ \
+		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
+		CardName=NETFIELD_REP_START, \
+		CardDescription, \
+		Cost, \
+		CostModifier, \
+		Icon, \
+		NETFIELD_REP_END=Icon	}; \
+	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override; \
+private: \
+	REPLICATED_BASE_CLASS(UAutoChessCardBase) \
+public:
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_ENHANCED_CONSTRUCTORS \

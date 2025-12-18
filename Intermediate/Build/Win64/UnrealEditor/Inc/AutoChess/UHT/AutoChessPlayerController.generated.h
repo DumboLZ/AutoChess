@@ -34,15 +34,15 @@ AUTOCHESS_API void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 
 template<> AUTOCHESS_API UScriptStruct* StaticStruct<struct FCardDisplayData>();
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_47_DELEGATE \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_50_DELEGATE \
 AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelegate& OnCardDisplayed, FCardDisplayData const& CardData, APlayerController* Caster, AActor* Target, FIntPoint TargetGridPos);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_48_DELEGATE \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_51_DELEGATE \
 AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnGoldUpdate, int32 CurrentGold, int32 Delta);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Server_MoveUnit_Implementation(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY); \
 	virtual void Server_PlayCard_Implementation(UAutoChessCardBase* Card, AActor* Target, int32 GridX, int32 GridY); \
 	virtual void Server_SellUnit_Implementation(AAutoChessUnitBase* Unit); \
@@ -83,8 +83,8 @@ AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	DECLARE_FUNCTION(execClient_ShowCardDisplay);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessPlayerController(); \
 	friend struct Z_Construct_UClass_AAutoChessPlayerController_Statics; \
@@ -102,7 +102,7 @@ public: \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessPlayerController(AAutoChessPlayerController&&); \
@@ -114,14 +114,14 @@ public: \
 	NO_API virtual ~AAutoChessPlayerController();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_49_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_52_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_55_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
