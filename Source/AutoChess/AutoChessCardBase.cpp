@@ -15,6 +15,18 @@ UAutoChessCardBase::UAutoChessCardBase()
 	AOERadius = 0;
 	DisplayDuration = 1.0f;
 	bSkipDisplay = false;
+	CostModifier = 0;
+}
+
+int32 UAutoChessCardBase::GetFinalCost() const
+{
+	return FMath::Max(0, Cost + CostModifier);
+}
+
+void UAutoChessCardBase::ModifyCost(int32 Amount)
+{
+	CostModifier += Amount;
+	OnCostChanged.Broadcast(GetFinalCost());
 }
 
 void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, AActor* Target)

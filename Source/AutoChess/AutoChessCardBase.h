@@ -18,6 +18,8 @@ enum class EAutoChessCardTargetType : uint8
 	AnyUnit		UMETA(DisplayName = "Any Unit")
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCardCostChanged, int32, NewFinalCost);
+
 /**
  * 自动走棋卡牌数据类
  * 定义卡牌属性：花费、对应的棋子类、图标等
@@ -29,6 +31,10 @@ class AUTOCHESS_API UAutoChessCardBase : public UObject
 	
 public:
 	UAutoChessCardBase();
+
+	// 费用更新事件
+	UPROPERTY(BlueprintAssignable, Category = "Card Info")
+	FOnCardCostChanged OnCostChanged;
 	// 卡牌名称
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	FText CardName;
@@ -42,8 +48,20 @@ public:
 	bool bConsumeAllMana = false;
 
 	// 金币消耗 (如果勾选"消耗所有法力"，此项将被忽略)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info", meta=(EditCondition="!bConsumeAllMana"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Card Info", meta=(EditCondition="!bConsumeAllMana"))
 	int32 Cost;
+
+	// 费用修正值 (例如 -1 表示减 1 费)
+	UPROPERTY(BlueprintReadWrite, Category = "Card Info")
+	int32 CostModifier = 0;
+
+	// 获取最终费用 (基础费用 + 修正值，最小为 0)
+	UFUNCTION(BlueprintPure, Category = "Card Info")
+	int32 GetFinalCost() const;
+
+	// 修改费用
+	UFUNCTION(BlueprintCallable, Category = "Card Info")
+	void ModifyCost(int32 Amount);
 
 	// 对应的棋子类 (生成时使用)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")

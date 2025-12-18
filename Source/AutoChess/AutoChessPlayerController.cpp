@@ -757,9 +757,9 @@ void AAutoChessPlayerController::ProcessAutoDraw(float DeltaTime)
 	}
 }
 
-void AAutoChessPlayerController::DrawCard()
+UAutoChessCardBase* AAutoChessPlayerController::DrawCard()
 {
-	if (DeckConfig.Num() == 0) return;
+	if (DeckConfig.Num() == 0) return nullptr;
 
 	// 随机抽一张
 	int32 Index = FMath::RandRange(0, DeckConfig.Num() - 1);
@@ -775,8 +775,10 @@ void AAutoChessPlayerController::DrawCard()
 			// 广播手牌更新
 			OnHandUpdated.Broadcast(HandCards);
 			// 可以在这里播放抽牌音效或UI动画
+			return NewCard;
 		}
 	}
+	return nullptr;
 }
 
 void AAutoChessPlayerController::DrawCards(int32 Count)
@@ -1036,8 +1038,9 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Skipping target validation to allow AOE casting."));
 
 		// 2. 检查费用
-		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, Card->Cost);
-		if (Mana >= Card->Cost)
+		int32 FinalCost = Card->GetFinalCost();
+		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Checking mana: Current=%f, Required=%d"), Mana, FinalCost);
+		if (Mana >= FinalCost)
 		{
 			// 设置 LastTargetGridPos，供 OnPlayed 中的展示逻辑使用
 			Card->LastTargetGridPos = TargetGridPos;
@@ -1050,9 +1053,9 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 			if (!Card->bConsumeAllMana)
 			{
 				// 普通卡牌：自动扣除Cost
-				Mana -= Card->Cost;
+				Mana -= FinalCost;
 				OnManaUpdated.Broadcast(Mana, MaxMana);
-				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Auto deducted Cost: %d, Remaining Mana: %f"), Card->Cost, Mana);
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Auto deducted Cost: %d, Remaining Mana: %f"), FinalCost, Mana);
 			}
 			else
 			{

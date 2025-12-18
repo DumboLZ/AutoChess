@@ -291,7 +291,7 @@ protected:
 public:
 	// 抽牌接口
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
-	void DrawCard();
+	UAutoChessCardBase* DrawCard();
 
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
 	void DrawCards(int32 Count);

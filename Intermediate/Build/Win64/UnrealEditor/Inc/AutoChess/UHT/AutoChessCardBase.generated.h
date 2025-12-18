@@ -17,7 +17,9 @@ class APlayerController;
 #define AUTOCHESS_AutoChessCardBase_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_RPC_WRAPPERS_NO_PURE_DECLS \
-	DECLARE_FUNCTION(execOnPlayed);
+	DECLARE_FUNCTION(execOnPlayed); \
+	DECLARE_FUNCTION(execModifyCost); \
+	DECLARE_FUNCTION(execGetFinalCost);
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_28_CALLBACK_WRAPPERS
