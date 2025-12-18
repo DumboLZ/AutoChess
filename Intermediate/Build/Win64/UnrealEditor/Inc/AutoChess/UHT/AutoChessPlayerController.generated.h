@@ -57,6 +57,7 @@ AUTOCHESS_API void FOnCardDisplayed_DelegateWrapper(const FMulticastScriptDelega
 	DECLARE_FUNCTION(execServer_SellUnit); \
 	DECLARE_FUNCTION(execServer_PlaceUnit); \
 	DECLARE_FUNCTION(execServer_BuyCard); \
+	DECLARE_FUNCTION(execAddMana); \
 	DECLARE_FUNCTION(execDrawCard); \
 	DECLARE_FUNCTION(execUpdateDragHighlight); \
 	DECLARE_FUNCTION(execTryPlayCardAtPosition); \

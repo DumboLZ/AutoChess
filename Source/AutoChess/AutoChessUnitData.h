@@ -34,6 +34,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
 
+	// 棋子描述
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	FText Description;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	UTexture2D* Icon;
 
@@ -108,6 +112,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
+
+	// 棋子描述
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	UTexture2D* Icon;

@@ -75,6 +75,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Data")
 	void InitFromUnitData();
 
+	// 棋子名称
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	FText UnitName;
+
+	// 棋子描述
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	FText Description;
+
 	// 最大生命值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float MaxHealth;

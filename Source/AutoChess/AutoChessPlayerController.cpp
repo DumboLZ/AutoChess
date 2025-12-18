@@ -734,6 +734,19 @@ void AAutoChessPlayerController::RegenerateMana(float DeltaTime)
 	}
 }
 
+void AAutoChessPlayerController::AddMana(float Amount)
+{
+	if (!HasAuthority()) return;
+
+	Mana = FMath::Clamp(Mana + Amount, 0.0f, MaxMana);
+	
+	// 广播法力更新
+	OnManaUpdated.Broadcast(Mana, MaxMana);
+	
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d] AddMana: %f, New Mana: %f"), TeamID, Amount, Mana);
+}
+
+
 void AAutoChessPlayerController::ProcessAutoDraw(float DeltaTime)
 {
 	DrawCardTimer += DeltaTime;

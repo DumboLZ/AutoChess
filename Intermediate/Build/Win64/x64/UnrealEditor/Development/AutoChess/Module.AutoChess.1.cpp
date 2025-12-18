@@ -9,4 +9,3 @@
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessGrid.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessHighlightActor.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessHUDWidget.gen.cpp"
-#include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessPlayerController.gen.cpp"

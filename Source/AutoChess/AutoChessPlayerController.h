@@ -255,6 +255,10 @@ public:
 	// 回复法力 (Public for GameMode access)
 	void RegenerateMana(float DeltaTime);
 
+	// 增加法力 (用于法术效果)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	void AddMana(float Amount);
+
 	// 处理自动抽牌 (Public for GameMode access)
 	void ProcessAutoDraw(float DeltaTime);
 
@@ -276,6 +280,7 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_PlaceUnit(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY);
 
+	// 出售单位
 	UFUNCTION(Server, Reliable)
 	void Server_SellUnit(AAutoChessUnitBase* Unit);
 

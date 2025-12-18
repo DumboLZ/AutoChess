@@ -876,6 +876,8 @@ void AAutoChessUnitBase::InitFromUnitData()
     FAutoChessUnitRow* Row = UnitDataHandle.GetRow<FAutoChessUnitRow>(TEXT("InitFromUnitData"));
     if (Row)
     {
+        UnitName = Row->UnitName;
+        Description = Row->Description;
         MaxHealth = Row->MaxHealth;
         AttackDamage = Row->AttackDamage;
         AttackSpeed = Row->AttackSpeed;
