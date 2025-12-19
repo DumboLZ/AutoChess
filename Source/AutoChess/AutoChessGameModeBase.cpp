@@ -2,16 +2,14 @@
 #include "AutoChessGameState.h"
 #include "AutoChessPlayerController.h"
 #include "AutoChessCardBase.h"
+#include "AutoChessCardData.h"
 #include "AutoChessUnitBase.h"
 #include "AutoChessGrid.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpectatorPawn.h"
 #include "AutoChessCameraPawn.h"
 #include "Engine/GameViewportClient.h"
-#include "AutoChessCameraPawn.h"
-#include "Engine/GameViewportClient.h"
 #include "GameMapsSettings.h"
-#include "AutoChessUnitData.h"
 #include "AutoChessUnitData.h"
 #include "AutoChessAttributeSet.h"
 #include "Components/CapsuleComponent.h"
@@ -304,6 +302,26 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 			GS->bPlayer2Ready = false;
 			// WinnerTeamID 的重置交给 SwitchPhase 处理，避免提前触发 UI
 			GS->WinnerTeamID = -1; // 重置获胜者
+
+			// 无限手牌模式：准备阶段清空手牌
+			for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			{
+				if (AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get()))
+				{
+					PC->ResetState(); // ResetState 会清空手牌并重置法力
+				}
+			}
+		}
+		else if (NewPhase == EAutoChessPhase::Battle)
+		{
+			// 无限手牌模式：进入战斗阶段时发放所有卡牌
+			for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			{
+				if (AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(It->Get()))
+				{
+					PC->InitializeHand();
+				}
+			}
 		}
 	}
 

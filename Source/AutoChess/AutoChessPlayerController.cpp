@@ -1,5 +1,6 @@
 #include "AutoChessPlayerController.h"
 #include "AutoChessCardBase.h"
+#include "AutoChessCardData.h"
 #include "AutoChessGrid.h"
 #include "AutoChessUnitBase.h"
 #include "AutoChessGameModeBase.h"
@@ -79,6 +80,7 @@ void AAutoChessPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 
 	DOREPLIFETIME_CONDITION(AAutoChessPlayerController, Mana, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AAutoChessPlayerController, HandCards, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AAutoChessPlayerController, DeckConfig, COND_OwnerOnly);
 	DOREPLIFETIME(AAutoChessPlayerController, TeamID);
 }
 
@@ -538,6 +540,30 @@ void AAutoChessPlayerController::Server_SellUnit_Implementation(AAutoChessUnitBa
 	SellUnit(Unit);
 }
 
+void AAutoChessPlayerController::Server_SellAllUnits_Implementation(int32 TargetTeamID)
+{
+	AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+	if (!GS) return;
+
+	// 复制一份数组进行遍历，因为 SellUnit 会修改 AllUnits
+	TArray<AAutoChessUnitBase*> UnitsToSell;
+	for (AAutoChessUnitBase* Unit : GS->AllUnits)
+	{
+		if (Unit && Unit->TeamID == TargetTeamID && !Unit->bIsDead)
+		{
+			UnitsToSell.Add(Unit);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d] Server_SellAllUnits for Team %d. Found %d units to sell."), 
+		TeamID, TargetTeamID, UnitsToSell.Num());
+
+	for (AAutoChessUnitBase* Unit : UnitsToSell)
+	{
+		SellUnit(Unit);
+	}
+}
+
 #include "AutoChessGhost.h"
 #include "AutoChessTrashCan.h"
 
@@ -809,28 +835,31 @@ void AAutoChessPlayerController::AddMana(float Amount)
 
 void AAutoChessPlayerController::ProcessAutoDraw(float DeltaTime)
 {
-	DrawCardTimer += DeltaTime;
-	if (DrawCardTimer >= DrawCardInterval)
-	{
-		DrawCardTimer = 0.0f;
-		DrawCard();
-	}
+	// 无限手牌模式：禁用自动抽牌
+	// DrawCardTimer += DeltaTime;
+	// if (DrawCardTimer >= DrawCardInterval)
+	// {
+	// 	DrawCardTimer = 0.0f;
+	// 	DrawCard();
+	// }
 }
 
 UAutoChessCardBase* AAutoChessPlayerController::DrawCard()
 {
-	if (DeckConfig.Num() == 0) return nullptr;
+	if (DeckConfig.Num() == 0 || !CardDataTable) return nullptr;
 
 	// 随机抽一张
 	int32 Index = FMath::RandRange(0, DeckConfig.Num() - 1);
-	TSubclassOf<UAutoChessCardBase> CardClass = DeckConfig[Index];
+	FName RowName = DeckConfig[Index];
 
-	if (CardClass)
+	FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(RowName, TEXT("DrawCard"));
+	if (Row && Row->CardClass)
 	{
 		// 实例化卡牌对象
-		UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, CardClass);
+		UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, Row->CardClass);
 		if (NewCard)
 		{
+			NewCard->InitFromRow(*Row);
 			HandCards.Add(NewCard);
 			// 广播手牌更新
 			OnHandUpdated.Broadcast(HandCards);
@@ -1124,9 +1153,9 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, GA will handle mana consumption"));
 			}
 
-			// 移除手牌
-			HandCards.Remove(Card);
-			OnHandUpdated.Broadcast(HandCards);
+			// 无限手牌模式：不移除手牌，但通过 RPC 通知客户端刷新 UI
+			// HandCards.Remove(Card);
+			Client_RefreshHand();
 			
 			// 成功打出后清除高亮 (Server 也需要清除吗？主要是 Client 需要)
 			// Server 可以通知 Client 清除，或者 Client 自己清除
@@ -1420,14 +1449,88 @@ void AAutoChessPlayerController::ResetState()
 	Mana = 0.0f;
 	OnRep_Mana(); // 手动更新客户端
 
-	// 清空手牌
+	// 无限手牌模式：准备阶段清空手牌
 	HandCards.Empty();
-	OnRep_HandCards(); // 手动更新客户端
+	
+	/* 
+	// 不再在这里发放卡牌，改为在战斗开始时调用 InitializeHand
+	if (DeckConfig.Num() > 0)
+	{
+		for (FName RowName : DeckConfig)
+		{
+			// ... 逻辑已移至 InitializeHand
+		}
+	}
+	*/
+
+	OnRep_HandCards(); // 更新服务器本地 UI
+	Client_RefreshHand(); // 通知客户端刷新 UI
 	
 	// 重置抽牌计时器
 	DrawCardTimer = 0.0f;
 
-	UE_LOG(LogTemp, Log, TEXT("[PlayerController] State Reset (Mana=0, HandCards=0)"));
+	UE_LOG(LogTemp, Log, TEXT("[PlayerController] State Reset (Mana=0, HandCards=%d)"), HandCards.Num());
+}
+
+void AAutoChessPlayerController::OnRep_DeckConfig()
+{
+	OnDeckUpdated.Broadcast(DeckConfig);
+}
+
+void AAutoChessPlayerController::Server_AddCardToDeck_Implementation(FName CardRowName)
+{
+	if (!CardDataTable) return;
+
+	// 验证行是否存在
+	FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(CardRowName, TEXT("AddCardToDeck"));
+	if (Row)
+	{
+		DeckConfig.Add(CardRowName);
+		OnRep_DeckConfig();
+		UE_LOG(LogTemp, Log, TEXT("[PC %d] Added RowName to deck: %s"), TeamID, *CardRowName.ToString());
+	}
+}
+
+void AAutoChessPlayerController::Server_RemoveCardFromDeck_Implementation(FName CardRowName)
+{
+	DeckConfig.Remove(CardRowName);
+	OnRep_DeckConfig();
+	UE_LOG(LogTemp, Log, TEXT("[PC %d] Removed RowName from deck: %s"), TeamID, *CardRowName.ToString());
+}
+
+void AAutoChessPlayerController::InitializeHand()
+{
+	if (!HasAuthority()) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d] InitializeHand: DeckConfig count = %d"), TeamID, DeckConfig.Num());
+
+	HandCards.Empty();
+	if (DeckConfig.Num() > 0 && CardDataTable)
+	{
+		for (FName RowName : DeckConfig)
+		{
+			FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(RowName, TEXT("InitializeHand"));
+			if (Row && Row->CardClass)
+			{
+				UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, Row->CardClass);
+				if (NewCard)
+				{
+					NewCard->InitFromRow(*Row);
+					HandCards.Add(NewCard);
+					UE_LOG(LogTemp, Log, TEXT("[PC %d] Initialized card from DT: %s"), TeamID, *RowName.ToString());
+				}
+			}
+		}
+	}
+	
+	OnRep_HandCards();
+	Client_RefreshHand();
+}
+
+void AAutoChessPlayerController::Client_RefreshHand_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] Client_RefreshHand called"), TeamID);
+	OnRep_HandCards();
 }
 
 	// 实现 Client_MatchEnded

@@ -12,6 +12,7 @@ class UAutoChessCardBase;
 // 定义 UI 更新委托
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnManaUpdate, float, CurrentMana, float, MaxMana);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHandUpdate, const TArray<UAutoChessCardBase*>&, HandCards);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeckUpdate, const TArray<FName>&, DeckConfig);
 
 // 卡牌展示数据（用于 RPC 传输）
 USTRUCT(BlueprintType)
@@ -71,6 +72,10 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_MatchEnded(int32 WinnerTeamID);
 
+	// 客户端刷新手牌 UI
+	UFUNCTION(Client, Reliable)
+	void Client_RefreshHand();
+
 	// 蓝图实现的比赛结束逻辑 (用于弹出 UI)
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
 	void BP_OnMatchEnded(int32 WinnerTeamID);
@@ -85,6 +90,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Config")
 	class UDataTable* UnitDataTable;
 
+	// 卡牌数据表
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Config")
+	class UDataTable* CardDataTable;
+
 	// 设置玩家准备状态
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")
 	void Server_SetPlayerReady(bool bReady);
@@ -92,6 +101,10 @@ public:
 	// 请求再来一局
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|GameFlow")
 	void Server_RequestRematch(bool bRematch);
+
+	// 卖出场上所有友方棋子
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Actions")
+	void Server_SellAllUnits(int32 TargetTeamID);
 
 	// 返回主菜单 (客户端本地调用)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
@@ -215,9 +228,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Battle")
 	float ManaRegenRate = 1.0f;
 
-	// 牌库配置 (卡牌类列表)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
-	TArray<TSubclassOf<UAutoChessCardBase>> DeckConfig;
+	// 牌库配置 (卡牌数据表行名列表)
+	UPROPERTY(ReplicatedUsing = OnRep_DeckConfig, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Battle")
+	TArray<FName> DeckConfig;
+
+	UFUNCTION()
+	void OnRep_DeckConfig();
 
 	// 当前手牌 (实例化后的卡牌对象)
 	UPROPERTY(ReplicatedUsing = OnRep_HandCards, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Battle")
@@ -257,6 +273,9 @@ public:
 	// 重置玩家状态 (清空手牌、重置法力)
 	void ResetState();
 
+	// 初始化手牌 (发放所有卡牌)
+	void InitializeHand();
+
 protected:
 	// 内部计时器
 	float DrawCardTimer;
@@ -282,6 +301,12 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_MoveUnit(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY);
 
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Battle")
+	void Server_AddCardToDeck(FName CardRowName);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Battle")
+	void Server_RemoveCardFromDeck(FName CardRowName);
+
 
 public:
 	// 抽牌接口
@@ -304,6 +329,10 @@ public:
 	// 卡牌展示事件
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnCardDisplayed OnCardDisplayed;
+
+	// 牌库更新事件
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnDeckUpdate OnDeckUpdated;
 
 	// --- 联机功能 (控制台命令) ---
 	

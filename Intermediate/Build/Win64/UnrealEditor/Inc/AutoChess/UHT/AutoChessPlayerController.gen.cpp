@@ -17,6 +17,7 @@ AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessPlayerController_NoRegister()
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature();
+AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnGoldUpdate__DelegateSignature();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnHandUpdate__DelegateSignature();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnManaUpdate__DelegateSignature();
@@ -140,6 +141,56 @@ void FOnHandUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnHandUpdate,
 	OnHandUpdate.ProcessMulticastDelegate<UObject>(&Parms);
 }
 // End Delegate FOnHandUpdate
+
+// Begin Delegate FOnDeckUpdate
+struct Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics
+{
+	struct _Script_AutoChess_eventOnDeckUpdate_Parms
+	{
+		TArray<FName> DeckConfig;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DeckConfig_MetaData[] = {
+		{ "NativeConst", "" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FNamePropertyParams NewProp_DeckConfig_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_DeckConfig;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::NewProp_DeckConfig_Inner = { "DeckConfig", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::NewProp_DeckConfig = { "DeckConfig", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(_Script_AutoChess_eventOnDeckUpdate_Parms, DeckConfig), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DeckConfig_MetaData), NewProp_DeckConfig_MetaData) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::NewProp_DeckConfig_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::NewProp_DeckConfig,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::FuncParams = { (UObject*(*)())Z_Construct_UPackage__Script_AutoChess, nullptr, "OnDeckUpdate__DelegateSignature", nullptr, nullptr, Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::PropPointers), sizeof(Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::_Script_AutoChess_eventOnDeckUpdate_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00130000, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::Function_MetaDataParams), Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::_Script_AutoChess_eventOnDeckUpdate_Parms) < MAX_uint16);
+UFunction* Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+void FOnDeckUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnDeckUpdate, TArray<FName> const& DeckConfig)
+{
+	struct _Script_AutoChess_eventOnDeckUpdate_Parms
+	{
+		TArray<FName> DeckConfig;
+	};
+	_Script_AutoChess_eventOnDeckUpdate_Parms Parms;
+	Parms.DeckConfig=DeckConfig;
+	OnDeckUpdate.ProcessMulticastDelegate<UObject>(&Parms);
+}
+// End Delegate FOnDeckUpdate
 
 // Begin ScriptStruct FCardDisplayData
 static FStructRegistrationInfo Z_Registration_Info_UScriptStruct_CardDisplayData;
@@ -618,6 +669,46 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execClient_MatchEnded)
 }
 // End Class AAutoChessPlayerController Function Client_MatchEnded
 
+// Begin Class AAutoChessPlayerController Function Client_RefreshHand
+static FName NAME_AAutoChessPlayerController_Client_RefreshHand = FName(TEXT("Client_RefreshHand"));
+void AAutoChessPlayerController::Client_RefreshHand()
+{
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessPlayerController_Client_RefreshHand),NULL);
+}
+struct Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\xae\xa2\xe6\x88\xb7\xe7\xab\xaf\xe5\x88\xb7\xe6\x96\xb0\xe6\x89\x8b\xe7\x89\x8c UI\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\xae\xa2\xe6\x88\xb7\xe7\xab\xaf\xe5\x88\xb7\xe6\x96\xb0\xe6\x89\x8b\xe7\x89\x8c UI" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "Client_RefreshHand", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x01020CC0, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execClient_RefreshHand)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Client_RefreshHand_Implementation();
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function Client_RefreshHand
+
 // Begin Class AAutoChessPlayerController Function Client_ReturnToMainMenu
 struct Z_Construct_UFunction_AAutoChessPlayerController_Client_ReturnToMainMenu_Statics
 {
@@ -1003,6 +1094,35 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execOnDebugMatchWinnerChanged)
 }
 // End Class AAutoChessPlayerController Function OnDebugMatchWinnerChanged
 
+// Begin Class AAutoChessPlayerController Function OnRep_DeckConfig
+struct Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "OnRep_DeckConfig", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00080401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execOnRep_DeckConfig)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->OnRep_DeckConfig();
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function OnRep_DeckConfig
+
 // Begin Class AAutoChessPlayerController Function OnRep_HandCards
 struct Z_Construct_UFunction_AAutoChessPlayerController_OnRep_HandCards_Statics
 {
@@ -1270,6 +1390,56 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execSellUnit)
 	P_NATIVE_END;
 }
 // End Class AAutoChessPlayerController Function SellUnit
+
+// Begin Class AAutoChessPlayerController Function Server_AddCardToDeck
+struct AutoChessPlayerController_eventServer_AddCardToDeck_Parms
+{
+	FName CardRowName;
+};
+static FName NAME_AAutoChessPlayerController_Server_AddCardToDeck = FName(TEXT("Server_AddCardToDeck"));
+void AAutoChessPlayerController::Server_AddCardToDeck(FName CardRowName)
+{
+	AutoChessPlayerController_eventServer_AddCardToDeck_Parms Parms;
+	Parms.CardRowName=CardRowName;
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessPlayerController_Server_AddCardToDeck),&Parms);
+}
+struct Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Battle" },
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FNamePropertyParams NewProp_CardRowName;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::NewProp_CardRowName = { "CardRowName", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessPlayerController_eventServer_AddCardToDeck_Parms, CardRowName), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::NewProp_CardRowName,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "Server_AddCardToDeck", nullptr, nullptr, Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::PropPointers), sizeof(AutoChessPlayerController_eventServer_AddCardToDeck_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04280CC0, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessPlayerController_eventServer_AddCardToDeck_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execServer_AddCardToDeck)
+{
+	P_GET_PROPERTY(FNameProperty,Z_Param_CardRowName);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Server_AddCardToDeck_Implementation(Z_Param_CardRowName);
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function Server_AddCardToDeck
 
 // Begin Class AAutoChessPlayerController Function Server_BuyCard
 struct AutoChessPlayerController_eventServer_BuyCard_Parms
@@ -1571,6 +1741,56 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execServer_PlayCard)
 }
 // End Class AAutoChessPlayerController Function Server_PlayCard
 
+// Begin Class AAutoChessPlayerController Function Server_RemoveCardFromDeck
+struct AutoChessPlayerController_eventServer_RemoveCardFromDeck_Parms
+{
+	FName CardRowName;
+};
+static FName NAME_AAutoChessPlayerController_Server_RemoveCardFromDeck = FName(TEXT("Server_RemoveCardFromDeck"));
+void AAutoChessPlayerController::Server_RemoveCardFromDeck(FName CardRowName)
+{
+	AutoChessPlayerController_eventServer_RemoveCardFromDeck_Parms Parms;
+	Parms.CardRowName=CardRowName;
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessPlayerController_Server_RemoveCardFromDeck),&Parms);
+}
+struct Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Battle" },
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FNamePropertyParams NewProp_CardRowName;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::NewProp_CardRowName = { "CardRowName", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessPlayerController_eventServer_RemoveCardFromDeck_Parms, CardRowName), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::NewProp_CardRowName,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "Server_RemoveCardFromDeck", nullptr, nullptr, Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::PropPointers), sizeof(AutoChessPlayerController_eventServer_RemoveCardFromDeck_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04280CC0, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessPlayerController_eventServer_RemoveCardFromDeck_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execServer_RemoveCardFromDeck)
+{
+	P_GET_PROPERTY(FNameProperty,Z_Param_CardRowName);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Server_RemoveCardFromDeck_Implementation(Z_Param_CardRowName);
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function Server_RemoveCardFromDeck
+
 // Begin Class AAutoChessPlayerController Function Server_RequestRematch
 struct AutoChessPlayerController_eventServer_RequestRematch_Parms
 {
@@ -1631,6 +1851,62 @@ DEFINE_FUNCTION(AAutoChessPlayerController::execServer_RequestRematch)
 	P_NATIVE_END;
 }
 // End Class AAutoChessPlayerController Function Server_RequestRematch
+
+// Begin Class AAutoChessPlayerController Function Server_SellAllUnits
+struct AutoChessPlayerController_eventServer_SellAllUnits_Parms
+{
+	int32 TargetTeamID;
+};
+static FName NAME_AAutoChessPlayerController_Server_SellAllUnits = FName(TEXT("Server_SellAllUnits"));
+void AAutoChessPlayerController::Server_SellAllUnits(int32 TargetTeamID)
+{
+	AutoChessPlayerController_eventServer_SellAllUnits_Parms Parms;
+	Parms.TargetTeamID=TargetTeamID;
+	ProcessEvent(FindFunctionChecked(NAME_AAutoChessPlayerController_Server_SellAllUnits),&Parms);
+}
+struct Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Actions" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\x96\xe5\x87\xba\xe5\x9c\xba\xe4\xb8\x8a\xe6\x89\x80\xe6\x9c\x89\xe5\x8f\x8b\xe6\x96\xb9\xe6\xa3\x8b\xe5\xad\x90\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\x96\xe5\x87\xba\xe5\x9c\xba\xe4\xb8\x8a\xe6\x89\x80\xe6\x9c\x89\xe5\x8f\x8b\xe6\x96\xb9\xe6\xa3\x8b\xe5\xad\x90" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TargetTeamID;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::NewProp_TargetTeamID = { "TargetTeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessPlayerController_eventServer_SellAllUnits_Parms, TargetTeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::NewProp_TargetTeamID,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessPlayerController, nullptr, "Server_SellAllUnits", nullptr, nullptr, Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::PropPointers), sizeof(AutoChessPlayerController_eventServer_SellAllUnits_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04220CC0, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessPlayerController_eventServer_SellAllUnits_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessPlayerController::execServer_SellAllUnits)
+{
+	P_GET_PROPERTY(FIntProperty,Z_Param_TargetTeamID);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->Server_SellAllUnits_Implementation(Z_Param_TargetTeamID);
+	P_NATIVE_END;
+}
+// End Class AAutoChessPlayerController Function Server_SellAllUnits
 
 // Begin Class AAutoChessPlayerController Function Server_SellUnit
 struct AutoChessPlayerController_eventServer_SellUnit_Parms
@@ -1880,6 +2156,7 @@ void AAutoChessPlayerController::StaticRegisterNativesAAutoChessPlayerController
 		{ "BuyCard", &AAutoChessPlayerController::execBuyCard },
 		{ "Client_HideCardDisplay", &AAutoChessPlayerController::execClient_HideCardDisplay },
 		{ "Client_MatchEnded", &AAutoChessPlayerController::execClient_MatchEnded },
+		{ "Client_RefreshHand", &AAutoChessPlayerController::execClient_RefreshHand },
 		{ "Client_ReturnToMainMenu", &AAutoChessPlayerController::execClient_ReturnToMainMenu },
 		{ "Client_ShowCardDisplay", &AAutoChessPlayerController::execClient_ShowCardDisplay },
 		{ "DrawCard", &AAutoChessPlayerController::execDrawCard },
@@ -1888,17 +2165,21 @@ void AAutoChessPlayerController::StaticRegisterNativesAAutoChessPlayerController
 		{ "HostGame", &AAutoChessPlayerController::execHostGame },
 		{ "JoinGame", &AAutoChessPlayerController::execJoinGame },
 		{ "OnDebugMatchWinnerChanged", &AAutoChessPlayerController::execOnDebugMatchWinnerChanged },
+		{ "OnRep_DeckConfig", &AAutoChessPlayerController::execOnRep_DeckConfig },
 		{ "OnRep_HandCards", &AAutoChessPlayerController::execOnRep_HandCards },
 		{ "OnRep_Mana", &AAutoChessPlayerController::execOnRep_Mana },
 		{ "PlaceUnit", &AAutoChessPlayerController::execPlaceUnit },
 		{ "PlayCard", &AAutoChessPlayerController::execPlayCard },
 		{ "SellUnit", &AAutoChessPlayerController::execSellUnit },
+		{ "Server_AddCardToDeck", &AAutoChessPlayerController::execServer_AddCardToDeck },
 		{ "Server_BuyCard", &AAutoChessPlayerController::execServer_BuyCard },
 		{ "Server_BuyUnit", &AAutoChessPlayerController::execServer_BuyUnit },
 		{ "Server_MoveUnit", &AAutoChessPlayerController::execServer_MoveUnit },
 		{ "Server_PlaceUnit", &AAutoChessPlayerController::execServer_PlaceUnit },
 		{ "Server_PlayCard", &AAutoChessPlayerController::execServer_PlayCard },
+		{ "Server_RemoveCardFromDeck", &AAutoChessPlayerController::execServer_RemoveCardFromDeck },
 		{ "Server_RequestRematch", &AAutoChessPlayerController::execServer_RequestRematch },
+		{ "Server_SellAllUnits", &AAutoChessPlayerController::execServer_SellAllUnits },
 		{ "Server_SellUnit", &AAutoChessPlayerController::execServer_SellUnit },
 		{ "Server_SetPlayerReady", &AAutoChessPlayerController::execServer_SetPlayerReady },
 		{ "TryPlayCardAtPosition", &AAutoChessPlayerController::execTryPlayCardAtPosition },
@@ -1927,6 +2208,16 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe5\x8d\x95\xe4\xbd\x8d\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CardDataTable_MetaData[] = {
+		{ "Category", "AutoChess|Config" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8d\xa1\xe7\x89\x8c\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8d\xa1\xe7\x89\x8c\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AbilitySystemComponent_MetaData[] = {
@@ -2067,11 +2358,11 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DeckConfig_MetaData[] = {
 		{ "Category", "AutoChess|Battle" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe7\x89\x8c\xe5\xba\x93\xe9\x85\x8d\xe7\xbd\xae (\xe5\x8d\xa1\xe7\x89\x8c\xe7\xb1\xbb\xe5\x88\x97\xe8\xa1\xa8)\n" },
+		{ "Comment", "// \xe7\x89\x8c\xe5\xba\x93\xe9\x85\x8d\xe7\xbd\xae (\xe5\x8d\xa1\xe7\x89\x8c\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8\xe8\xa1\x8c\xe5\x90\x8d\xe5\x88\x97\xe8\xa1\xa8)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe7\x89\x8c\xe5\xba\x93\xe9\x85\x8d\xe7\xbd\xae (\xe5\x8d\xa1\xe7\x89\x8c\xe7\xb1\xbb\xe5\x88\x97\xe8\xa1\xa8)" },
+		{ "ToolTip", "\xe7\x89\x8c\xe5\xba\x93\xe9\x85\x8d\xe7\xbd\xae (\xe5\x8d\xa1\xe7\x89\x8c\xe6\x95\xb0\xe6\x8d\xae\xe8\xa1\xa8\xe8\xa1\x8c\xe5\x90\x8d\xe5\x88\x97\xe8\xa1\xa8)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HandCards_MetaData[] = {
@@ -2124,8 +2415,19 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ "ToolTip", "\xe5\x8d\xa1\xe7\x89\x8c\xe5\xb1\x95\xe7\xa4\xba\xe4\xba\x8b\xe4\xbb\xb6" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_OnDeckUpdated_MetaData[] = {
+		{ "Category", "AutoChess|Events" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe7\x89\x8c\xe5\xba\x93\xe6\x9b\xb4\xe6\x96\xb0\xe4\xba\x8b\xe4\xbb\xb6\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessPlayerController.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe7\x89\x8c\xe5\xba\x93\xe6\x9b\xb4\xe6\x96\xb0\xe4\xba\x8b\xe4\xbb\xb6" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_UnitDataTable;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_CardDataTable;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_AbilitySystemComponent;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_SelectedCardClass;
@@ -2140,7 +2442,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_Mana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxMana;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManaRegenRate;
-	static const UECodeGen_Private::FClassPropertyParams NewProp_DeckConfig_Inner;
+	static const UECodeGen_Private::FNamePropertyParams NewProp_DeckConfig_Inner;
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_DeckConfig;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_HandCards_Inner;
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_HandCards;
@@ -2148,6 +2450,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static const UECodeGen_Private::FMulticastDelegatePropertyParams NewProp_OnManaUpdated;
 	static const UECodeGen_Private::FMulticastDelegatePropertyParams NewProp_OnHandUpdated;
 	static const UECodeGen_Private::FMulticastDelegatePropertyParams NewProp_OnCardDisplayed;
+	static const UECodeGen_Private::FMulticastDelegatePropertyParams NewProp_OnDeckUpdated;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -2156,6 +2459,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_BuyCard, "BuyCard" }, // 564924422
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Client_HideCardDisplay, "Client_HideCardDisplay" }, // 2575351283
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Client_MatchEnded, "Client_MatchEnded" }, // 1672630615
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_Client_RefreshHand, "Client_RefreshHand" }, // 526522070
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Client_ReturnToMainMenu, "Client_ReturnToMainMenu" }, // 601527853
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Client_ShowCardDisplay, "Client_ShowCardDisplay" }, // 2444876624
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_DrawCard, "DrawCard" }, // 1713348605
@@ -2164,18 +2468,22 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_HostGame, "HostGame" }, // 433675712
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_JoinGame, "JoinGame" }, // 2827352532
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_OnDebugMatchWinnerChanged, "OnDebugMatchWinnerChanged" }, // 1065136084
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_OnRep_DeckConfig, "OnRep_DeckConfig" }, // 3835431189
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_OnRep_HandCards, "OnRep_HandCards" }, // 2994885739
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_OnRep_Mana, "OnRep_Mana" }, // 44575286
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_PlaceUnit, "PlaceUnit" }, // 1670979043
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_PlayCard, "PlayCard" }, // 79853008
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_RefreshShop, "RefreshShop" }, // 1906884202
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_SellUnit, "SellUnit" }, // 587305614
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_AddCardToDeck, "Server_AddCardToDeck" }, // 504348046
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_BuyCard, "Server_BuyCard" }, // 1564667196
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_BuyUnit, "Server_BuyUnit" }, // 2370569049
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_MoveUnit, "Server_MoveUnit" }, // 249671395
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_PlaceUnit, "Server_PlaceUnit" }, // 344645829
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_PlayCard, "Server_PlayCard" }, // 4182496431
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_RemoveCardFromDeck, "Server_RemoveCardFromDeck" }, // 1205728679
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_RequestRematch, "Server_RequestRematch" }, // 3914817756
+		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_SellAllUnits, "Server_SellAllUnits" }, // 111380566
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_SellUnit, "Server_SellUnit" }, // 3127502654
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_Server_SetPlayerReady, "Server_SetPlayerReady" }, // 4192042800
 		{ &Z_Construct_UFunction_AAutoChessPlayerController_TryPlayCardAtPosition, "TryPlayCardAtPosition" }, // 3449445507
@@ -2189,6 +2497,7 @@ struct Z_Construct_UClass_AAutoChessPlayerController_Statics
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitDataTable = { "UnitDataTable", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, UnitDataTable), Z_Construct_UClass_UDataTable_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UnitDataTable_MetaData), NewProp_UnitDataTable_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_CardDataTable = { "CardDataTable", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, CardDataTable), Z_Construct_UClass_UDataTable_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CardDataTable_MetaData), NewProp_CardDataTable_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_AbilitySystemComponent = { "AbilitySystemComponent", nullptr, (EPropertyFlags)0x00100000000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, AbilitySystemComponent), Z_Construct_UClass_UAbilitySystemComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AbilitySystemComponent_MetaData), NewProp_AbilitySystemComponent_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_TeamID = { "TeamID", nullptr, (EPropertyFlags)0x0010000000000025, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, TeamID), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TeamID_MetaData), NewProp_TeamID_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass = { "SelectedCardClass", nullptr, (EPropertyFlags)0x0014000000000004, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, SelectedCardClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SelectedCardClass_MetaData), NewProp_SelectedCardClass_MetaData) };
@@ -2203,16 +2512,18 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlaye
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_Mana = { "Mana", "OnRep_Mana", (EPropertyFlags)0x0020080100020025, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, Mana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Mana_MetaData), NewProp_Mana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_MaxMana = { "MaxMana", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, MaxMana), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxMana_MetaData), NewProp_MaxMana_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_ManaRegenRate = { "ManaRegenRate", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, ManaRegenRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManaRegenRate_MetaData), NewProp_ManaRegenRate_MetaData) };
-const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_DeckConfig_Inner = { "DeckConfig", nullptr, (EPropertyFlags)0x0004000000000000, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_UClass, Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_DeckConfig = { "DeckConfig", nullptr, (EPropertyFlags)0x0024080000000005, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, DeckConfig), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DeckConfig_MetaData), NewProp_DeckConfig_MetaData) };
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_DeckConfig_Inner = { "DeckConfig", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_DeckConfig = { "DeckConfig", "OnRep_DeckConfig", (EPropertyFlags)0x0020080100000025, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, DeckConfig), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DeckConfig_MetaData), NewProp_DeckConfig_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HandCards_Inner = { "HandCards", nullptr, (EPropertyFlags)0x0000000000020000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UClass_UAutoChessCardBase_NoRegister, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_HandCards = { "HandCards", "OnRep_HandCards", (EPropertyFlags)0x0020080100020035, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, HandCards), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HandCards_MetaData), NewProp_HandCards_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_DrawCardInterval = { "DrawCardInterval", nullptr, (EPropertyFlags)0x0020080000010015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, DrawCardInterval), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DrawCardInterval_MetaData), NewProp_DrawCardInterval_MetaData) };
 const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnManaUpdated = { "OnManaUpdated", nullptr, (EPropertyFlags)0x0010000010080000, UECodeGen_Private::EPropertyGenFlags::InlineMulticastDelegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, OnManaUpdated), Z_Construct_UDelegateFunction_AutoChess_OnManaUpdate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OnManaUpdated_MetaData), NewProp_OnManaUpdated_MetaData) }; // 757995455
 const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnHandUpdated = { "OnHandUpdated", nullptr, (EPropertyFlags)0x0010000010080000, UECodeGen_Private::EPropertyGenFlags::InlineMulticastDelegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, OnHandUpdated), Z_Construct_UDelegateFunction_AutoChess_OnHandUpdate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OnHandUpdated_MetaData), NewProp_OnHandUpdated_MetaData) }; // 4042686198
 const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnCardDisplayed = { "OnCardDisplayed", nullptr, (EPropertyFlags)0x0010000010080000, UECodeGen_Private::EPropertyGenFlags::InlineMulticastDelegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, OnCardDisplayed), Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OnCardDisplayed_MetaData), NewProp_OnCardDisplayed_MetaData) }; // 3303714762
+const UECodeGen_Private::FMulticastDelegatePropertyParams Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnDeckUpdated = { "OnDeckUpdated", nullptr, (EPropertyFlags)0x0010000010080000, UECodeGen_Private::EPropertyGenFlags::InlineMulticastDelegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessPlayerController, OnDeckUpdated), Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OnDeckUpdated_MetaData), NewProp_OnDeckUpdated_MetaData) }; // 2796415843
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessPlayerController_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_UnitDataTable,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_CardDataTable,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_AbilitySystemComponent,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_TeamID,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_SelectedCardClass,
@@ -2235,6 +2546,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnManaUpdated,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnHandUpdated,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnCardDisplayed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessPlayerController_Statics::NewProp_OnDeckUpdated,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessPlayerController_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessPlayerController_Statics::DependentSingletons[])() = {
@@ -2276,10 +2588,12 @@ void AAutoChessPlayerController::ValidateGeneratedRepEnums(const TArray<struct F
 {
 	static const FName Name_TeamID(TEXT("TeamID"));
 	static const FName Name_Mana(TEXT("Mana"));
+	static const FName Name_DeckConfig(TEXT("DeckConfig"));
 	static const FName Name_HandCards(TEXT("HandCards"));
 	const bool bIsValid = true
 		&& Name_TeamID == ClassReps[(int32)ENetFields_Private::TeamID].Property->GetFName()
 		&& Name_Mana == ClassReps[(int32)ENetFields_Private::Mana].Property->GetFName()
+		&& Name_DeckConfig == ClassReps[(int32)ENetFields_Private::DeckConfig].Property->GetFName()
 		&& Name_HandCards == ClassReps[(int32)ENetFields_Private::HandCards].Property->GetFName();
 	checkf(bIsValid, TEXT("UHT Generated Rep Indices do not match runtime populated Rep Indices for properties in AAutoChessPlayerController"));
 }
@@ -2294,10 +2608,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ FCardDisplayData::StaticStruct, Z_Construct_UScriptStruct_FCardDisplayData_Statics::NewStructOps, TEXT("CardDisplayData"), &Z_Registration_Info_UScriptStruct_CardDisplayData, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FCardDisplayData), 1569734733U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 2483045947U) },
+		{ Z_Construct_UClass_AAutoChessPlayerController, AAutoChessPlayerController::StaticClass, TEXT("AAutoChessPlayerController"), &Z_Registration_Info_UClass_AAutoChessPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessPlayerController), 322105833U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_2949563865(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_3933607832(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_Statics::ScriptStructInfo),
 	nullptr, 0);

@@ -160,6 +160,10 @@ void AAutoChessGameState::UnregisterUnit(AAutoChessUnitBase* Unit)
 	if (Unit)
 	{
 		AllUnits.Remove(Unit);
+
+		// 如果是英雄单位，清除引用
+		if (Unit == HeroUnit_Team0) HeroUnit_Team0 = nullptr;
+		if (Unit == HeroUnit_Team1) HeroUnit_Team1 = nullptr;
 		
 		// 检查胜利条件
 		CheckWinCondition();

@@ -1,4 +1,5 @@
 #include "AutoChessCardBase.h"
+#include "AutoChessCardData.h"
 #include "AutoChessPlayerController.h"
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
@@ -191,4 +192,25 @@ void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UAutoChessCardBase, Cost);
 	DOREPLIFETIME(UAutoChessCardBase, CostModifier);
 	DOREPLIFETIME(UAutoChessCardBase, Icon);
+	DOREPLIFETIME(UAutoChessCardBase, BuyPrice);
+	DOREPLIFETIME(UAutoChessCardBase, SellPrice);
+}
+
+void UAutoChessCardBase::InitFromRow(const FAutoChessCardRow& Row)
+{
+	CardName = Row.CardName;
+	CardDescription = Row.CardDescription;
+	bConsumeAllMana = Row.bConsumeAllMana;
+	Cost = Row.Cost;
+	BuyPrice = Row.BuyPrice;
+	SellPrice = Row.SellPrice;
+	UnitClass = Row.UnitClass;
+	Icon = Row.Icon;
+	Rarity = Row.Rarity;
+	CardAbilityClass = Row.CardAbilityClass;
+	TargetType = Row.TargetType;
+	AOERadius = Row.AOERadius;
+	TriggerTag = Row.TriggerTag;
+	DisplayDuration = Row.DisplayDuration;
+	bSkipDisplay = Row.bSkipDisplay;
 }

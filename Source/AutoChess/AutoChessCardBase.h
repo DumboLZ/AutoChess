@@ -3,20 +3,14 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayTagContainer.h"
+#include "AutoChessCardTypes.h"
 #include "AutoChessCardBase.generated.h"
+
+struct FAutoChessCardRow;
 
 class AAutoChessUnitBase;
 class AAutoChessPlayerController;
 
-UENUM(BlueprintType)
-enum class EAutoChessCardTargetType : uint8
-{
-	None		UMETA(DisplayName = "None"),
-	Enemy		UMETA(DisplayName = "Enemy Unit"),
-	Ally		UMETA(DisplayName = "Ally Unit"),
-	Self		UMETA(DisplayName = "Self (Player)"),
-	AnyUnit		UMETA(DisplayName = "Any Unit")
-};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCardCostChanged, int32, NewFinalCost);
 
@@ -54,6 +48,14 @@ public:
 	// 费用修正值 (例如 -1 表示减 1 费)
 	UPROPERTY(ReplicatedUsing = OnRep_CostModifier, BlueprintReadWrite, Category = "Card Info")
 	int32 CostModifier = 0;
+
+	// 购买价格 (金币)
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Card Info")
+	int32 BuyPrice;
+
+	// 卖出价格 (金币)
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Card Info")
+	int32 SellPrice;
 
 	UFUNCTION()
 	void OnRep_Cost();
@@ -128,6 +130,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Card Effect")
 	void OnPlayed(APlayerController* Controller, AActor* Target);
 	virtual void OnPlayed_Implementation(APlayerController* Controller, AActor* Target);
+
+	// 从数据行初始化
+	UFUNCTION(BlueprintCallable, Category = "Card Info")
+	void InitFromRow(const FAutoChessCardRow& Row);
 
 	// 支持网络复制
 	virtual bool IsSupportedForNetworking() const override { return true; }
