@@ -135,6 +135,10 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	int32 SellPrice;
 
+	// 是否为英雄单位
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
+	bool bIsHero;
+
 	// 技能 Ability 类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> UnitAbilityClass;

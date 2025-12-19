@@ -33,7 +33,9 @@ AAutoChessUnitBase::AAutoChessUnitBase()
 	
 	MoveSpeed = 300.0f;
 	bIsMoving = false;
+	bIsMoving = false;
 	CurrentGridPos = FIntPoint(0, 0);
+	bIsHero = false;
 
 	// 确保 AI 控制器自动接管
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -83,6 +85,7 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, CritRate);
 	DOREPLIFETIME(AAutoChessUnitBase, CritDamage);
 	DOREPLIFETIME(AAutoChessUnitBase, SellPrice);
+	DOREPLIFETIME(AAutoChessUnitBase, bIsHero);
 	DOREPLIFETIME(AAutoChessUnitBase, UnitDataHandle);
 }
 
@@ -906,7 +909,10 @@ void AAutoChessUnitBase::InitFromUnitData()
         ManaRegenOnHit = Row->ManaRegenOnHit;
         CritRate = Row->CritRate;
         CritDamage = Row->CritDamage;
+        CritRate = Row->CritRate;
+        CritDamage = Row->CritDamage;
         SellPrice = Row->SellPrice;
+        bIsHero = Row->bIsHero;
 
         UnitAbilityClass = Row->AbilityClass;
         PassiveAbilityClass = Row->PassiveAbilityClass;

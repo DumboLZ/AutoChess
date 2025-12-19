@@ -69,6 +69,7 @@ public: \
 		CritRate, \
 		CritDamage, \
 		SellPrice, \
+		bIsHero, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \

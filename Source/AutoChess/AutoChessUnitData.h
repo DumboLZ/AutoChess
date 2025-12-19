@@ -27,6 +27,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	TSubclassOf<class AAutoChessUnitBase> UnitClass;
 
+	// 是否为英雄单位 (英雄死亡会导致游戏失败)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	bool bIsHero = false;
+
 	// 购买价格
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	int32 Cost = 1;
@@ -124,6 +128,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	FText UnitName;
+
+	// 是否为英雄单位
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	bool bIsHero = false;
 
 	// 卖出价格
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")

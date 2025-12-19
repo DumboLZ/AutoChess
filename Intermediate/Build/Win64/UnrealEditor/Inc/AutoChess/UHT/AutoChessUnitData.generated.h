@@ -22,7 +22,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 template<> AUTOCHESS_API UScriptStruct* StaticStruct<struct FAutoChessUnitRow>();
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_120_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_124_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUAutoChessUnitData(); \
 	friend struct Z_Construct_UClass_UAutoChessUnitData_Statics; \
@@ -31,7 +31,7 @@ public: \
 	DECLARE_SERIALIZER(UAutoChessUnitData)
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_120_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_124_ENHANCED_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UAutoChessUnitData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 private: \
@@ -45,12 +45,12 @@ public: \
 	NO_API virtual ~UAutoChessUnitData();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_117_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_120_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_121_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_124_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_120_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_120_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_124_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitData_h_124_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

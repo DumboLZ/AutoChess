@@ -84,7 +84,9 @@ public: \
 		PhaseTimer, \
 		GameGrid, \
 		AllUnits, \
-		NETFIELD_REP_END=AllUnits	}; \
+		HeroUnit_Team0, \
+		HeroUnit_Team1, \
+		NETFIELD_REP_END=HeroUnit_Team1	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 

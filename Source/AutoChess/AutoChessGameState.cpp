@@ -87,7 +87,10 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, GoldPerRound);
 	
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
+	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
+	DOREPLIFETIME(AAutoChessGameState, HeroUnit_Team0);
+	DOREPLIFETIME(AAutoChessGameState, HeroUnit_Team1);
 }
 
 void AAutoChessGameState::OnRep_WinnerTeamID()
@@ -134,6 +137,21 @@ void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)
 	if (Unit && !AllUnits.Contains(Unit))
 	{
 		AllUnits.Add(Unit);
+
+		// 如果是英雄单位，记录引用
+		if (Unit->bIsHero)
+		{
+			if (Unit->TeamID == 0)
+			{
+				HeroUnit_Team0 = Unit;
+				UE_LOG(LogTemp, Warning, TEXT("[GameState] Registered Hero for Team 0: %s"), *Unit->GetName());
+			}
+			else if (Unit->TeamID == 1)
+			{
+				HeroUnit_Team1 = Unit;
+				UE_LOG(LogTemp, Warning, TEXT("[GameState] Registered Hero for Team 1: %s"), *Unit->GetName());
+			}
+		}
 	}
 }
 
@@ -154,33 +172,51 @@ void AAutoChessGameState::CheckWinCondition()
 	AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (!GM || GM->CurrentPhase != EAutoChessPhase::Battle) return;
 
-	int32 Team0Count = 0;
-	int32 Team1Count = 0;
+	// 检查英雄状态
+	bool bHero0Dead = !HeroUnit_Team0 || HeroUnit_Team0->bIsDead;
+	bool bHero1Dead = !HeroUnit_Team1 || HeroUnit_Team1->bIsDead;
 
-	for (AAutoChessUnitBase* Unit : AllUnits)
+	// 如果双方都没有英雄（可能是还没买），暂时不触发胜利判定，或者维持原有逻辑
+	// 这里假设一旦有英雄上场，就必须保护英雄
+	if (!HeroUnit_Team0 && !HeroUnit_Team1)
 	{
-		if (IsValid(Unit) && !Unit->bIsDead)
+		// 都没有英雄，使用旧的逻辑：全灭判定
+		int32 Team0Count = 0;
+		int32 Team1Count = 0;
+
+		for (AAutoChessUnitBase* Unit : AllUnits)
 		{
-			if (Unit->TeamID == 0) Team0Count++;
-			else if (Unit->TeamID == 1) Team1Count++;
+			if (IsValid(Unit) && !Unit->bIsDead)
+			{
+				if (Unit->TeamID == 0) Team0Count++;
+				else if (Unit->TeamID == 1) Team1Count++;
+			}
 		}
+
+		if (Team0Count == 0 && Team1Count == 0) GM->EndRound(-1);
+		else if (Team0Count == 0) GM->EndRound(1);
+		else if (Team1Count == 0) GM->EndRound(0);
+		
+		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("[GameState] CheckWinCondition - Team0: %d, Team1: %d"), Team0Count, Team1Count);
-
-	if (Team0Count == 0 && Team1Count == 0)
+	// 英雄判定逻辑
+	if (bHero0Dead && bHero1Dead)
 	{
-		// 平局
-		GM->EndRound(-1); 
+		// 平局 (同归于尽)
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Both Heroes Dead -> Draw"));
+		GM->EndRound(-1);
 	}
-	else if (Team0Count == 0)
+	else if (bHero0Dead)
 	{
-		// Team 1 获胜
+		// Team 0 英雄死亡 -> Team 1 获胜
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Hero 0 Dead -> Team 1 Wins"));
 		GM->EndRound(1);
 	}
-	else if (Team1Count == 0)
+	else if (bHero1Dead)
 	{
-		// Team 0 获胜
+		// Team 1 英雄死亡 -> Team 0 获胜
+		UE_LOG(LogTemp, Warning, TEXT("[GameState] Hero 1 Dead -> Team 0 Wins"));
 		GM->EndRound(0);
 	}
 }

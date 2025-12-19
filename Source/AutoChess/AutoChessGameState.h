@@ -209,6 +209,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")
 	AAutoChessUnitBase* GetUnitAtGrid(int32 GridX, int32 GridY);
 
+	// 队伍0的英雄单位
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|Board")
+	AAutoChessUnitBase* HeroUnit_Team0;
+
+	// 队伍1的英雄单位
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|Board")
+	AAutoChessUnitBase* HeroUnit_Team1;
+
 	// --- 全局法术高亮系统 ---
 	
 	// 法术高亮 Actor - 队伍 0
