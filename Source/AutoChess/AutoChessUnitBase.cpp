@@ -485,6 +485,27 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		}
 	}
 
+
+	// 实时寻找最近的敌人（每帧都更新目标）
+	AAutoChessUnitBase* NewTarget = FindNearestEnemy();
+	if (NewTarget)
+	{
+		// 如果目标发生变化，清除当前路径
+		if (NewTarget != CurrentTarget)
+		{
+			CurrentTarget = NewTarget;
+			CurrentPath.Empty();
+			bIsMoving = false;
+		}
+	}
+	else
+	{
+		// 没有敌人了，清除目标
+		CurrentTarget = nullptr;
+		CurrentPath.Empty();
+		bIsMoving = false;
+	}
+
 	// 简单的自动攻击逻辑 (仅在有目标时)
 	if (IsValid(CurrentTarget) && !CurrentTarget->bIsDead)
 	{
@@ -579,26 +600,6 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 				}
 			}
 		}
-	}
-
-	// 实时寻找最近的敌人（每帧都更新目标）
-	AAutoChessUnitBase* NewTarget = FindNearestEnemy();
-	if (NewTarget)
-	{
-		// 如果目标发生变化，清除当前路径
-		if (NewTarget != CurrentTarget)
-		{
-			CurrentTarget = NewTarget;
-			CurrentPath.Empty();
-			bIsMoving = false;
-		}
-	}
-	else
-	{
-		// 没有敌人了，清除目标
-		CurrentTarget = nullptr;
-		CurrentPath.Empty();
-		bIsMoving = false;
 	}
 }
 
@@ -854,12 +855,26 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 
 	if (UnitAbilityClass && AbilitySystemComponent)
 	{
-		FGameplayAbilitySpecHandle SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+		// 尝试查找已有技能
+		FGameplayAbilitySpec* Spec = AbilitySystemComponent->FindAbilitySpecFromClass(UnitAbilityClass);
+		FGameplayAbilitySpecHandle SpecHandle;
+
+		if (Spec)
+		{
+			SpecHandle = Spec->Handle;
+		}
+		else
+		{
+			// 如果没有，才授予
+			UE_LOG(LogTemp, Warning, TEXT("[UnitBase] UseSkill: Ability not found, granting %s"), *UnitAbilityClass->GetName());
+			SpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+		}
 		
 		if (SpecHandle.IsValid())
 		{
 			if (AbilitySystemComponent->TryActivateAbility(SpecHandle))
 			{
+				UE_LOG(LogTemp, Log, TEXT("[UnitBase] UseSkill: Activated %s"), *UnitAbilityClass->GetName());
 				if (AttributeSet)
 				{
 					AttributeSet->SetMana(0.0f);
@@ -869,6 +884,10 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SkillVFX, GetActorLocation(), GetActorRotation(), true);
 				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[UnitBase] UseSkill: Failed to activate %s (Tags/Cost/Cooldown?)"), *UnitAbilityClass->GetName());
 			}
 		}
 	}

@@ -7,6 +7,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Net/UnrealNetwork.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 AAutoChessGameState::AAutoChessGameState()
 {
@@ -14,6 +15,7 @@ AAutoChessGameState::AAutoChessGameState()
 	Player2Health = 100;
 	Player1Gold = 0;
 	Player2Gold = 0;
+	CurrentRound = 1;
 }
 
 void AAutoChessGameState::BeginPlay()
@@ -277,7 +279,7 @@ AAutoChessUnitBase* AAutoChessGameState::GetUnitAtGrid(int32 GridX, int32 GridY)
 	// 注意：这需要 UnitBase 已经更新了它的 GridPos
 	for (AAutoChessUnitBase* Unit : AllUnits)
 	{
-		if (IsValid(Unit))
+		if (IsValid(Unit) && !Unit->bIsDead)
 		{
 			// Check current position
 			if (Unit->CurrentGridPos.X == GridX && Unit->CurrentGridPos.Y == GridY)
@@ -366,6 +368,55 @@ void AAutoChessGameState::Multicast_ShowSpellHighlight_Implementation(const TArr
 	
 	UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowSpellHighlight] Team %d highlight updated! NumInstances=%d"), 
 		TeamID, TargetHighlightActor->HighlightISM ? TargetHighlightActor->HighlightISM->GetInstanceCount() : -1);
+}
+
+void AAutoChessGameState::Multicast_ShowIndependentSpellHighlight_Implementation(const TArray<FIntPoint>& GridPositions, int32 TeamID, float Duration)
+{
+	if (!GameGrid) return;
+
+	// 1. 生成独立的 Highlight Actor
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	AAutoChessHighlightActor* TempHighlight = GetWorld()->SpawnActor<AAutoChessHighlightActor>(AAutoChessHighlightActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	
+	if (TempHighlight)
+	{
+		// 2. 初始化视觉效果
+		UMaterialInterface* SelectedMaterial = (TeamID == 0) ? GameGrid->MaterialSpellHighlight_Team0 : GameGrid->MaterialSpellHighlight_Team1;
+		
+		// 注意：AAutoChessHighlightActor::InitVisuals 需要 Mesh 和 Material
+		// 这里我们使用 Grid 中的 TileMesh
+		if (GameGrid->TileMesh && SelectedMaterial)
+		{
+			TempHighlight->InitVisuals(GameGrid->TileMesh, SelectedMaterial);
+		}
+
+		// 3. 更新高亮位置
+		TempHighlight->UpdateHighlights(GameGrid, GridPositions);
+		
+		// 关键修复：确保所有人可见
+		if (TempHighlight->HighlightISM)
+		{
+			TempHighlight->HighlightISM->bOnlyOwnerSee = false;
+			TempHighlight->HighlightISM->MarkRenderStateDirty();
+		}
+		
+		UE_LOG(LogTemp, Warning, TEXT("[GameState::Multicast_ShowIndependentSpellHighlight] Spawned independent highlight for Team %d, Duration: %.1f"), TeamID, Duration);
+
+		// 4. 设置自动销毁定时器
+		if (Duration > 0.0f)
+		{
+			FTimerHandle DestroyTimer;
+			GetWorld()->GetTimerManager().SetTimer(DestroyTimer, [TempHighlight]()
+			{
+				if (IsValid(TempHighlight))
+				{
+					TempHighlight->Destroy();
+				}
+			}, Duration, false);
+		}
+	}
 }
 
 void AAutoChessGameState::Multicast_HideSpellHighlight_Implementation(int32 TeamID)

@@ -479,7 +479,7 @@ void AAutoChessGameModeBase::ResetBoardForNewRound()
 		}
 	}
 
-	// 1. 收集所有单位的复活数据
+	// 1. 收集所有单位的复活数据（只复活英雄）
 	struct FUnitRespawnData
 	{
 		FName RowName;
@@ -494,14 +494,22 @@ void AAutoChessGameModeBase::ResetBoardForNewRound()
 	{
 		if (IsValid(Unit))
 		{
-			FUnitRespawnData Data;
-			Data.RowName = Unit->UnitDataHandle.RowName;
-			Data.TeamID = Unit->TeamID;
-			Data.StartGridPos = Unit->StartGridPos;
-			RespawnList.Add(Data);
-			
-			UE_LOG(LogTemp, Warning, TEXT("[GameMode] Collected Unit: %s, RowName: %s, Team: %d, StartPos: (%d, %d)"), 
-				*Unit->GetName(), *Data.RowName.ToString(), Data.TeamID, Data.StartGridPos.X, Data.StartGridPos.Y);
+			// 只收集英雄单位进行复活
+			if (Unit->bIsHero)
+			{
+				FUnitRespawnData Data;
+				Data.RowName = Unit->UnitDataHandle.RowName;
+				Data.TeamID = Unit->TeamID;
+				Data.StartGridPos = Unit->StartGridPos;
+				RespawnList.Add(Data);
+				
+				UE_LOG(LogTemp, Warning, TEXT("[GameMode] Collected HERO for respawn: %s, RowName: %s, Team: %d, StartPos: (%d, %d)"), 
+					*Unit->GetName(), *Data.RowName.ToString(), Data.TeamID, Data.StartGridPos.X, Data.StartGridPos.Y);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("[GameMode] Skipping non-hero unit (will not respawn): %s"), *Unit->GetName());
+			}
 		}
 	}
 
@@ -517,14 +525,14 @@ void AAutoChessGameModeBase::ResetBoardForNewRound()
 	}
 	GS->AllUnits.Empty(); // 确保清空
 
-	// 3. 生成新单位
-	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Spawning %d new units..."), RespawnList.Num());
+	// 3. 生成新单位（只生成英雄）
+	UE_LOG(LogTemp, Warning, TEXT("[GameMode] Spawning %d hero units..."), RespawnList.Num());
 	for (const FUnitRespawnData& Data : RespawnList)
 	{
 		AAutoChessUnitBase* NewUnit = SpawnUnit(Data.RowName, Data.TeamID, Data.StartGridPos);
 		if (!NewUnit)
 		{
-			UE_LOG(LogTemp, Error, TEXT("[GameMode] Failed to spawn unit! RowName: %s"), *Data.RowName.ToString());
+			UE_LOG(LogTemp, Error, TEXT("[GameMode] Failed to spawn hero unit! RowName: %s"), *Data.RowName.ToString());
 		}
 	}
 }
@@ -574,8 +582,8 @@ void AAutoChessGameModeBase::BroadcastCardDisplay(UAutoChessCardBase* Card, AAct
 				TeamID = CasterPC->TeamID;
 			}
 
-			// 调用多播显示高亮
-			GS->Multicast_ShowSpellHighlight(HighlightPoints, TeamID);
+			// 调用多播显示独立高亮 (自动销毁)
+			GS->Multicast_ShowIndependentSpellHighlight(HighlightPoints, TeamID, Card->DisplayDuration);
 		}
 	}
 

@@ -33,8 +33,10 @@ static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGol
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Multicast_HideSpellHighlight_Implementation(int32 TeamID); \
+	virtual void Multicast_ShowIndependentSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID, float Duration); \
 	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
 	DECLARE_FUNCTION(execMulticast_HideSpellHighlight); \
+	DECLARE_FUNCTION(execMulticast_ShowIndependentSpellHighlight); \
 	DECLARE_FUNCTION(execMulticast_ShowSpellHighlight); \
 	DECLARE_FUNCTION(execIsTileReserved); \
 	DECLARE_FUNCTION(execReserveTile); \

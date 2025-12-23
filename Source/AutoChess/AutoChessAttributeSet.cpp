@@ -106,8 +106,8 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 		{
 			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
 			{
-				// 3秒内流失完当前所有护盾
-				Unit->ShieldDecayRate = GetShield() / 3.0f;
+				// 5秒内流失完当前所有护盾
+				Unit->ShieldDecayRate = GetShield() / 5.0f;
 				UE_LOG(LogTemp, Warning, TEXT("[Shield] Shield increased to %.1f. Decay Rate set to %.1f/s"), GetShield(), Unit->ShieldDecayRate);
 				
 				// 服务器端也需要更新 Widget（因为 OnRep 不会在 Authority 触发）

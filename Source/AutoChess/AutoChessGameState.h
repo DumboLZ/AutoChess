@@ -239,6 +239,10 @@ public:
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "AutoChess|Spell")
 	void Multicast_ShowSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID);
 
+	// 显示独立法术高亮 (多播 - 自动销毁)
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "AutoChess|Spell")
+	void Multicast_ShowIndependentSpellHighlight(const TArray<FIntPoint>& GridPositions, int32 TeamID, float Duration);
+
 	// 隐藏法术高亮 (多播)
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "AutoChess|Spell")
 	void Multicast_HideSpellHighlight(int32 TeamID);

@@ -3,6 +3,7 @@
 #include "AutoChessPlayerController.h"
 #include "AutoChessGameModeBase.h"
 #include "AutoChessGameState.h"
+#include "AutoChessGrid.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
@@ -72,34 +73,52 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 					GameMode->BroadcastCardDisplay(this, nullptr, LastTargetGridPos, Controller);
 				}
 
-				// 1.5 预留目标格子，防止其他单位寻路进入
+				// 1.5 计算 AOE 范围内的所有有效格子
+				TArray<FIntPoint> TargetTiles;
 				if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
 				{
-					GS->ReserveTile(LastTargetGridPos, DisplayDuration);
-					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Reserved tile (%d, %d) for %.2f seconds"), 
-						LastTargetGridPos.X, LastTargetGridPos.Y, DisplayDuration);
+					for (int32 x = LastTargetGridPos.X - AOERadius; x <= LastTargetGridPos.X + AOERadius; x++)
+					{
+						for (int32 y = LastTargetGridPos.Y - AOERadius; y <= LastTargetGridPos.Y + AOERadius; y++)
+						{
+							if (GS->GameGrid && GS->GameGrid->IsValidGridPosition(x, y))
+							{
+								FIntPoint Tile(x, y);
+								TargetTiles.Add(Tile);
+								
+								// 预留目标格子，防止其他单位寻路进入
+								GS->ReserveTile(Tile, DisplayDuration);
+							}
+						}
+					}
+					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Reserved %d tiles for AOE summon (Radius: %d)"), 
+						TargetTiles.Num(), AOERadius);
 				}
 
 				// 2. 延迟召唤
 				FTimerHandle SummonTimerHandle;
-				auto SummonLambda = [AutoChessController, this]() mutable
+				
+				auto SummonLambda = [AutoChessController, this, TargetTiles]() mutable
 				{
 					if (AutoChessController && IsValid(AutoChessController))
 					{
-						AutoChessController->Server_SummonUnit(UnitRowName, LastTargetGridPos.X, LastTargetGridPos.Y);
-						UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Delayed summon: %s at (%d, %d)"), 
-							*UnitRowName.ToString(), LastTargetGridPos.X, LastTargetGridPos.Y);
-
-						// 清除全局高亮
-						if (UWorld* World = AutoChessController->GetWorld())
+						int32 SummonCount = 0;
+						AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>();
+						
+						for (const FIntPoint& Tile : TargetTiles)
 						{
-							if (AAutoChessGameState* GS = World->GetGameState<AAutoChessGameState>())
+							// 检查格子是否已被占用 (排除预留，因为预留就是为了这次召唤)
+							// 注意：IsGridOccupied 内部会检查 IsTileReserved
+							// 但在这里我们希望即使被预留了也能召唤，只要没有真正的单位
+							if (GS && GS->GetUnitAtGrid(Tile.X, Tile.Y) == nullptr)
 							{
-								int32 TeamID = AutoChessController->TeamID;
-								GS->Multicast_HideSpellHighlight(TeamID);
-								UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Cleared spell highlight for Team %d"), TeamID);
+								AutoChessController->Server_SummonUnit(UnitRowName, Tile.X, Tile.Y);
+								SummonCount++;
 							}
 						}
+						
+						UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] AOE Summon complete: %d units of %s summoned"), 
+							SummonCount, *UnitRowName.ToString());
 					}
 				};
 
@@ -112,7 +131,7 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 				{
 					// 延迟召唤
 					Controller->GetWorldTimerManager().SetTimer(SummonTimerHandle, SummonLambda, DisplayDuration, false);
-					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Summon card display started, will summon after %.2f seconds"), DisplayDuration);
+					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] AOE Summon card display started, will summon after %.2f seconds"), DisplayDuration);
 				}
 			}
 			return;
@@ -182,7 +201,9 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 		}
 
 		// 定义激活逻辑 Lambda
-		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData, AutoChessController]() mutable
+		FIntPoint CapturedTargetPos = LastTargetGridPos; // 捕获当前目标位置
+		
+		auto ActivateAbilityLambda = [this, ASC, SpecToActivate, EventTag, EventData, AutoChessController, CapturedTargetPos]() mutable
 		{
 			// 安全检查：延迟执行时对象可能已失效
 			if (!ASC || !IsValid(ASC))
@@ -196,30 +217,14 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 				UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] SpecToActivate is invalid at delayed activation!"));
 				return;
 			}
+
+			// 确保 EventData 使用捕获的目标位置（如果需要）
+			// 注意：如果 GA 内部使用了 LastTargetGridPos，可能还需要在 EventData 中传递
 			
 			// 注意：最后一个参数必须是引用 (*ASC)
 			int32 Count = ASC->TriggerAbilityFromGameplayEvent(SpecToActivate->Handle, ASC->AbilityActorInfo.Get(), EventTag, &EventData, *ASC);
-			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated! Result Count: %d"), Count);
-			
-			// 清除全局高亮
-			if (AutoChessController && IsValid(AutoChessController))
-			{
-				if (UWorld* World = AutoChessController->GetWorld())
-				{
-					if (AAutoChessGameState* GS = World->GetGameState<AAutoChessGameState>())
-					{
-						// 获取施法者的 TeamID
-						int32 TeamID = 0;
-						if (AAutoChessPlayerController* CasterPC = Cast<AAutoChessPlayerController>(AutoChessController))
-						{
-							TeamID = CasterPC->TeamID;
-						}
-						
-						// 使用多播清除对应队伍的高亮
-						GS->Multicast_HideSpellHighlight(TeamID);
-					}
-				}
-			}
+			UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Ability Activated at (%d, %d)! Result Count: %d"), 
+				CapturedTargetPos.X, CapturedTargetPos.Y, Count);
 		};
 
 		if (bSkipDisplay || DisplayDuration <= 0.0f)

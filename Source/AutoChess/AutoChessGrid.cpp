@@ -251,6 +251,9 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 	// 4个方向
 	const FIntPoint Directions[] = { FIntPoint(0, 1), FIntPoint(0, -1), FIntPoint(1, 0), FIntPoint(-1, 0) };
 
+	FIntPoint ClosestNode = StartGridPos;
+	int32 MinH = StartNode.H;
+
 	while (OpenList.Num() > 0)
 	{
 		// Find node with lowest F
@@ -267,6 +270,13 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 		FGridNode CurrentNode = OpenList[LowestIndex];
 		OpenList.RemoveAt(LowestIndex);
 		ClosedSet.Add(CurrentNode.Pos);
+
+		// 记录离目标最近的可达点
+		if (CurrentNode.H < MinH)
+		{
+			MinH = CurrentNode.H;
+			ClosestNode = CurrentNode.Pos;
+		}
 
 		// Found target
 		if (CurrentNode.Pos == EndGridPos)
@@ -338,9 +348,12 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 		}
 	}
 
-	if (bFound)
+	// 如果没找到终点，但找到了一个更近的点，也算成功（退而求其次）
+	FIntPoint FinalTarget = bFound ? EndGridPos : ClosestNode;
+	
+	if (FinalTarget != StartGridPos)
 	{
-		FIntPoint Current = EndGridPos;
+		FIntPoint Current = FinalTarget;
 		while (Current != FIntPoint(-1, -1))
 		{
 			OutPathPoints.Insert(Current, 0);
@@ -350,14 +363,14 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 			}
 			else
 			{
-				break; // Should not happen
+				break;
 			}
 		}
 		if (OutPathPoints.Num() > 0 && OutPathPoints[0] == StartGridPos)
 		{
 			OutPathPoints.RemoveAt(0);
 		}
-		return true;
+		return OutPathPoints.Num() > 0;
 	}
 
 	return false;
