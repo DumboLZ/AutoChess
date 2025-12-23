@@ -10,5 +10,6 @@ enum class EAutoChessCardTargetType : uint8
 	Enemy		UMETA(DisplayName = "Enemy Unit"),
 	Ally		UMETA(DisplayName = "Ally Unit"),
 	Self		UMETA(DisplayName = "Self (Player)"),
-	AnyUnit		UMETA(DisplayName = "Any Unit")
+	AnyUnit		UMETA(DisplayName = "Any Unit"),
+	EmptyTile	UMETA(DisplayName = "Empty Grid Tile")
 };

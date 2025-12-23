@@ -48,6 +48,7 @@ public: \
 		CostModifier, \
 		BuyPrice, \
 		SellPrice, \
+		UnitRowName, \
 		Icon, \
 		NETFIELD_REP_END=Icon	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override; \

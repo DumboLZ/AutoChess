@@ -16,10 +16,6 @@ struct FAutoChessCardRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	// 卡牌逻辑类 (用于实例化)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Card")
-	TSubclassOf<UAutoChessCardBase> CardClass;
-
 	// 卡牌名称
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Card")
 	FText CardName;
@@ -44,9 +40,9 @@ struct FAutoChessCardRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Card")
 	int32 SellPrice = 1;
 
-	// 对应的棋子类 (如果是召唤类卡牌)
+	// 对应的棋子数据行 (用于召唤类卡牌，提供编辑器下拉框)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Card")
-	TSubclassOf<class AAutoChessUnitBase> UnitClass;
+	FDataTableRowHandle UnitRow;
 
 	// 卡牌图标
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Card")

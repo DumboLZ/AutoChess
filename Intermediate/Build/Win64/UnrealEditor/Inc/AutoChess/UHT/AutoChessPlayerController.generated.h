@@ -13,6 +13,7 @@ class AActor;
 class AAutoChessUnitBase;
 class APlayerController;
 class UAutoChessCardBase;
+struct FAutoChessCardRow;
 struct FCardDisplayData;
 #ifdef AUTOCHESS_AutoChessPlayerController_generated_h
 #error "AutoChessPlayerController.generated.h already included, missing '#pragma once' in AutoChessPlayerController.h"
@@ -47,6 +48,7 @@ AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessPlayerController_h_56_RPC_WRAPPERS_NO_PURE_DECLS \
+	virtual void Client_RefreshDeck_Implementation(); \
 	virtual void Server_RemoveCardFromDeck_Implementation(FName CardRowName); \
 	virtual void Server_AddCardToDeck_Implementation(FName CardRowName); \
 	virtual void Server_MoveUnit_Implementation(AAutoChessUnitBase* Unit, int32 TargetGridX, int32 TargetGridY); \
@@ -54,6 +56,7 @@ AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	virtual void Server_SellUnit_Implementation(AAutoChessUnitBase* Unit); \
 	virtual void Server_PlaceUnit_Implementation(TSubclassOf<UAutoChessCardBase> CardClass, int32 GridX, int32 GridY); \
 	virtual void Server_BuyCard_Implementation(TSubclassOf<UAutoChessCardBase> CardClass); \
+	virtual void Server_SummonUnit_Implementation(FName UnitRowName, int32 GridX, int32 GridY); \
 	virtual void Server_SellAllUnits_Implementation(int32 TargetTeamID); \
 	virtual void Server_RequestRematch_Implementation(bool bRematch); \
 	virtual void Server_SetPlayerReady_Implementation(bool bReady); \
@@ -66,6 +69,8 @@ AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	DECLARE_FUNCTION(execHostGame); \
 	DECLARE_FUNCTION(execDrawCards); \
 	DECLARE_FUNCTION(execDrawCard); \
+	DECLARE_FUNCTION(execGetCardRowData); \
+	DECLARE_FUNCTION(execClient_RefreshDeck); \
 	DECLARE_FUNCTION(execServer_RemoveCardFromDeck); \
 	DECLARE_FUNCTION(execServer_AddCardToDeck); \
 	DECLARE_FUNCTION(execServer_MoveUnit); \
@@ -86,6 +91,7 @@ AUTOCHESS_API void FOnGoldUpdate_DelegateWrapper(const FMulticastScriptDelegate&
 	DECLARE_FUNCTION(execBuyCard); \
 	DECLARE_FUNCTION(execOnDebugMatchWinnerChanged); \
 	DECLARE_FUNCTION(execClient_ReturnToMainMenu); \
+	DECLARE_FUNCTION(execServer_SummonUnit); \
 	DECLARE_FUNCTION(execServer_SellAllUnits); \
 	DECLARE_FUNCTION(execServer_RequestRematch); \
 	DECLARE_FUNCTION(execServer_SetPlayerReady); \

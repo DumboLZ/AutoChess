@@ -460,29 +460,18 @@ void AAutoChessPlayerController::PlaceUnit(TSubclassOf<UAutoChessCardBase> CardC
 
 		// 获取卡牌默认对象以读取属性
 		UAutoChessCardBase* CardCDO = CardClass->GetDefaultObject<UAutoChessCardBase>();
-		if (!CardCDO || !CardCDO->UnitClass) return;
+		if (!CardCDO || CardCDO->UnitRowName.IsNone()) return;
 
 		AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
 		if (GS && !GS->IsGridOccupied(GridX, GridY))
 		{
-			// 生成单位
-			if (AAutoChessGrid* Grid = GS->GameGrid)
+			// 使用 GameMode 的 SpawnUnit 进行数据驱动生成
+			if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 			{
-				FVector SpawnLoc = Grid->GridToWorld(GridX, GridY);
-				SpawnLoc.Z += 50.0f; // 稍微抬高一点
-
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-				AAutoChessUnitBase* NewUnit = GetWorld()->SpawnActor<AAutoChessUnitBase>(CardCDO->UnitClass, SpawnLoc, FRotator::ZeroRotator, SpawnParams);
-				
+				AAutoChessUnitBase* NewUnit = GM->SpawnUnit(CardCDO->UnitRowName, TeamID, FIntPoint(GridX, GridY));
 				if (NewUnit)
 				{
-					NewUnit->TeamID = TeamID; // 使用当前控制器的 TeamID
-					NewUnit->SnapToGrid(); // 确保对齐
-					
-					// 注册到 GameState (Server Only)
-					GS->RegisterUnit(NewUnit);
+					UE_LOG(LogTemp, Log, TEXT("[PC %d] PlaceUnit: Spawned unit from card %s"), TeamID, *CardClass->GetName());
 				}
 			}
 		}
@@ -561,6 +550,18 @@ void AAutoChessPlayerController::Server_SellAllUnits_Implementation(int32 Target
 	for (AAutoChessUnitBase* Unit : UnitsToSell)
 	{
 		SellUnit(Unit);
+	}
+}
+
+void AAutoChessPlayerController::Server_SummonUnit_Implementation(FName UnitRowName, int32 GridX, int32 GridY)
+{
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		AAutoChessUnitBase* NewUnit = GM->SpawnUnit(UnitRowName, TeamID, FIntPoint(GridX, GridY));
+		if (NewUnit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[PC %d] Summoned unit %s at (%d, %d)"), TeamID, *UnitRowName.ToString(), GridX, GridY);
+		}
 	}
 }
 
@@ -853,10 +854,10 @@ UAutoChessCardBase* AAutoChessPlayerController::DrawCard()
 	FName RowName = DeckConfig[Index];
 
 	FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(RowName, TEXT("DrawCard"));
-	if (Row && Row->CardClass)
+	if (Row)
 	{
-		// 实例化卡牌对象
-		UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, Row->CardClass);
+		// 所有卡牌统一使用基类
+		UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, UAutoChessCardBase::StaticClass());
 		if (NewCard)
 		{
 			NewCard->InitFromRow(*Row);
@@ -1122,6 +1123,17 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 			}
 		}
 
+		// 目标验证
+		if (Card->TargetType == EAutoChessCardTargetType::EmptyTile)
+		{
+			AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+			if (GS && GS->IsGridOccupied(TargetGridPos.X, TargetGridPos.Y))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Cannot play summon card on occupied tile (%d, %d)"), TargetGridPos.X, TargetGridPos.Y);
+				return false;
+			}
+		}
+
 		// 移除严格的目标验证逻辑，允许 AOE 法术对空地施放
 		// 具体的伤害判定逻辑交由 GAS (Gameplay Ability) 处理
 		UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Skipping target validation to allow AOE casting."));
@@ -1137,6 +1149,16 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 			// **先触发效果**（GA可以读到完整的法力值）
 			UE_LOG(LogTemp, Warning, TEXT("[PlayCard] Calling Card->OnPlayed()..."));
 			Card->OnPlayed(this, Target);
+
+			// 如果是召唤类卡牌且指定了空地目标，预留该格子
+			if (Card->TargetType == EAutoChessCardTargetType::EmptyTile)
+			{
+				AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+				if (GS)
+				{
+					GS->ReserveTile(TargetGridPos, Card->DisplayDuration);
+				}
+			}
 
 			// **然后扣费**（但如果勾选了"消耗所有法力"，由GA自行处理）
 			if (!Card->bConsumeAllMana)
@@ -1485,8 +1507,39 @@ void AAutoChessPlayerController::Server_AddCardToDeck_Implementation(FName CardR
 	FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(CardRowName, TEXT("AddCardToDeck"));
 	if (Row)
 	{
+		// 检查金币是否足够
+		AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
+		if (GS)
+		{
+			int32 CurrentGold = (TeamID == 0) ? GS->Player1Gold : GS->Player2Gold;
+			if (CurrentGold < Row->BuyPrice)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[PC %d] Not enough gold to buy card %s (Need: %d, Have: %d)"), 
+					TeamID, *CardRowName.ToString(), Row->BuyPrice, CurrentGold);
+				return;
+			}
+
+			// 扣除金币
+			if (TeamID == 0)
+			{
+				GS->Player1Gold -= Row->BuyPrice;
+				GS->OnRep_Player1Gold(); // 触发 UI 更新
+			}
+			else
+			{
+				GS->Player2Gold -= Row->BuyPrice;
+				GS->OnRep_Player2Gold(); // 触发 UI 更新
+			}
+
+			UE_LOG(LogTemp, Log, TEXT("[PC %d] Bought card %s for %d gold. Remaining: %d"), 
+				TeamID, *CardRowName.ToString(), Row->BuyPrice, 
+				(TeamID == 0) ? GS->Player1Gold : GS->Player2Gold);
+		}
+
+		// 添加到牌库
 		DeckConfig.Add(CardRowName);
 		OnRep_DeckConfig();
+		Client_RefreshDeck();
 		UE_LOG(LogTemp, Log, TEXT("[PC %d] Added RowName to deck: %s"), TeamID, *CardRowName.ToString());
 	}
 }
@@ -1495,6 +1548,7 @@ void AAutoChessPlayerController::Server_RemoveCardFromDeck_Implementation(FName 
 {
 	DeckConfig.Remove(CardRowName);
 	OnRep_DeckConfig();
+	Client_RefreshDeck();
 	UE_LOG(LogTemp, Log, TEXT("[PC %d] Removed RowName from deck: %s"), TeamID, *CardRowName.ToString());
 }
 
@@ -1510,9 +1564,10 @@ void AAutoChessPlayerController::InitializeHand()
 		for (FName RowName : DeckConfig)
 		{
 			FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(RowName, TEXT("InitializeHand"));
-			if (Row && Row->CardClass)
+			if (Row)
 			{
-				UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, Row->CardClass);
+				// 所有卡牌统一使用基类
+				UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(this, UAutoChessCardBase::StaticClass());
 				if (NewCard)
 				{
 					NewCard->InitFromRow(*Row);
@@ -1531,6 +1586,25 @@ void AAutoChessPlayerController::Client_RefreshHand_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] Client_RefreshHand called"), TeamID);
 	OnRep_HandCards();
+}
+
+void AAutoChessPlayerController::Client_RefreshDeck_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("[PC %d Client] Client_RefreshDeck called"), TeamID);
+	OnRep_DeckConfig();
+}
+
+bool AAutoChessPlayerController::GetCardRowData(FName RowName, FAutoChessCardRow& OutRow)
+{
+	if (!CardDataTable) return false;
+
+	FAutoChessCardRow* Row = CardDataTable->FindRow<FAutoChessCardRow>(RowName, TEXT("GetCardRowData"));
+	if (Row)
+	{
+		OutRow = *Row;
+		return true;
+	}
+	return false;
 }
 
 	// 实现 Client_MatchEnded

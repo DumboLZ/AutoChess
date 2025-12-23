@@ -36,6 +36,8 @@ static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGol
 	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
 	DECLARE_FUNCTION(execMulticast_HideSpellHighlight); \
 	DECLARE_FUNCTION(execMulticast_ShowSpellHighlight); \
+	DECLARE_FUNCTION(execIsTileReserved); \
+	DECLARE_FUNCTION(execReserveTile); \
 	DECLARE_FUNCTION(execGetUnitAtGrid); \
 	DECLARE_FUNCTION(execFindEmptyBenchSlot); \
 	DECLARE_FUNCTION(execIsGridOccupied); \

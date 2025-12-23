@@ -37,6 +37,8 @@ struct Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType_Statics
 		{ "AnyUnit.DisplayName", "Any Unit" },
 		{ "AnyUnit.Name", "EAutoChessCardTargetType::AnyUnit" },
 		{ "BlueprintType", "true" },
+		{ "EmptyTile.DisplayName", "Empty Grid Tile" },
+		{ "EmptyTile.Name", "EAutoChessCardTargetType::EmptyTile" },
 		{ "Enemy.DisplayName", "Enemy Unit" },
 		{ "Enemy.Name", "EAutoChessCardTargetType::Enemy" },
 		{ "ModuleRelativePath", "AutoChessCardTypes.h" },
@@ -52,6 +54,7 @@ struct Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType_Statics
 		{ "EAutoChessCardTargetType::Ally", (int64)EAutoChessCardTargetType::Ally },
 		{ "EAutoChessCardTargetType::Self", (int64)EAutoChessCardTargetType::Self },
 		{ "EAutoChessCardTargetType::AnyUnit", (int64)EAutoChessCardTargetType::AnyUnit },
+		{ "EAutoChessCardTargetType::EmptyTile", (int64)EAutoChessCardTargetType::EmptyTile },
 	};
 	static const UECodeGen_Private::FEnumParams EnumParams;
 };
@@ -81,10 +84,10 @@ UEnum* Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType()
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardTypes_h_Statics
 {
 	static constexpr FEnumRegisterCompiledInInfo EnumInfo[] = {
-		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1177921309U) },
+		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1280066613U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardTypes_h_3532006995(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardTypes_h_75220846(TEXT("/Script/AutoChess"),
 	nullptr, 0,
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardTypes_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardTypes_h_Statics::EnumInfo));

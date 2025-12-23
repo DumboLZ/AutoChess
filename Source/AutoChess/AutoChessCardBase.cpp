@@ -60,7 +60,65 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 
 	if (!CardAbilityClass)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] CardAbilityClass is NULL!"));
+		// 如果没有配置 GA，检查是否是召唤卡牌
+		if (!UnitRowName.IsNone())
+		{
+			// 纯召唤卡：先展示，然后延迟召唤
+			if (AutoChessController && LastTargetGridPos.X != -1 && LastTargetGridPos.Y != -1)
+			{
+				// 1. 广播卡牌展示事件到所有客户端
+				if (AAutoChessGameModeBase* GameMode = Cast<AAutoChessGameModeBase>(AutoChessController->GetWorld()->GetAuthGameMode()))
+				{
+					GameMode->BroadcastCardDisplay(this, nullptr, LastTargetGridPos, Controller);
+				}
+
+				// 1.5 预留目标格子，防止其他单位寻路进入
+				if (AAutoChessGameState* GS = AutoChessController->GetWorld()->GetGameState<AAutoChessGameState>())
+				{
+					GS->ReserveTile(LastTargetGridPos, DisplayDuration);
+					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Reserved tile (%d, %d) for %.2f seconds"), 
+						LastTargetGridPos.X, LastTargetGridPos.Y, DisplayDuration);
+				}
+
+				// 2. 延迟召唤
+				FTimerHandle SummonTimerHandle;
+				auto SummonLambda = [AutoChessController, this]() mutable
+				{
+					if (AutoChessController && IsValid(AutoChessController))
+					{
+						AutoChessController->Server_SummonUnit(UnitRowName, LastTargetGridPos.X, LastTargetGridPos.Y);
+						UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Delayed summon: %s at (%d, %d)"), 
+							*UnitRowName.ToString(), LastTargetGridPos.X, LastTargetGridPos.Y);
+
+						// 清除全局高亮
+						if (UWorld* World = AutoChessController->GetWorld())
+						{
+							if (AAutoChessGameState* GS = World->GetGameState<AAutoChessGameState>())
+							{
+								int32 TeamID = AutoChessController->TeamID;
+								GS->Multicast_HideSpellHighlight(TeamID);
+								UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Cleared spell highlight for Team %d"), TeamID);
+							}
+						}
+					}
+				};
+
+				if (bSkipDisplay || DisplayDuration <= 0.0f)
+				{
+					// 立即召唤
+					SummonLambda();
+				}
+				else
+				{
+					// 延迟召唤
+					Controller->GetWorldTimerManager().SetTimer(SummonTimerHandle, SummonLambda, DisplayDuration, false);
+					UE_LOG(LogTemp, Warning, TEXT("[CardBase::OnPlayed] Summon card display started, will summon after %.2f seconds"), DisplayDuration);
+				}
+			}
+			return;
+		}
+		
+		UE_LOG(LogTemp, Error, TEXT("[CardBase::OnPlayed] CardAbilityClass is NULL and no UnitRowName!"));
 		return;
 	}
 
@@ -194,6 +252,7 @@ void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UAutoChessCardBase, Icon);
 	DOREPLIFETIME(UAutoChessCardBase, BuyPrice);
 	DOREPLIFETIME(UAutoChessCardBase, SellPrice);
+	DOREPLIFETIME(UAutoChessCardBase, UnitRowName);
 }
 
 void UAutoChessCardBase::InitFromRow(const FAutoChessCardRow& Row)
@@ -204,7 +263,7 @@ void UAutoChessCardBase::InitFromRow(const FAutoChessCardRow& Row)
 	Cost = Row.Cost;
 	BuyPrice = Row.BuyPrice;
 	SellPrice = Row.SellPrice;
-	UnitClass = Row.UnitClass;
+	UnitRowName = Row.UnitRow.RowName;
 	Icon = Row.Icon;
 	Rarity = Row.Rarity;
 	CardAbilityClass = Row.CardAbilityClass;

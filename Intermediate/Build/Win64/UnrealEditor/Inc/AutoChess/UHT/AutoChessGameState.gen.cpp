@@ -476,6 +476,64 @@ DEFINE_FUNCTION(AAutoChessGameState::execIsGridOccupied)
 }
 // End Class AAutoChessGameState Function IsGridOccupied
 
+// Begin Class AAutoChessGameState Function IsTileReserved
+struct Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics
+{
+	struct AutoChessGameState_eventIsTileReserved_Parms
+	{
+		FIntPoint GridPos;
+		bool ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Grid" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\xa3\x80\xe6\x9f\xa5\xe6\xa0\xbc\xe5\xad\x90\xe6\x98\xaf\xe5\x90\xa6\xe8\xa2\xab\xe9\xa2\x84\xe7\x95\x99\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameState.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\xa3\x80\xe6\x9f\xa5\xe6\xa0\xbc\xe5\xad\x90\xe6\x98\xaf\xe5\x90\xa6\xe8\xa2\xab\xe9\xa2\x84\xe7\x95\x99" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_GridPos;
+	static void NewProp_ReturnValue_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_GridPos = { "GridPos", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameState_eventIsTileReserved_Parms, GridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+void Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_ReturnValue_SetBit(void* Obj)
+{
+	((AutoChessGameState_eventIsTileReserved_Parms*)Obj)->ReturnValue = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AutoChessGameState_eventIsTileReserved_Parms), &Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_GridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameState, nullptr, "IsTileReserved", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::AutoChessGameState_eventIsTileReserved_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::AutoChessGameState_eventIsTileReserved_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGameState_IsTileReserved()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameState_IsTileReserved_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameState::execIsTileReserved)
+{
+	P_GET_STRUCT(FIntPoint,Z_Param_GridPos);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(bool*)Z_Param__Result=P_THIS->IsTileReserved(Z_Param_GridPos);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameState Function IsTileReserved
+
 // Begin Class AAutoChessGameState Function Multicast_HideSpellHighlight
 struct AutoChessGameState_eventMulticast_HideSpellHighlight_Parms
 {
@@ -939,6 +997,60 @@ DEFINE_FUNCTION(AAutoChessGameState::execRegisterUnit)
 }
 // End Class AAutoChessGameState Function RegisterUnit
 
+// Begin Class AAutoChessGameState Function ReserveTile
+struct Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics
+{
+	struct AutoChessGameState_eventReserveTile_Parms
+	{
+		FIntPoint GridPos;
+		float Duration;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Grid" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe9\xa2\x84\xe7\x95\x99\xe6\xa0\xbc\xe5\xad\x90 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8f\xac\xe5\x94\xa4\xe6\xb3\x95\xe6\x9c\xaf\xe5\xb1\x95\xe7\xa4\xba\xe6\x9c\x9f\xe9\x97\xb4\xe5\x8d\xa0\xe7\x94\xa8)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessGameState.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe9\xa2\x84\xe7\x95\x99\xe6\xa0\xbc\xe5\xad\x90 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8f\xac\xe5\x94\xa4\xe6\xb3\x95\xe6\x9c\xaf\xe5\xb1\x95\xe7\xa4\xba\xe6\x9c\x9f\xe9\x97\xb4\xe5\x8d\xa0\xe7\x94\xa8)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_GridPos;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_Duration;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::NewProp_GridPos = { "GridPos", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameState_eventReserveTile_Parms, GridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::NewProp_Duration = { "Duration", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessGameState_eventReserveTile_Parms, Duration), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::NewProp_GridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::NewProp_Duration,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessGameState, nullptr, "ReserveTile", nullptr, nullptr, Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::AutoChessGameState_eventReserveTile_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04820401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::AutoChessGameState_eventReserveTile_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessGameState_ReserveTile()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessGameState_ReserveTile_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessGameState::execReserveTile)
+{
+	P_GET_STRUCT(FIntPoint,Z_Param_GridPos);
+	P_GET_PROPERTY(FFloatProperty,Z_Param_Duration);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->ReserveTile(Z_Param_GridPos,Z_Param_Duration);
+	P_NATIVE_END;
+}
+// End Class AAutoChessGameState Function ReserveTile
+
 // Begin Class AAutoChessGameState Function UnregisterUnit
 struct Z_Construct_UFunction_AAutoChessGameState_UnregisterUnit_Statics
 {
@@ -997,6 +1109,7 @@ void AAutoChessGameState::StaticRegisterNativesAAutoChessGameState()
 		{ "GetUnitAtGrid", &AAutoChessGameState::execGetUnitAtGrid },
 		{ "GetUnitsByTeam", &AAutoChessGameState::execGetUnitsByTeam },
 		{ "IsGridOccupied", &AAutoChessGameState::execIsGridOccupied },
+		{ "IsTileReserved", &AAutoChessGameState::execIsTileReserved },
 		{ "Multicast_HideSpellHighlight", &AAutoChessGameState::execMulticast_HideSpellHighlight },
 		{ "Multicast_ShowSpellHighlight", &AAutoChessGameState::execMulticast_ShowSpellHighlight },
 		{ "OnRep_CurrentPhaseIndex", &AAutoChessGameState::execOnRep_CurrentPhaseIndex },
@@ -1010,6 +1123,7 @@ void AAutoChessGameState::StaticRegisterNativesAAutoChessGameState()
 		{ "OnRep_Player2Wins", &AAutoChessGameState::execOnRep_Player2Wins },
 		{ "OnRep_WinnerTeamID", &AAutoChessGameState::execOnRep_WinnerTeamID },
 		{ "RegisterUnit", &AAutoChessGameState::execRegisterUnit },
+		{ "ReserveTile", &AAutoChessGameState::execReserveTile },
 		{ "UnregisterUnit", &AAutoChessGameState::execUnregisterUnit },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
@@ -1368,6 +1482,7 @@ struct Z_Construct_UClass_AAutoChessGameState_Statics
 		{ &Z_Construct_UFunction_AAutoChessGameState_GetUnitAtGrid, "GetUnitAtGrid" }, // 246306590
 		{ &Z_Construct_UFunction_AAutoChessGameState_GetUnitsByTeam, "GetUnitsByTeam" }, // 462591683
 		{ &Z_Construct_UFunction_AAutoChessGameState_IsGridOccupied, "IsGridOccupied" }, // 588425901
+		{ &Z_Construct_UFunction_AAutoChessGameState_IsTileReserved, "IsTileReserved" }, // 3188362184
 		{ &Z_Construct_UFunction_AAutoChessGameState_Multicast_HideSpellHighlight, "Multicast_HideSpellHighlight" }, // 3848971725
 		{ &Z_Construct_UFunction_AAutoChessGameState_Multicast_ShowSpellHighlight, "Multicast_ShowSpellHighlight" }, // 959181873
 		{ &Z_Construct_UDelegateFunction_AAutoChessGameState_OnGoldUpdated__DelegateSignature, "OnGoldUpdated__DelegateSignature" }, // 3281728275
@@ -1385,6 +1500,7 @@ struct Z_Construct_UClass_AAutoChessGameState_Statics
 		{ &Z_Construct_UFunction_AAutoChessGameState_OnRep_WinnerTeamID, "OnRep_WinnerTeamID" }, // 3970199561
 		{ &Z_Construct_UDelegateFunction_AAutoChessGameState_OnWinnerChanged__DelegateSignature, "OnWinnerChanged__DelegateSignature" }, // 1857475496
 		{ &Z_Construct_UFunction_AAutoChessGameState_RegisterUnit, "RegisterUnit" }, // 147410819
+		{ &Z_Construct_UFunction_AAutoChessGameState_ReserveTile, "ReserveTile" }, // 3239494172
 		{ &Z_Construct_UFunction_AAutoChessGameState_UnregisterUnit, "UnregisterUnit" }, // 2819651692
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -1563,10 +1679,10 @@ AAutoChessGameState::~AAutoChessGameState() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 2333232445U) },
+		{ Z_Construct_UClass_AAutoChessGameState, AAutoChessGameState::StaticClass, TEXT("AAutoChessGameState"), &Z_Registration_Info_UClass_AAutoChessGameState, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessGameState), 1543971103U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_915312920(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_3288006055(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

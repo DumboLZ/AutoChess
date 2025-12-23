@@ -24,7 +24,8 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	op(EAutoChessCardTargetType::Enemy) \
 	op(EAutoChessCardTargetType::Ally) \
 	op(EAutoChessCardTargetType::Self) \
-	op(EAutoChessCardTargetType::AnyUnit) 
+	op(EAutoChessCardTargetType::AnyUnit) \
+	op(EAutoChessCardTargetType::EmptyTile) 
 
 enum class EAutoChessCardTargetType : uint8;
 template<> struct TIsUEnumClass<EAutoChessCardTargetType> { enum { Value = true }; };

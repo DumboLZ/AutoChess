@@ -106,6 +106,10 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Actions")
 	void Server_SellAllUnits(int32 TargetTeamID);
 
+	// 召唤单位到指定格子
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Actions")
+	void Server_SummonUnit(FName UnitRowName, int32 GridX, int32 GridY);
+
 	// 返回主菜单 (客户端本地调用)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|GameFlow")
 	void Client_ReturnToMainMenu();
@@ -306,6 +310,12 @@ protected:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "AutoChess|Battle")
 	void Server_RemoveCardFromDeck(FName CardRowName);
+
+	UFUNCTION(Client, Reliable)
+	void Client_RefreshDeck();
+
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Battle")
+	bool GetCardRowData(FName RowName, FAutoChessCardRow& OutRow);
 
 
 public:

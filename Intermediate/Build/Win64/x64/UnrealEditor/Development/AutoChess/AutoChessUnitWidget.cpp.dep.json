@@ -35,7 +35,19 @@
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\animation\\widgetanimationevents.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\widgetanimationevents.generated.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\userwidget.generated.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitwidget.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitwidget.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\horizontalbox.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\panelwidget.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\panelslot.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\panelslot.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\panelwidget.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\horizontalbox.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\horizontalboxslot.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\horizontalboxslot.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\progressbar.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\slate\\public\\widgets\\notifications\\sprogressbar.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\slate\\uht\\sprogressbar.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\progressbar.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

@@ -132,19 +132,6 @@ void AAutoChessUnitBase::BeginPlay()
 			AttributeSet->InitAttackDamage(AttackDamage);
 			AttributeSet->InitAttackSpeed(AttackSpeed);
 
-			// 授予技能 (主动) - 仅服务器
-			if (HasAuthority() && UnitAbilityClass)
-			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
-			}
-
-			// 授予技能 (被动) - 仅服务器
-			if (HasAuthority() && PassiveAbilityClass)
-			{
-				FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
-				AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
-			}
-
 			// 授予初始 Gameplay Tags
 			if (UnitData && UnitData->InitialTags.Num() > 0)
 			{
@@ -261,20 +248,9 @@ void AAutoChessUnitBase::OnDeath_Implementation()
 
 	UE_LOG(LogTemp, Warning, TEXT("[UnitBase] OnDeath: %s"), *GetName());
 
-	// 播放死亡动画
-	Multicast_PlayDeathAnimation();
-
-	// 隐藏并禁用碰撞 (不销毁，等待复活)
-	// 延迟一会再隐藏，让死亡动画播完
-	FTimerHandle DeathTimer;
-	GetWorld()->GetTimerManager().SetTimer(DeathTimer, [this]()
-	{
-		if (this)
-		{
-			SetActorHiddenInGame(true);
-			SetActorEnableCollision(false);
-		}
-	}, 2.0f, false);
+	// 立即隐藏并禁用碰撞 (不销毁，等待复活)
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
 
 	// 不要从 GameState 移除 (保留引用以便复活)
 	// 只触发胜利条件检查
@@ -577,6 +553,14 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 			}
 			else
 			{
+				// 英雄单位不可移动，只能站桩攻击
+				if (bIsHero)
+				{
+					bIsMoving = false;
+					CurrentPath.Empty();
+					return;
+				}
+
 				// 3. 寻路并开始移动
 				if (AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState()))
 				{
@@ -596,10 +580,25 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	// 实时寻找最近的敌人（每帧都更新目标）
+	AAutoChessUnitBase* NewTarget = FindNearestEnemy();
+	if (NewTarget)
+	{
+		// 如果目标发生变化，清除当前路径
+		if (NewTarget != CurrentTarget)
+		{
+			CurrentTarget = NewTarget;
+			CurrentPath.Empty();
+			bIsMoving = false;
+		}
+	}
 	else
 	{
-		// 寻找新目标
-		CurrentTarget = FindNearestEnemy();
+		// 没有敌人了，清除目标
+		CurrentTarget = nullptr;
+		CurrentPath.Empty();
+		bIsMoving = false;
 	}
 }
 
@@ -947,6 +946,33 @@ void AAutoChessUnitBase::InitFromUnitData()
         
         UpdateTeamColor();
         RefreshUI();
+
+        // 授予技能 - 仅服务器
+        if (HasAuthority() && AbilitySystemComponent)
+        {
+            // 授予主动技能
+            if (UnitAbilityClass)
+            {
+                // 检查是否已经拥有
+                if (!AbilitySystemComponent->FindAbilitySpecFromClass(UnitAbilityClass))
+                {
+                    AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+                    UE_LOG(LogTemp, Log, TEXT("[UnitBase] Granted Active Ability: %s"), *UnitAbilityClass->GetName());
+                }
+            }
+
+            // 授予被动技能
+            if (PassiveAbilityClass)
+            {
+                // 检查是否已经拥有
+                if (!AbilitySystemComponent->FindAbilitySpecFromClass(PassiveAbilityClass))
+                {
+                    FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
+                    AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
+                    UE_LOG(LogTemp, Log, TEXT("[UnitBase] Granted and Activated Passive Ability: %s"), *PassiveAbilityClass->GetName());
+                }
+            }
+        }
     }
 }
 

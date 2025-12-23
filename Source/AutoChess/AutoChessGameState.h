@@ -209,6 +209,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Board")
 	AAutoChessUnitBase* GetUnitAtGrid(int32 GridX, int32 GridY);
 
+	// 预留格子 (用于召唤法术展示期间占用)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	void ReserveTile(FIntPoint GridPos, float Duration);
+
+	// 检查格子是否被预留
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	bool IsTileReserved(FIntPoint GridPos);
+
 	// 队伍0的英雄单位
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "AutoChess|Board")
 	AAutoChessUnitBase* HeroUnit_Team0;
@@ -239,4 +247,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	// 预留的格子列表 (Key: 坐标, Value: 过期时间)
+	TMap<FIntPoint, float> ReservedTiles;
 };

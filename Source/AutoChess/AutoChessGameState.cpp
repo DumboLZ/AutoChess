@@ -240,7 +240,35 @@ TArray<AAutoChessUnitBase*> AAutoChessGameState::GetUnitsByTeam(int32 TeamID)
 
 bool AAutoChessGameState::IsGridOccupied(int32 GridX, int32 GridY)
 {
-	return GetUnitAtGrid(GridX, GridY) != nullptr;
+	return GetUnitAtGrid(GridX, GridY) != nullptr || IsTileReserved(FIntPoint(GridX, GridY));
+}
+
+void AAutoChessGameState::ReserveTile(FIntPoint GridPos, float Duration)
+{
+	if (Duration <= 0.0f) return;
+	
+	float ExpiryTime = GetWorld()->GetTimeSeconds() + Duration;
+	ReservedTiles.Add(GridPos, ExpiryTime);
+	
+	UE_LOG(LogTemp, Warning, TEXT("[GameState] Reserved Tile (%d, %d) for %f seconds"), GridPos.X, GridPos.Y, Duration);
+}
+
+bool AAutoChessGameState::IsTileReserved(FIntPoint GridPos)
+{
+	if (ReservedTiles.Contains(GridPos))
+	{
+		float ExpiryTime = ReservedTiles[GridPos];
+		if (GetWorld()->GetTimeSeconds() < ExpiryTime)
+		{
+			return true;
+		}
+		else
+		{
+			// 已过期，移除
+			ReservedTiles.Remove(GridPos);
+		}
+	}
+	return false;
 }
 
 AAutoChessUnitBase* AAutoChessGameState::GetUnitAtGrid(int32 GridX, int32 GridY)

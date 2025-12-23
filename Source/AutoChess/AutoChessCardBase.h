@@ -71,9 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card Info")
 	void ModifyCost(int32 Amount);
 
-	// 对应的棋子类 (生成时使用)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
-	TSubclassOf<AAutoChessUnitBase> UnitClass;
+	// 对应的棋子数据行名 (用于召唤类卡牌)
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	FName UnitRowName;
 
 	// 卡牌图标 (UI显示)
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")

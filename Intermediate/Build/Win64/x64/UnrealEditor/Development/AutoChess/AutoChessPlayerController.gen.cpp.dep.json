@@ -61,7 +61,11 @@
             "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\source\\gameplayabilities\\public\\abilitysystemreplicationproxyinterface.h",
             "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\intermediate\\build\\win64\\unrealeditor\\inc\\gameplayabilities\\uht\\abilitysystemreplicationproxyinterface.generated.h",
             "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\intermediate\\build\\win64\\unrealeditor\\inc\\gameplayabilities\\uht\\abilitysystemcomponent.generated.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessplayercontroller.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessplayercontroller.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscarddata.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscardtypes.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochesscardtypes.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochesscarddata.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
