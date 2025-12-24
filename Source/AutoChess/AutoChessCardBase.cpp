@@ -83,11 +83,15 @@ void UAutoChessCardBase::OnPlayed_Implementation(APlayerController* Controller, 
 						{
 							if (GS->GameGrid && GS->GameGrid->IsValidGridPosition(x, y))
 							{
-								FIntPoint Tile(x, y);
-								TargetTiles.Add(Tile);
-								
-								// 预留目标格子，防止其他单位寻路进入
-								GS->ReserveTile(Tile, DisplayDuration);
+								// --- 召唤卡牌半场限制 ---
+								if (GS->IsTileOnTeamHalf(AutoChessController->TeamID, y))
+								{
+									FIntPoint Tile(x, y);
+									TargetTiles.Add(Tile);
+									
+									// 预留目标格子，防止其他单位寻路进入
+									GS->ReserveTile(Tile, DisplayDuration);
+								}
 							}
 						}
 					}
@@ -258,6 +262,7 @@ void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UAutoChessCardBase, BuyPrice);
 	DOREPLIFETIME(UAutoChessCardBase, SellPrice);
 	DOREPLIFETIME(UAutoChessCardBase, UnitRowName);
+	DOREPLIFETIME(UAutoChessCardBase, bConsumeAllMana);
 }
 
 void UAutoChessCardBase::InitFromRow(const FAutoChessCardRow& Row)

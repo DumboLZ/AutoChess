@@ -1033,6 +1033,23 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 				// 转换为格子坐标
 				if (GS->GameGrid->WorldToGrid(Intersection, CenterX, CenterY))
 				{
+					// --- 召唤卡牌半场限制 ---
+					bool bIsSummonCard = !Card->UnitRowName.IsNone();
+					if (bIsSummonCard)
+					{
+						// 如果鼠标指向的中心点不在己方半场，直接清除高亮并返回
+						if (!GS->IsTileOnTeamHalf(TeamID, CenterY))
+						{
+							if (HighlightActor)
+							{
+								HighlightActor->UpdateHighlights(GS->GameGrid, TArray<FIntPoint>());
+							}
+							Card->HighlightedTiles.Empty();
+							return;
+						}
+					}
+					// -----------------------
+
 					// 高亮逻辑
 					TArray<FIntPoint> HighlightPoints;
 					int32 Radius = Card->AOERadius;
@@ -1043,7 +1060,18 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 						{
 							if (GS->GameGrid->IsValidGridPosition(x, y))
 							{
-								HighlightPoints.Add(FIntPoint(x, y));
+								// 如果是召唤卡牌，AOE 范围也必须限制在己方半场
+								if (bIsSummonCard)
+								{
+									if (GS->IsTileOnTeamHalf(TeamID, y))
+									{
+										HighlightPoints.Add(FIntPoint(x, y));
+									}
+								}
+								else
+								{
+									HighlightPoints.Add(FIntPoint(x, y));
+								}
 							}
 						}
 					}
@@ -1102,6 +1130,19 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 			AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>();
 			if (GS && GS->GameGrid)
 			{
+				// --- 召唤卡牌半场限制 (服务器验证) ---
+				bool bIsSummonCard = !Card->UnitRowName.IsNone();
+				if (bIsSummonCard)
+				{
+					if (!GS->IsTileOnTeamHalf(TeamID, TargetGridPos.Y))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("[PlayCard] FAILED: Summon card target (%d, %d) is not on Team %d's half!"), 
+							TargetGridPos.X, TargetGridPos.Y, TeamID);
+						return false;
+					}
+				}
+				// -----------------------------------
+
 				TArray<FIntPoint> HighlightPoints;
 				int32 Radius = Card->AOERadius;
 				
@@ -1112,7 +1153,18 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 					{
 						if (GS->GameGrid->IsValidGridPosition(x, y))
 						{
-							HighlightPoints.Add(FIntPoint(x, y));
+							// 如果是召唤卡牌，AOE 范围也必须限制在己方半场
+							if (bIsSummonCard)
+							{
+								if (GS->IsTileOnTeamHalf(TeamID, y))
+								{
+									HighlightPoints.Add(FIntPoint(x, y));
+								}
+							}
+							else
+							{
+								HighlightPoints.Add(FIntPoint(x, y));
+							}
 						}
 					}
 				}
@@ -1160,7 +1212,7 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 				}
 			}
 
-			// **然后扣费**（但如果勾选了"消耗所有法力"，由GA自行处理）
+			// **然后扣费**
 			if (!Card->bConsumeAllMana)
 			{
 				// 普通卡牌：自动扣除Cost
@@ -1170,9 +1222,10 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 			}
 			else
 			{
-				// "消耗所有法力"卡牌：由GA自行处理法力消耗
-				// 这里不扣费，让GA根据消耗的法力值决定效果强度
-				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, GA will handle mana consumption"));
+				// "消耗所有法力"卡牌：直接清空法力
+				Mana = 0.0f;
+				OnManaUpdated.Broadcast(Mana, MaxMana);
+				UE_LOG(LogTemp, Warning, TEXT("[PlayCard] bConsumeAllMana=true, Consumed ALL mana."));
 			}
 
 			// 无限手牌模式：不移除手牌，但通过 RPC 通知客户端刷新 UI

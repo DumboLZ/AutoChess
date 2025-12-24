@@ -506,6 +506,28 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		bIsMoving = false;
 	}
 
+	// --- 技能释放逻辑优化：满蓝自动释放 (不依赖攻击目标) ---
+	if (HasAuthority() && CheckCanFight() && !bIsDead && !bIsStunned)
+	{
+		if (AttributeSet && AttributeSet->GetMana() >= AttributeSet->GetMaxMana())
+		{
+			// 检查是否已经在播放技能动画，避免重复触发
+			bool bIsCasting = false;
+			UAnimInstance* AnimInst = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+			if (SkillMontage && AnimInst && AnimInst->Montage_IsPlaying(SkillMontage))
+			{
+				bIsCasting = true;
+			}
+
+			if (!bIsCasting)
+			{
+				UE_LOG(LogTemp, Log, TEXT("[UnitBase] Tick: Mana full, triggering UseSkill for %s"), *UnitName.ToString());
+				UseSkill();
+			}
+		}
+	}
+	// -------------------------------------------------------
+
 	// 简单的自动攻击逻辑 (仅在有目标时)
 	if (IsValid(CurrentTarget) && !CurrentTarget->bIsDead)
 	{
@@ -619,7 +641,12 @@ void AAutoChessUnitBase::ProcessGridMovement(float DeltaTime)
 
 	SetActorRotation(Direction.Rotation());
 
-	float MoveStep = MoveSpeed * DeltaTime;
+	float CurrentMoveSpeed = MoveSpeed;
+	if (AttributeSet)
+	{
+		CurrentMoveSpeed = AttributeSet->GetMoveSpeed();
+	}
+	float MoveStep = CurrentMoveSpeed * DeltaTime;
 
 	if (Distance <= MoveStep)
 	{
@@ -874,7 +901,7 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 		{
 			if (AbilitySystemComponent->TryActivateAbility(SpecHandle))
 			{
-				UE_LOG(LogTemp, Log, TEXT("[UnitBase] UseSkill: Activated %s"), *UnitAbilityClass->GetName());
+				UE_LOG(LogTemp, Log, TEXT("[UnitBase] UseSkill: Activated %s for %s"), *UnitAbilityClass->GetName(), *UnitName.ToString());
 				if (AttributeSet)
 				{
 					AttributeSet->SetMana(0.0f);
@@ -887,7 +914,16 @@ void AAutoChessUnitBase::UseSkill_Implementation()
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("[UnitBase] UseSkill: Failed to activate %s (Tags/Cost/Cooldown?)"), *UnitAbilityClass->GetName());
+				UE_LOG(LogTemp, Warning, TEXT("[UnitBase] UseSkill: FAILED to activate %s for %s (Tags/Cost/Cooldown?)"), 
+					*UnitAbilityClass->GetName(), *UnitName.ToString());
+				
+				// 调试：打印当前拥有的 Tags
+				if (AbilitySystemComponent)
+				{
+					FGameplayTagContainer OwnedTags;
+					AbilitySystemComponent->GetOwnedGameplayTags(OwnedTags);
+					UE_LOG(LogTemp, Warning, TEXT("  - Owned Tags: %s"), *OwnedTags.ToString());
+				}
 			}
 		}
 	}
@@ -961,6 +997,7 @@ void AAutoChessUnitBase::InitFromUnitData()
             AttributeSet->InitAttackSpeed(AttackSpeed);
             AttributeSet->InitCritRate(CritRate);
             AttributeSet->InitCritDamage(CritDamage);
+            AttributeSet->InitMoveSpeed(MoveSpeed);
         }
         
         UpdateTeamColor();
@@ -969,6 +1006,28 @@ void AAutoChessUnitBase::InitFromUnitData()
         // 授予技能 - 仅服务器
         if (HasAuthority() && AbilitySystemComponent)
         {
+            // --- 标签授予优化 ---
+            // 1. 应用数据表中的初始标签
+            if (!Row->InitialTags.IsEmpty())
+            {
+                AbilitySystemComponent->AddLooseGameplayTags(Row->InitialTags);
+                AbilitySystemComponent->AddReplicatedLooseGameplayTags(Row->InitialTags); // 确保同步到客户端
+                UE_LOG(LogTemp, Log, TEXT("[UnitBase] Applied %d InitialTags to %s"), Row->InitialTags.Num(), *UnitName.ToString());
+            }
+
+            // 2. 如果是英雄，自动添加英雄标签
+            if (bIsHero)
+            {
+                FGameplayTag HeroTag = FGameplayTag::RequestGameplayTag(FName("Unit.Type.Hero"), false);
+                if (HeroTag.IsValid())
+                {
+                    AbilitySystemComponent->AddLooseGameplayTag(HeroTag);
+                    AbilitySystemComponent->AddReplicatedLooseGameplayTag(HeroTag);
+                    UE_LOG(LogTemp, Log, TEXT("[UnitBase] Automatically added Hero tag to %s"), *UnitName.ToString());
+                }
+            }
+            // ------------------
+
             // 授予主动技能
             if (UnitAbilityClass)
             {

@@ -42,6 +42,7 @@ static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGol
 	DECLARE_FUNCTION(execReserveTile); \
 	DECLARE_FUNCTION(execGetUnitAtGrid); \
 	DECLARE_FUNCTION(execFindEmptyBenchSlot); \
+	DECLARE_FUNCTION(execIsTileOnTeamHalf); \
 	DECLARE_FUNCTION(execIsGridOccupied); \
 	DECLARE_FUNCTION(execGetUnitsByTeam); \
 	DECLARE_FUNCTION(execUnregisterUnit); \

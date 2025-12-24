@@ -81,6 +81,7 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, InitialGold);
 	
 	DOREPLIFETIME(AAutoChessGameState, CurrentPhaseIndex);
+	DOREPLIFETIME(AAutoChessGameState, CurrentRound);
 	DOREPLIFETIME(AAutoChessGameState, PhaseTimer);
 	
 	DOREPLIFETIME(AAutoChessGameState, Player1Wins);
@@ -88,7 +89,6 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(AAutoChessGameState, MatchWinnerTeamID);
 	DOREPLIFETIME(AAutoChessGameState, GoldPerRound);
 	
-	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
 	DOREPLIFETIME(AAutoChessGameState, HeroUnit_Team0);
@@ -467,4 +467,22 @@ bool AAutoChessGameState::FindEmptyBenchSlot(int32 TeamID, FIntPoint& OutGridPos
 	}
 
 	return false;
+}
+
+bool AAutoChessGameState::IsTileOnTeamHalf(int32 TeamID, int32 GridY)
+{
+	if (!GameGrid) return false;
+
+	int32 HalfHeight = GameGrid->GridHeight / 2;
+
+	if (TeamID == 0)
+	{
+		// Team 0 在下半场 (Y < 4)
+		return GridY < HalfHeight;
+	}
+	else
+	{
+		// Team 1 在上半场 (Y >= 4)
+		return GridY >= HalfHeight;
+	}
 }

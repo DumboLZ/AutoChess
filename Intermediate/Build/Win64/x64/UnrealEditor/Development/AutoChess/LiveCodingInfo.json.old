@@ -2,6 +2,7 @@
 	"RemapUnityFiles": 
 	{
 		"Module.AutoChess.1.cpp.obj": [
+			"AutoChess.init.gen.cpp.obj",
 			"AutoChessAttributeSet.gen.cpp.obj",
 			"AutoChessCameraPawn.gen.cpp.obj",
 			"AutoChessCardBase.gen.cpp.obj",
@@ -9,10 +10,9 @@
 			"AutoChessCardTypes.gen.cpp.obj",
 			"AutoChessGameModeBase.gen.cpp.obj",
 			"AutoChessGameplayAbility.gen.cpp.obj",
+			"AutoChessGameState.gen.cpp.obj",
 			"AutoChessGhost.gen.cpp.obj",
-			"AutoChessGrid.gen.cpp.obj",
-			"AutoChess.init.gen.cpp.obj",
-			"AutoChessGameState.gen.cpp.obj"
+			"AutoChessGrid.gen.cpp.obj"
 		],
 		"Module.AutoChess.2.cpp.obj": [
 			"AutoChessHighlightActor.gen.cpp.obj",
@@ -29,20 +29,20 @@
 			"MainMenuPlayerController.gen.cpp.obj",
 			"AutoChess.cpp.obj",
 			"AutoChessCameraPawn.cpp.obj",
+			"AutoChessGameModeBase.cpp.obj",
 			"AutoChessGameplayAbility.cpp.obj",
 			"AutoChessGhost.cpp.obj",
 			"AutoChessGrid.cpp.obj",
 			"AutoChessHighlightActor.cpp.obj",
 			"AutoChessHUDWidget.cpp.obj",
-			"AutoChessPlayerController.cpp.obj",
 			"AutoChessProjectile.cpp.obj",
 			"AutoChessSkillProjectile.cpp.obj",
 			"AutoChessTrashCan.cpp.obj",
 			"MainMenuPlayerController.cpp.obj",
 			"AutoChessAttributeSet.cpp.obj",
 			"AutoChessCardBase.cpp.obj",
-			"AutoChessGameModeBase.cpp.obj",
 			"AutoChessGameState.cpp.obj",
+			"AutoChessPlayerController.cpp.obj",
 			"AutoChessUnitBase.cpp.obj"
 		]
 	}

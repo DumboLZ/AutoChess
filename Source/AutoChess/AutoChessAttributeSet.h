@@ -75,6 +75,11 @@ public:
 	FGameplayAttributeData CritDamage;
 	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, CritDamage)
 
+	// 移动速度
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_MoveSpeed)
+	FGameplayAttributeData MoveSpeed;
+	ATTRIBUTE_ACCESSORS(UAutoChessAttributeSet, MoveSpeed)
+
 protected:
 	// --- 网络同步回调 ---
 	
@@ -104,4 +109,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_CritDamage(const FGameplayAttributeData& OldCritDamage);
+
+	UFUNCTION()
+	virtual void OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed);
 };

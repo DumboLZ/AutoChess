@@ -25,6 +25,7 @@ void UAutoChessAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, CritRate, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAutoChessAttributeSet, MoveSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -49,15 +50,17 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 			FGameplayTag TrueDamageTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.True"), false);
 			FGameplayTag NonLethalTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.NonLethal"), false);
 			
+			// 暂时回退到旧的 API 以确保编译通过，稍后再研究 5.4 的正确访问方式
+			const FGameplayTagContainer& AssetTags = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags;
+
 			if (TrueDamageTag.IsValid())
 			{
-				// 检查 GE 的 AssetTags
-				bIsTrueDamage = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(TrueDamageTag);
+				bIsTrueDamage = AssetTags.HasTag(TrueDamageTag);
 			}
 			
 			if (NonLethalTag.IsValid())
 			{
-				bIsNonLethal = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(NonLethalTag);
+				bIsNonLethal = AssetTags.HasTag(NonLethalTag);
 			}
 		}
 
@@ -221,4 +224,9 @@ void UAutoChessAttributeSet::OnRep_CritRate(const FGameplayAttributeData& OldCri
 void UAutoChessAttributeSet::OnRep_CritDamage(const FGameplayAttributeData& OldCritDamage)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, CritDamage, OldCritDamage);
+}
+
+void UAutoChessAttributeSet::OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAutoChessAttributeSet, MoveSpeed, OldMoveSpeed);
 }

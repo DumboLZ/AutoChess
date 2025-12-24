@@ -198,6 +198,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	bool IsGridOccupied(int32 GridX, int32 GridY);
 
+	// 检查格子是否在指定队伍的半场
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	bool IsTileOnTeamHalf(int32 TeamID, int32 GridY);
+
 	// 查找空闲的备战区格子
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	bool FindEmptyBenchSlot(int32 TeamID, FIntPoint& OutGridPos);
