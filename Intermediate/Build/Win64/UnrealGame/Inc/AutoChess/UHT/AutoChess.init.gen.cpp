@@ -7,10 +7,14 @@
 #include "UObject/GeneratedCppIncludes.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
+	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnGoldUpdated__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnHealthUpdate__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnPhaseChanged__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnWinnerChanged__DelegateSignature();
+	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature();
+	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature();
+	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnGoldUpdate__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnHandUpdate__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnManaUpdate__DelegateSignature();
 	static FPackageRegistrationInfo Z_Registration_Info_UPackage__Script_AutoChess;
@@ -19,10 +23,14 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 		if (!Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton)
 		{
 			static UObject* (*const SingletonFuncArray[])() = {
+				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnGoldUpdated__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnHealthUpdate__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnPhaseChanged__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnWinnerChanged__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnDeckUpdate__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnGoldUpdate__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnHandUpdate__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnManaUpdate__DelegateSignature,
 			};
@@ -31,13 +39,13 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0xA06557F3,
-				0x6ACB6E58,
+				0x4BDCBCE0,
+				0x0543C768,
 				METADATA_PARAMS(0, nullptr)
 			};
 			UECodeGen_Private::ConstructUPackage(Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton, PackageParams);
 		}
 		return Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xA06557F3, 0x6ACB6E58));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0x4BDCBCE0, 0x0543C768));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

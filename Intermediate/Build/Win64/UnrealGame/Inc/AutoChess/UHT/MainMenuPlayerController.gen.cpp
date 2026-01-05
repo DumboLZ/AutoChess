@@ -21,21 +21,34 @@ UPackage* Z_Construct_UPackage__Script_AutoChess();
 // Begin Class AMainMenuPlayerController Function HostGame
 struct Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics
 {
+	struct MainMenuPlayerController_eventHostGame_Parms
+	{
+		int32 InitialGold;
+	};
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-		{ "Category", "Networking" },
+		{ "Category", "AutoChess|Menu" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x88\x9b\xe5\xbb\xba\xe6\xb8\xb8\xe6\x88\x8f\xef\xbc\x88\xe4\xbd\x9c\xe4\xb8\xba Host\xef\xbc\x89\n// \xe7\x94\xa8\xe6\xb3\x95\xef\xbc\x9a\xe5\x9c\xa8 UI \xe6\x8c\x89\xe9\x92\xae\xe4\xb8\xad\xe8\xb0\x83\xe7\x94\xa8\n" },
+		{ "Comment", "// \xe5\x88\x9b\xe5\xbb\xba\xe6\xb8\xb8\xe6\x88\x8f (\xe4\xbd\x9c\xe4\xb8\xba Listen Server)\n// InitialGold: \xe5\x88\x9d\xe5\xa7\x8b\xe9\x87\x91\xe5\xb8\x81\xe8\xae\xbe\xe7\xbd\xae\n" },
 #endif
+		{ "CPP_Default_InitialGold", "0" },
 		{ "ModuleRelativePath", "MainMenuPlayerController.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x88\x9b\xe5\xbb\xba\xe6\xb8\xb8\xe6\x88\x8f\xef\xbc\x88\xe4\xbd\x9c\xe4\xb8\xba Host\xef\xbc\x89\n\xe7\x94\xa8\xe6\xb3\x95\xef\xbc\x9a\xe5\x9c\xa8 UI \xe6\x8c\x89\xe9\x92\xae\xe4\xb8\xad\xe8\xb0\x83\xe7\x94\xa8" },
+		{ "ToolTip", "\xe5\x88\x9b\xe5\xbb\xba\xe6\xb8\xb8\xe6\x88\x8f (\xe4\xbd\x9c\xe4\xb8\xba Listen Server)\nInitialGold: \xe5\x88\x9d\xe5\xa7\x8b\xe9\x87\x91\xe5\xb8\x81\xe8\xae\xbe\xe7\xbd\xae" },
 #endif
 	};
 #endif // WITH_METADATA
+	static const UECodeGen_Private::FIntPropertyParams NewProp_InitialGold;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static const UECodeGen_Private::FFunctionParams FuncParams;
 };
-const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AMainMenuPlayerController, nullptr, "HostGame", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::Function_MetaDataParams), Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::Function_MetaDataParams) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::NewProp_InitialGold = { "InitialGold", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(MainMenuPlayerController_eventHostGame_Parms, InitialGold), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::NewProp_InitialGold,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AMainMenuPlayerController, nullptr, "HostGame", nullptr, nullptr, Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::PropPointers), sizeof(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::MainMenuPlayerController_eventHostGame_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::Function_MetaDataParams), Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AMainMenuPlayerController_HostGame_Statics::MainMenuPlayerController_eventHostGame_Parms) < MAX_uint16);
 UFunction* Z_Construct_UFunction_AMainMenuPlayerController_HostGame()
 {
 	static UFunction* ReturnFunction = nullptr;
@@ -47,9 +60,10 @@ UFunction* Z_Construct_UFunction_AMainMenuPlayerController_HostGame()
 }
 DEFINE_FUNCTION(AMainMenuPlayerController::execHostGame)
 {
+	P_GET_PROPERTY(FIntProperty,Z_Param_InitialGold);
 	P_FINISH;
 	P_NATIVE_BEGIN;
-	P_THIS->HostGame();
+	P_THIS->HostGame(Z_Param_InitialGold);
 	P_NATIVE_END;
 }
 // End Class AMainMenuPlayerController Function HostGame
@@ -63,13 +77,13 @@ struct Z_Construct_UFunction_AMainMenuPlayerController_JoinGame_Statics
 	};
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-		{ "Category", "Networking" },
+		{ "Category", "AutoChess|Menu" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x8a\xa0\xe5\x85\xa5\xe6\xb8\xb8\xe6\x88\x8f\xef\xbc\x88\xe4\xbd\x9c\xe4\xb8\xba Client\xef\xbc\x89\n// \xe7\x94\xa8\xe6\xb3\x95\xef\xbc\x9a\xe5\x9c\xa8 UI \xe6\x8c\x89\xe9\x92\xae\xe4\xb8\xad\xe8\xb0\x83\xe7\x94\xa8\n" },
+		{ "Comment", "// \xe5\x8a\xa0\xe5\x85\xa5\xe6\xb8\xb8\xe6\x88\x8f (\xe4\xbd\x9c\xe4\xb8\xba Client)\n" },
 #endif
 		{ "ModuleRelativePath", "MainMenuPlayerController.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x8a\xa0\xe5\x85\xa5\xe6\xb8\xb8\xe6\x88\x8f\xef\xbc\x88\xe4\xbd\x9c\xe4\xb8\xba Client\xef\xbc\x89\n\xe7\x94\xa8\xe6\xb3\x95\xef\xbc\x9a\xe5\x9c\xa8 UI \xe6\x8c\x89\xe9\x92\xae\xe4\xb8\xad\xe8\xb0\x83\xe7\x94\xa8" },
+		{ "ToolTip", "\xe5\x8a\xa0\xe5\x85\xa5\xe6\xb8\xb8\xe6\x88\x8f (\xe4\xbd\x9c\xe4\xb8\xba Client)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Address_MetaData[] = {
@@ -198,8 +212,8 @@ struct Z_Construct_UClass_AMainMenuPlayerController_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
-		{ &Z_Construct_UFunction_AMainMenuPlayerController_HostGame, "HostGame" }, // 606987200
-		{ &Z_Construct_UFunction_AMainMenuPlayerController_JoinGame, "JoinGame" }, // 1098651891
+		{ &Z_Construct_UFunction_AMainMenuPlayerController_HostGame, "HostGame" }, // 2232164172
+		{ &Z_Construct_UFunction_AMainMenuPlayerController_JoinGame, "JoinGame" }, // 4175621654
 		{ &Z_Construct_UFunction_AMainMenuPlayerController_QuitGame, "QuitGame" }, // 1969698882
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
@@ -255,10 +269,10 @@ AMainMenuPlayerController::~AMainMenuPlayerController() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_MainMenuPlayerController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AMainMenuPlayerController, AMainMenuPlayerController::StaticClass, TEXT("AMainMenuPlayerController"), &Z_Registration_Info_UClass_AMainMenuPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AMainMenuPlayerController), 3308516850U) },
+		{ Z_Construct_UClass_AMainMenuPlayerController, AMainMenuPlayerController::StaticClass, TEXT("AMainMenuPlayerController"), &Z_Registration_Info_UClass_AMainMenuPlayerController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AMainMenuPlayerController), 617067608U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_MainMenuPlayerController_h_3645740070(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_MainMenuPlayerController_h_1121643544(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_MainMenuPlayerController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_MainMenuPlayerController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

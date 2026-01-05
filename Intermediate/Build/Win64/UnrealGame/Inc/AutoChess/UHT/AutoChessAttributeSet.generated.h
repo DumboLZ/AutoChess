@@ -17,6 +17,9 @@ struct FGameplayAttributeData;
 #define AUTOCHESS_AutoChessAttributeSet_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessAttributeSet_h_21_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execOnRep_MoveSpeed); \
+	DECLARE_FUNCTION(execOnRep_CritDamage); \
+	DECLARE_FUNCTION(execOnRep_CritRate); \
 	DECLARE_FUNCTION(execOnRep_AttackSpeed); \
 	DECLARE_FUNCTION(execOnRep_Shield); \
 	DECLARE_FUNCTION(execOnRep_AttackDamage); \
@@ -43,7 +46,10 @@ public: \
 		AttackDamage, \
 		Shield, \
 		AttackSpeed, \
-		NETFIELD_REP_END=AttackSpeed	}; \
+		CritRate, \
+		CritDamage, \
+		MoveSpeed, \
+		NETFIELD_REP_END=MoveSpeed	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override; \
 private: \
 	REPLICATED_BASE_CLASS(UAutoChessAttributeSet) \

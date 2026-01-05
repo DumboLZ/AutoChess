@@ -613,7 +613,7 @@ void Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bConsumeAllMana_SetB
 {
 	((UAutoChessCardBase*)Obj)->bConsumeAllMana = 1;
 }
-const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bConsumeAllMana = { "bConsumeAllMana", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(UAutoChessCardBase), &Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bConsumeAllMana_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bConsumeAllMana_MetaData), NewProp_bConsumeAllMana_MetaData) };
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bConsumeAllMana = { "bConsumeAllMana", nullptr, (EPropertyFlags)0x0010000000010035, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(UAutoChessCardBase), &Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_bConsumeAllMana_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bConsumeAllMana_MetaData), NewProp_bConsumeAllMana_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_Cost = { "Cost", "OnRep_Cost", (EPropertyFlags)0x0010000100000025, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, Cost), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Cost_MetaData), NewProp_Cost_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_CostModifier = { "CostModifier", "OnRep_CostModifier", (EPropertyFlags)0x0010000100000024, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, CostModifier), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CostModifier_MetaData), NewProp_CostModifier_MetaData) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_BuyPrice = { "BuyPrice", nullptr, (EPropertyFlags)0x0010000000000025, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, BuyPrice), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BuyPrice_MetaData), NewProp_BuyPrice_MetaData) };
@@ -695,6 +695,7 @@ void UAutoChessCardBase::ValidateGeneratedRepEnums(const TArray<struct FRepRecor
 {
 	static const FName Name_CardName(TEXT("CardName"));
 	static const FName Name_CardDescription(TEXT("CardDescription"));
+	static const FName Name_bConsumeAllMana(TEXT("bConsumeAllMana"));
 	static const FName Name_Cost(TEXT("Cost"));
 	static const FName Name_CostModifier(TEXT("CostModifier"));
 	static const FName Name_BuyPrice(TEXT("BuyPrice"));
@@ -704,6 +705,7 @@ void UAutoChessCardBase::ValidateGeneratedRepEnums(const TArray<struct FRepRecor
 	const bool bIsValid = true
 		&& Name_CardName == ClassReps[(int32)ENetFields_Private::CardName].Property->GetFName()
 		&& Name_CardDescription == ClassReps[(int32)ENetFields_Private::CardDescription].Property->GetFName()
+		&& Name_bConsumeAllMana == ClassReps[(int32)ENetFields_Private::bConsumeAllMana].Property->GetFName()
 		&& Name_Cost == ClassReps[(int32)ENetFields_Private::Cost].Property->GetFName()
 		&& Name_CostModifier == ClassReps[(int32)ENetFields_Private::CostModifier].Property->GetFName()
 		&& Name_BuyPrice == ClassReps[(int32)ENetFields_Private::BuyPrice].Property->GetFName()
@@ -720,10 +722,10 @@ UAutoChessCardBase::~UAutoChessCardBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 2061717204U) },
+		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 950170327U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_2924742710(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1698713176(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

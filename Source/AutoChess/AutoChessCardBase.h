@@ -38,7 +38,7 @@ public:
 	FText CardDescription;
 
 	// 是否消耗所有法力值 (用于可变强度技能)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Card Info")
 	bool bConsumeAllMana = false;
 
 	// 金币消耗 (如果勾选"消耗所有法力"，此项将被忽略)

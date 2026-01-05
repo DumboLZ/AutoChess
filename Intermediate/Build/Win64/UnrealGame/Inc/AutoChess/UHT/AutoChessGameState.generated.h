@@ -27,18 +27,34 @@ static void FOnPhaseChanged_DelegateWrapper(const FMulticastScriptDelegate& OnPh
 static void FOnWinnerChanged_DelegateWrapper(const FMulticastScriptDelegate& OnWinnerChanged, int32 WinnerTeamID);
 
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_45_DELEGATE \
+static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGoldUpdated, int32 NewGold, int32 PlayerIndex);
+
+
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Multicast_HideSpellHighlight_Implementation(int32 TeamID); \
+	virtual void Multicast_ShowIndependentSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID, float Duration); \
 	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
 	DECLARE_FUNCTION(execMulticast_HideSpellHighlight); \
+	DECLARE_FUNCTION(execMulticast_ShowIndependentSpellHighlight); \
 	DECLARE_FUNCTION(execMulticast_ShowSpellHighlight); \
+	DECLARE_FUNCTION(execIsTileReserved); \
+	DECLARE_FUNCTION(execReserveTile); \
 	DECLARE_FUNCTION(execGetUnitAtGrid); \
+	DECLARE_FUNCTION(execFindEmptyBenchSlot); \
+	DECLARE_FUNCTION(execIsTileOnTeamHalf); \
 	DECLARE_FUNCTION(execIsGridOccupied); \
 	DECLARE_FUNCTION(execGetUnitsByTeam); \
 	DECLARE_FUNCTION(execUnregisterUnit); \
 	DECLARE_FUNCTION(execRegisterUnit); \
 	DECLARE_FUNCTION(execOnRep_CurrentPhaseIndex); \
+	DECLARE_FUNCTION(execOnRep_MatchWinnerTeamID); \
+	DECLARE_FUNCTION(execOnRep_Player2Wins); \
+	DECLARE_FUNCTION(execOnRep_Player1Wins); \
 	DECLARE_FUNCTION(execOnRep_WinnerTeamID); \
+	DECLARE_FUNCTION(execOnRep_InitialGold); \
+	DECLARE_FUNCTION(execOnRep_Player2Gold); \
+	DECLARE_FUNCTION(execOnRep_Player1Gold); \
 	DECLARE_FUNCTION(execOnRep_Player2Health); \
 	DECLARE_FUNCTION(execOnRep_Player1Health);
 
@@ -58,17 +74,24 @@ public: \
 		Player2Health, \
 		Player1Gold, \
 		Player2Gold, \
+		InitialGold, \
 		bPlayer1Ready, \
 		bPlayer2Ready, \
 		bPlayer1Rematch, \
 		bPlayer2Rematch, \
 		WinnerTeamID, \
+		Player1Wins, \
+		Player2Wins, \
+		MatchWinnerTeamID, \
+		GoldPerRound, \
 		CurrentPhaseIndex, \
 		CurrentRound, \
 		PhaseTimer, \
 		GameGrid, \
 		AllUnits, \
-		NETFIELD_REP_END=AllUnits	}; \
+		HeroUnit_Team0, \
+		HeroUnit_Team1, \
+		NETFIELD_REP_END=HeroUnit_Team1	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 

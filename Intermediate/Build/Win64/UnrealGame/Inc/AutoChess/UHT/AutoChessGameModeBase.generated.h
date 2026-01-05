@@ -10,6 +10,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
+class AAutoChessUnitBase;
 class APlayerController;
 class UAutoChessCardBase;
 enum class EAutoChessPhase : uint8;
@@ -20,9 +21,11 @@ enum class EAutoChessPhase : uint8;
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_23_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execBroadcastCardDisplay); \
+	DECLARE_FUNCTION(execResetBoardForNewRound); \
 	DECLARE_FUNCTION(execRestartGame); \
 	DECLARE_FUNCTION(execEndRound); \
-	DECLARE_FUNCTION(execStartBattle);
+	DECLARE_FUNCTION(execStartBattle); \
+	DECLARE_FUNCTION(execSpawnUnit);
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameModeBase_h_23_CALLBACK_WRAPPERS

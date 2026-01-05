@@ -1006,13 +1006,16 @@ void AAutoChessUnitBase::InitFromUnitData()
         // 授予技能 - 仅服务器
         if (HasAuthority() && AbilitySystemComponent)
         {
-            // --- 标签授予优化 ---
+            // --- 标签授予优化 (更稳妥的方式) ---
             // 1. 应用数据表中的初始标签
-            if (!Row->InitialTags.IsEmpty())
+            for (const FGameplayTag& Tag : Row->InitialTags)
             {
-                AbilitySystemComponent->AddLooseGameplayTags(Row->InitialTags);
-                AbilitySystemComponent->AddReplicatedLooseGameplayTags(Row->InitialTags); // 确保同步到客户端
-                UE_LOG(LogTemp, Log, TEXT("[UnitBase] Applied %d InitialTags to %s"), Row->InitialTags.Num(), *UnitName.ToString());
+                if (Tag.IsValid())
+                {
+                    AbilitySystemComponent->AddLooseGameplayTag(Tag);
+                    AbilitySystemComponent->AddReplicatedLooseGameplayTag(Tag);
+                    UE_LOG(LogTemp, Log, TEXT("[UnitBase] Applied InitialTag: %s to %s"), *Tag.ToString(), *UnitName.ToString());
+                }
             }
 
             // 2. 如果是英雄，自动添加英雄标签
@@ -1027,6 +1030,13 @@ void AAutoChessUnitBase::InitFromUnitData()
                 }
             }
             // ------------------
+
+            // --- 调试日志：打印所有拥有标签 ---
+            FGameplayTagContainer OwnedTags;
+            AbilitySystemComponent->GetOwnedGameplayTags(OwnedTags);
+            UE_LOG(LogTemp, Warning, TEXT("[UnitBase] %s initialization complete. Owned Tags: %s"), 
+                *UnitName.ToString(), *OwnedTags.ToString());
+            // ------------------------------
 
             // 授予主动技能
             if (UnitAbilityClass)
