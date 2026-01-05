@@ -17,7 +17,11 @@
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\gameplaytags\\classes\\gameplaytagcontainer.h",
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\core\\public\\misc\\comparisonutility.h",
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\gameplaytags\\uht\\gameplaytagcontainer.generated.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscardbase.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscardtypes.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscardtypes.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscardbase.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscarddata.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscarddata.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

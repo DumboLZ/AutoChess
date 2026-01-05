@@ -1,0 +1,18 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochessunitdata.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\autochess\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\autochess\\definitions.autochess.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessunitdata.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\gameplaytags\\classes\\gameplaytagcontainer.h",
+            "d:\\epic\\ue_5.4\\engine\\source\\runtime\\core\\public\\misc\\comparisonutility.h",
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\gameplaytags\\uht\\gameplaytagcontainer.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochessunitdata.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

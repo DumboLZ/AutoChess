@@ -29,20 +29,20 @@
 			"MainMenuPlayerController.gen.cpp.obj",
 			"AutoChess.cpp.obj",
 			"AutoChessCameraPawn.cpp.obj",
+			"AutoChessCardBase.cpp.obj",
 			"AutoChessGameModeBase.cpp.obj",
 			"AutoChessGameplayAbility.cpp.obj",
+			"AutoChessGameState.cpp.obj",
 			"AutoChessGhost.cpp.obj",
 			"AutoChessGrid.cpp.obj",
 			"AutoChessHighlightActor.cpp.obj",
 			"AutoChessHUDWidget.cpp.obj",
+			"AutoChessPlayerController.cpp.obj",
 			"AutoChessProjectile.cpp.obj",
 			"AutoChessSkillProjectile.cpp.obj",
 			"AutoChessTrashCan.cpp.obj",
 			"MainMenuPlayerController.cpp.obj",
 			"AutoChessAttributeSet.cpp.obj",
-			"AutoChessCardBase.cpp.obj",
-			"AutoChessGameState.cpp.obj",
-			"AutoChessPlayerController.cpp.obj",
 			"AutoChessUnitBase.cpp.obj"
 		]
 	}

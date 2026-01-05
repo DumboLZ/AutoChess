@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscardtypes.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\autochess\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\autochess\\definitions.autochess.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochesscardtypes.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealgame\\inc\\autochess\\uht\\autochesscardtypes.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

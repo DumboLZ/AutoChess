@@ -105,6 +105,12 @@
 			]
 		},
 		{
+			"ShaderMapHash": "FEEDF02E1B58F66C80BDF0AEDA7E5D1677C90C94",
+			"Assets": [
+				"/Game/Art/M_UnitIcon"
+			]
+		},
+		{
 			"ShaderMapHash": "BC34CA333E2A06EC4ED343674C56DB5301676F55",
 			"Assets": [
 				"/Engine/EngineMaterials/PhAT_JointLimitMaterial"
@@ -138,6 +144,12 @@
 			"ShaderMapHash": "792B113B8C294A78E53C903FB9E6056EA4363AD6",
 			"Assets": [
 				"/Engine/MapTemplates/Materials/BasicAsset02"
+			]
+		},
+		{
+			"ShaderMapHash": "879D003CFC152095B82E91216F95BCDEB46E71C2",
+			"Assets": [
+				"/Game/LittleDragons/Materials/Little_Dragon_Tiger/Mat_LDT_Toon"
 			]
 		},
 		{
@@ -329,6 +341,29 @@
 			]
 		},
 		{
+			"ShaderMapHash": "B61E109A751A4C53928D9941E3540705B954358C",
+			"Assets": [
+				"/Engine/EngineDebugMaterials/BoneWeightMaterial"
+			]
+		},
+		{
+			"ShaderMapHash": "D05F3C9C4541A0126C4755F4B95A0C1688E14350",
+			"Assets": [
+				"/Game/LittleDragons/Materials/Eyes/Realistic_Eyes/Mat_Eye_Realistic"
+			]
+		},
+		{
+			"ShaderMapHash": "F5D75B9C3141E8EF3B508641628A7A7CD4847163",
+			"Assets": [
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Cat",
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Dilated",
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Poly",
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Poly_Cat",
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Poly_Dilated",
+				"/Game/LittleDragons/Materials/Eyes/SpriteEyes/Mat_Eye_Round"
+			]
+		},
+		{
 			"ShaderMapHash": "F3FB609ECA543AF843927ECE8177771D824E7C83",
 			"Assets": [
 				"/Engine/EngineMaterials/Widget3DPassThrough_Opaque_OneSided"
@@ -413,6 +448,18 @@
 			]
 		},
 		{
+			"ShaderMapHash": "24644CBDEB4CCCDB53AA853BC6190660142BA7D8",
+			"Assets": [
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_BlueMarine",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Green",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Grey",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Magnenta",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Orange",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Pink",
+				"/Game/LittleDragons/Materials/Eggs/Mat_Egg_Red"
+			]
+		},
+		{
 			"ShaderMapHash": "D7DA2BC0A3C2E1EB0E89811055079727C278BB5E",
 			"Assets": [
 				"/Interchange/gltf/MaterialInstances/MI_Default_Mask"
@@ -464,6 +511,12 @@
 			"ShaderMapHash": "9306EDD589EEC5368DA90BFC34E89575A1CD9E2B",
 			"Assets": [
 				"/Engine/EngineMaterials/PPM_DefaultCalibrationGrayscale"
+			]
+		},
+		{
+			"ShaderMapHash": "C6E591D81D8F03F9C2C71637877253E9696A2244",
+			"Assets": [
+				"/Game/LittleDragons/Materials/Little_Dragon_Tiger/Mat_LDT_Realistic"
 			]
 		},
 		{
@@ -542,12 +595,6 @@
 			"ShaderMapHash": "E675B8F13993B174DE79BEC189F474D2D9CFBDC3",
 			"Assets": [
 				"/Interchange/gltf/M_SpecularGlossiness"
-			]
-		},
-		{
-			"ShaderMapHash": "C9B2F3F3F020FA8CA4FE95EEFECDC72BE38BEC7F",
-			"Assets": [
-				"/Game/Art/M_UnitIcon"
 			]
 		},
 		{
