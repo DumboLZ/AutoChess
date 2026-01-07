@@ -681,13 +681,24 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 
 		if (AttributeSet)
 		{
-			float CurrentMana = AttributeSet->GetMana();
-			float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnAttack, 0.0f, AttributeSet->GetMaxMana());
-			AttributeSet->SetMana(NewMana);
-			
-			if (NewMana >= AttributeSet->GetMaxMana())
+			// 检查是否禁止获取法力
+			bool bCanGainMana = true;
+			FGameplayTag NoManaTag = FGameplayTag::RequestGameplayTag(FName("State.NoManaGain"), false);
+			if (NoManaTag.IsValid() && AbilitySystemComponent && AbilitySystemComponent->HasMatchingGameplayTag(NoManaTag))
 			{
-				UseSkill();
+				bCanGainMana = false;
+			}
+
+			if (bCanGainMana)
+			{
+				float CurrentMana = AttributeSet->GetMana();
+				float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnAttack, 0.0f, AttributeSet->GetMaxMana());
+				AttributeSet->SetMana(NewMana);
+				
+				if (NewMana >= AttributeSet->GetMaxMana())
+				{
+					UseSkill();
+				}
 			}
 		}
 
@@ -825,13 +836,24 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 
 				if (!bIsCastingSkill)
 				{
-					float CurrentMana = AttributeSet->GetMana();
-					float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
-					AttributeSet->SetMana(NewMana);
-
-					if (NewMana >= AttributeSet->GetMaxMana())
+					// 检查是否禁止获取法力
+					bool bCanGainMana = true;
+					FGameplayTag NoManaTag = FGameplayTag::RequestGameplayTag(FName("State.NoManaGain"), false);
+					if (NoManaTag.IsValid() && AbilitySystemComponent->HasMatchingGameplayTag(NoManaTag))
 					{
-						UseSkill();
+						bCanGainMana = false;
+					}
+
+					if (bCanGainMana)
+					{
+						float CurrentMana = AttributeSet->GetMana();
+						float NewMana = FMath::Clamp(CurrentMana + ManaRegenOnHit, 0.0f, AttributeSet->GetMaxMana());
+						AttributeSet->SetMana(NewMana);
+
+						if (NewMana >= AttributeSet->GetMaxMana())
+						{
+							UseSkill();
+						}
 					}
 				}
 

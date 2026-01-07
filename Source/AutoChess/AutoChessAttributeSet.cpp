@@ -155,6 +155,22 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	}
 	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
+		// 检查是否禁止获取法力
+		if (Data.EvaluatedData.Magnitude > 0.0f)
+		{
+			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+			{
+				FGameplayTag NoManaTag = FGameplayTag::RequestGameplayTag(FName("State.NoManaGain"), false);
+				if (NoManaTag.IsValid() && Unit->GetAbilitySystemComponent() && Unit->GetAbilitySystemComponent()->HasMatchingGameplayTag(NoManaTag))
+				{
+					// 回滚法力值：新值 = 当前值 - 增加量
+					SetMana(FMath::Max(0.0f, GetMana() - Data.EvaluatedData.Magnitude));
+					UE_LOG(LogTemp, Warning, TEXT("[AttributeSet] Mana gain BLOCKED by State.NoManaGain for %s"), *Unit->GetName());
+					return;
+				}
+			}
+		}
+		
 		UE_LOG(LogTemp, Warning, TEXT("[AttributeSet] Mana changed! New: %.1f"), GetMana());
 		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}

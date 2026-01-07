@@ -3,4 +3,5 @@
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessProjectile.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessSkillProjectile.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessTrashCan.gen.cpp"
+#include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessUnitBase.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessUnitData.gen.cpp"

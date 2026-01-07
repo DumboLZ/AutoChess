@@ -23,7 +23,6 @@
 			"AutoChessUnitBase.gen.cpp.obj"
 		],
 		"Module.AutoChess.3.cpp.obj": [
-			"AutoChessUnitWidget.gen.cpp.obj",
 			"MainMenuPlayerController.gen.cpp.obj",
 			"AutoChess.cpp.obj",
 			"AutoChessCameraPawn.cpp.obj",
@@ -37,6 +36,7 @@
 			"AutoChessSkillProjectile.cpp.obj",
 			"AutoChessTrashCan.cpp.obj",
 			"MainMenuPlayerController.cpp.obj",
+			"AutoChessUnitWidget.gen.cpp.obj",
 			"AutoChessAttributeSet.cpp.obj",
 			"AutoChessGameModeBase.cpp.obj",
 			"AutoChessGameState.cpp.obj",
