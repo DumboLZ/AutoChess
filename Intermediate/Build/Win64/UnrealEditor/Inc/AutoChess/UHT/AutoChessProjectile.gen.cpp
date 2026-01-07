@@ -7,6 +7,7 @@
 #include "UObject/GeneratedCppIncludes.h"
 #include "AutoChess/AutoChessProjectile.h"
 #include "Runtime/Engine/Classes/Engine/HitResult.h"
+#include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeAutoChessProjectile() {}
 
@@ -21,6 +22,7 @@ ENGINE_API UClass* Z_Construct_UClass_UPrimitiveComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UProjectileMovementComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
 ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FHitResult();
+GAMEPLAYTAGS_API UScriptStruct* Z_Construct_UScriptStruct_FGameplayTag();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
 
@@ -213,12 +215,23 @@ struct Z_Construct_UClass_AAutoChessProjectile_Statics
 		{ "ToolTip", "\xe6\x96\xbd\xe6\xb3\x95\xe8\x80\x85" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileType_MetaData[] = {
+		{ "Category", "AutoChess|Projectile" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb\xe5\x9e\x8b\xe6\xa0\x87\xe7\xad\xbe (\xe7\x94\xa8\xe4\xba\x8e\xe8\xa2\xab\xe5\x8a\xa8\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa0\xe6\x88\x90\xe5\x88\xa4\xe5\xae\x9a)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb\xe5\x9e\x8b\xe6\xa0\x87\xe7\xad\xbe (\xe7\x94\xa8\xe4\xba\x8e\xe8\xa2\xab\xe5\x8a\xa8\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa0\xe6\x88\x90\xe5\x88\xa4\xe5\xae\x9a)" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CapsuleComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MeshComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MovementComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_TargetUnit;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_InstigatorUnit;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_ProjectileType;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -236,12 +249,14 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessProj
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_MovementComp = { "MovementComp", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, MovementComp), Z_Construct_UClass_UProjectileMovementComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MovementComp_MetaData), NewProp_MovementComp_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_TargetUnit = { "TargetUnit", "OnRep_TargetUnit", (EPropertyFlags)0x0020080100000020, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, TargetUnit), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TargetUnit_MetaData), NewProp_TargetUnit_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_InstigatorUnit = { "InstigatorUnit", nullptr, (EPropertyFlags)0x0020080000000020, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, InstigatorUnit), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_InstigatorUnit_MetaData), NewProp_InstigatorUnit_MetaData) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_ProjectileType = { "ProjectileType", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, ProjectileType), Z_Construct_UScriptStruct_FGameplayTag, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ProjectileType_MetaData), NewProp_ProjectileType_MetaData) }; // 1298103297
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessProjectile_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CapsuleComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_MeshComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_MovementComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_TargetUnit,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_InstigatorUnit,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_ProjectileType,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessProjectile_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessProjectile_Statics::DependentSingletons[])() = {
@@ -293,10 +308,10 @@ AAutoChessProjectile::~AAutoChessProjectile() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessProjectile, AAutoChessProjectile::StaticClass, TEXT("AAutoChessProjectile"), &Z_Registration_Info_UClass_AAutoChessProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessProjectile), 2802489482U) },
+		{ Z_Construct_UClass_AAutoChessProjectile, AAutoChessProjectile::StaticClass, TEXT("AAutoChessProjectile"), &Z_Registration_Info_UClass_AAutoChessProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessProjectile), 3814500705U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_3846456430(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_2281235381(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

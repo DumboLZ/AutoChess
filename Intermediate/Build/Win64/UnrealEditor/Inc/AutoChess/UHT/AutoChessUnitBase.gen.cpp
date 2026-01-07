@@ -27,11 +27,61 @@ ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FDataTableRowHandle();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UAbilitySystemComponent_NoRegister();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UAbilitySystemInterface_NoRegister();
 GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UGameplayAbility_NoRegister();
+GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UGameplayEffect_NoRegister();
 NIAGARA_API UClass* Z_Construct_UClass_UNiagaraSystem_NoRegister();
 UMG_API UClass* Z_Construct_UClass_UUserWidget_NoRegister();
 UMG_API UClass* Z_Construct_UClass_UWidgetComponent_NoRegister();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
+
+// Begin Class AAutoChessUnitBase Function ApplyGEToAllAllies
+struct Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics
+{
+	struct AutoChessUnitBase_eventApplyGEToAllAllies_Parms
+	{
+		TSubclassOf<UGameplayEffect> GEClass;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Ability" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe4\xb8\xba\xe6\x89\x80\xe6\x9c\x89\xe5\x8f\x8b\xe6\x96\xb9\xe5\x8d\x95\xe4\xbd\x8d\xe6\x96\xbd\xe5\x8a\xa0 GE (\xe7\x94\xa8\xe4\xba\x8e\xe5\x85\x89\xe7\x8e\xaf/\xe5\x85\xa8\xe5\xb1\x80\xe8\xa2\xab\xe5\x8a\xa8)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe4\xb8\xba\xe6\x89\x80\xe6\x9c\x89\xe5\x8f\x8b\xe6\x96\xb9\xe5\x8d\x95\xe4\xbd\x8d\xe6\x96\xbd\xe5\x8a\xa0 GE (\xe7\x94\xa8\xe4\xba\x8e\xe5\x85\x89\xe7\x8e\xaf/\xe5\x85\xa8\xe5\xb1\x80\xe8\xa2\xab\xe5\x8a\xa8)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FClassPropertyParams NewProp_GEClass;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::NewProp_GEClass = { "GEClass", nullptr, (EPropertyFlags)0x0014000000000080, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventApplyGEToAllAllies_Parms, GEClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayEffect_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::NewProp_GEClass,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "ApplyGEToAllAllies", nullptr, nullptr, Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::AutoChessUnitBase_eventApplyGEToAllAllies_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::AutoChessUnitBase_eventApplyGEToAllAllies_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execApplyGEToAllAllies)
+{
+	P_GET_OBJECT(UClass,Z_Param_GEClass);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->ApplyGEToAllAllies(Z_Param_GEClass);
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function ApplyGEToAllAllies
 
 // Begin Class AAutoChessUnitBase Function AttackTarget
 struct Z_Construct_UFunction_AAutoChessUnitBase_AttackTarget_Statics
@@ -43,13 +93,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_AttackTarget_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xb0\x9d\xe8\xaf\x95\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xb0\x9d\xe8\xaf\x95\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
@@ -93,11 +137,11 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_CheckCanFight_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Combat" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xa3\x80\xe6\x9f\xa5\xe6\x98\xaf\xe5\x90\xa6\xe5\x8f\xaf\xe4\xbb\xa5\xe6\x88\x98\xe6\x96\x97 (\xe5\x9f\xba\xe4\xba\x8e\xe6\xb8\xb8\xe6\x88\x8f\xe9\x98\xb6\xe6\xae\xb5)\n" },
+		{ "Comment", "// \xe6\x88\x98\xe6\x96\x97\xe9\x80\xbb\xe8\xbe\x91\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xa3\x80\xe6\x9f\xa5\xe6\x98\xaf\xe5\x90\xa6\xe5\x8f\xaf\xe4\xbb\xa5\xe6\x88\x98\xe6\x96\x97 (\xe5\x9f\xba\xe4\xba\x8e\xe6\xb8\xb8\xe6\x88\x8f\xe9\x98\xb6\xe6\xae\xb5)" },
+		{ "ToolTip", "\xe6\x88\x98\xe6\x96\x97\xe9\x80\xbb\xe8\xbe\x91" },
 #endif
 	};
 #endif // WITH_METADATA
@@ -145,13 +189,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Animation" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe8\x8e\xb7\xe5\x8f\x96\xe5\x8d\x95\xe4\xbd\x8d\xe5\xbd\x93\xe5\x89\x8d\xe9\x80\x9f\xe5\xba\xa6 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8a\xa8\xe7\x94\xbb\xe8\x93\x9d\xe5\x9b\xbe\xef\xbc\x8c\xe5\x9b\xa0\xe4\xb8\xba\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xae\xbe\xe7\xbd\xae\xe4\xbd\x8d\xe7\xbd\xae\xe5\x8f\xaf\xe8\x83\xbd\xe5\xaf\xbc\xe8\x87\xb4 GetVelocity \xe4\xb8\xba 0)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe8\x8e\xb7\xe5\x8f\x96\xe5\x8d\x95\xe4\xbd\x8d\xe5\xbd\x93\xe5\x89\x8d\xe9\x80\x9f\xe5\xba\xa6 (\xe7\x94\xa8\xe4\xba\x8e\xe5\x8a\xa8\xe7\x94\xbb\xe8\x93\x9d\xe5\x9b\xbe\xef\xbc\x8c\xe5\x9b\xa0\xe4\xb8\xba\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xae\xbe\xe7\xbd\xae\xe4\xbd\x8d\xe7\xbd\xae\xe5\x8f\xaf\xe8\x83\xbd\xe5\xaf\xbc\xe8\x87\xb4 GetVelocity \xe4\xb8\xba 0)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FStructPropertyParams NewProp_ReturnValue;
@@ -190,11 +228,11 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Data" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe4\xbb\x8e DataAsset \xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe5\xb1\x9e\xe6\x80\xa7\n" },
+		{ "Comment", "// \xe4\xbb\x8e\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe5\xb1\x9e\xe6\x80\xa7\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe4\xbb\x8e DataAsset \xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe5\xb1\x9e\xe6\x80\xa7" },
+		{ "ToolTip", "\xe4\xbb\x8e\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe5\xb1\x9e\xe6\x80\xa7" },
 #endif
 	};
 #endif // WITH_METADATA
@@ -229,13 +267,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation_St
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -269,13 +301,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation_Sta
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\xad\xbb\xe4\xba\xa1\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\xad\xbb\xe4\xba\xa1\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -309,13 +335,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation_Sta
 {
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x92\xad\xe6\x94\xbe\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x92\xad\xe6\x94\xbe\xe6\x8a\x80\xe8\x83\xbd\xe5\x8a\xa8\xe7\x94\xbb (\xe5\xa4\x9a\xe6\x92\xad)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -350,13 +370,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_OnDeath_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|State" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xad\xbb\xe4\xba\xa1\xe5\xa4\x84\xe7\x90\x86\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xad\xbb\xe4\xba\xa1\xe5\xa4\x84\xe7\x90\x86" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -480,15 +494,9 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_ReceiveDamage_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x8f\x97\xe5\x88\xb0\xe4\xbc\xa4\xe5\xae\xb3\n" },
-#endif
 		{ "CPP_Default_bIsCrit", "false" },
 		{ "CPP_Default_bIsProjectile", "false" },
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x8f\x97\xe5\x88\xb0\xe4\xbc\xa4\xe5\xae\xb3" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_DamageAmount;
@@ -549,13 +557,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_RefreshUI_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|UI" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x88\xb7\xe6\x96\xb0 UI \xe6\x98\xbe\xe7\xa4\xba (\xe8\xa1\x80\xe6\x9d\xa1\xe3\x80\x81\xe8\x93\x9d\xe6\x9d\xa1)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x88\xb7\xe6\x96\xb0 UI \xe6\x98\xbe\xe7\xa4\xba (\xe8\xa1\x80\xe6\x9d\xa1\xe3\x80\x81\xe8\x93\x9d\xe6\x9d\xa1)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -585,13 +587,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_ResetUnit_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|State" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe9\x87\x8d\xe7\xbd\xae\xe5\x8d\x95\xe4\xbd\x8d\xe7\x8a\xb6\xe6\x80\x81 (\xe5\xa4\x8d\xe6\xb4\xbb\xe5\xb9\xb6\xe5\xbd\x92\xe4\xbd\x8d)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe9\x87\x8d\xe7\xbd\xae\xe5\x8d\x95\xe4\xbd\x8d\xe7\x8a\xb6\xe6\x80\x81 (\xe5\xa4\x8d\xe6\xb4\xbb\xe5\xb9\xb6\xe5\xbd\x92\xe4\xbd\x8d)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -621,13 +617,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_SnapToGrid_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Grid" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x9b\xb4\xe6\x96\xb0\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\x9e\xac\xe9\x97\xb4)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x9b\xb4\xe6\x96\xb0\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\x9e\xac\xe9\x97\xb4)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -661,13 +651,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Skill" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe4\xbe\x9b\xe8\x93\x9d\xe5\x9b\xbe\xe8\xb0\x83\xe7\x94\xa8)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe4\xbe\x9b\xe8\x93\x9d\xe5\x9b\xbe\xe8\xb0\x83\xe7\x94\xa8)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FStructPropertyParams NewProp_TargetLocation;
@@ -747,13 +731,7 @@ struct Z_Construct_UFunction_AAutoChessUnitBase_UseSkill_Statics
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe4\xbd\xbf\xe7\x94\xa8\xe6\x8a\x80\xe8\x83\xbd (C++ \xe5\xae\x9e\xe7\x8e\xb0\xe5\x9f\xba\xe7\xa1\x80\xe9\x80\xbb\xe8\xbe\x91\xef\xbc\x8c\xe8\x93\x9d\xe5\x9b\xbe\xe5\x8f\xaf\xe6\x89\xa9\xe5\xb1\x95)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe4\xbd\xbf\xe7\x94\xa8\xe6\x8a\x80\xe8\x83\xbd (C++ \xe5\xae\x9e\xe7\x8e\xb0\xe5\x9f\xba\xe7\xa1\x80\xe9\x80\xbb\xe8\xbe\x91\xef\xbc\x8c\xe8\x93\x9d\xe5\x9b\xbe\xe5\x8f\xaf\xe6\x89\xa9\xe5\xb1\x95)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -782,6 +760,7 @@ void AAutoChessUnitBase::StaticRegisterNativesAAutoChessUnitBase()
 {
 	UClass* Class = AAutoChessUnitBase::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "ApplyGEToAllAllies", &AAutoChessUnitBase::execApplyGEToAllAllies },
 		{ "AttackTarget", &AAutoChessUnitBase::execAttackTarget },
 		{ "CheckCanFight", &AAutoChessUnitBase::execCheckCanFight },
 		{ "GetUnitVelocity", &AAutoChessUnitBase::execGetUnitVelocity },
@@ -872,351 +851,183 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitData_MetaData[] = {
 		{ "Category", "AutoChess|Data" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataAsset)\n// \xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xe4\xba\x86\xe6\xad\xa4\xe9\xa1\xb9\xef\xbc\x8c\xe5\xb0\x86\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe5\x85\xb6\xe4\xb8\xad\xe7\x9a\x84\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe6\xa3\x8b\xe5\xad\x90\n" },
+		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataAsset)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataAsset)\n\xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xe4\xba\x86\xe6\xad\xa4\xe9\xa1\xb9\xef\xbc\x8c\xe5\xb0\x86\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe5\x85\xb6\xe4\xb8\xad\xe7\x9a\x84\xe6\x95\xb0\xe6\x8d\xae\xe5\x88\x9d\xe5\xa7\x8b\xe5\x8c\x96\xe6\xa3\x8b\xe5\xad\x90" },
+		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataAsset)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitDataHandle_MetaData[] = {
 		{ "Category", "AutoChess|Data" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (\xe6\x96\xb0\xe6\x96\xb9\xe5\xbc\x8f\xef\xbc\x9a\xe5\xbc\x95\xe7\x94\xa8 DataTable Row)\n" },
+		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataTable Row)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (\xe6\x96\xb0\xe6\x96\xb9\xe5\xbc\x8f\xef\xbc\x9a\xe5\xbc\x95\xe7\x94\xa8 DataTable Row)" },
+		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x95\xb0\xe6\x8d\xae\xe9\x85\x8d\xe7\xbd\xae (DataTable Row)" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitName_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe5\x90\x8d\xe7\xa7\xb0\n" },
+		{ "Comment", "// \xe5\x9f\xba\xe7\xa1\x80\xe5\xb1\x9e\xe6\x80\xa7\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe5\x90\x8d\xe7\xa7\xb0" },
+		{ "ToolTip", "\xe5\x9f\xba\xe7\xa1\x80\xe5\xb1\x9e\xe6\x80\xa7" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Description_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xa3\x8b\xe5\xad\x90\xe6\x8f\x8f\xe8\xbf\xb0\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xa3\x8b\xe5\xad\x90\xe6\x8f\x8f\xe8\xbf\xb0" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxHealth_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x9c\x80\xe5\xa4\xa7\xe7\x94\x9f\xe5\x91\xbd\xe5\x80\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x9c\x80\xe5\xa4\xa7\xe7\x94\x9f\xe5\x91\xbd\xe5\x80\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Health_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xbd\x93\xe5\x89\x8d\xe7\x94\x9f\xe5\x91\xbd\xe5\x80\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xbd\x93\xe5\x89\x8d\xe7\x94\x9f\xe5\x91\xbd\xe5\x80\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttackDamage_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\x9b\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe5\x8a\x9b" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttackRangeGrid_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe8\x8c\x83\xe5\x9b\xb4 (\xe6\xa0\xbc\xe5\xad\x90\xe6\x95\xb0)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe8\x8c\x83\xe5\x9b\xb4 (\xe6\xa0\xbc\xe5\xad\x90\xe6\x95\xb0)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttackSpeed_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe9\x80\x9f\xe5\xba\xa6 (\xe6\xac\xa1/\xe7\xa7\x92)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe9\x80\x9f\xe5\xba\xa6 (\xe6\xac\xa1/\xe7\xa7\x92)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxMana_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x9c\x80\xe5\xa4\xa7\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x9c\x80\xe5\xa4\xa7\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_Mana_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xbd\x93\xe5\x89\x8d\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xbd\x93\xe5\x89\x8d\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_InitialMana_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x88\x9d\xe5\xa7\x8b\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x88\x9d\xe5\xa7\x8b\xe6\xb3\x95\xe5\x8a\x9b\xe5\x80\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ManaRegenOnAttack_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe5\x9b\x9e\xe8\x93\x9d\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe5\x9b\x9e\xe8\x93\x9d" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ManaRegenOnHit_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x8f\x97\xe5\x87\xbb\xe5\x9b\x9e\xe8\x93\x9d\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x8f\x97\xe5\x87\xbb\xe5\x9b\x9e\xe8\x93\x9d" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritRate_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe7\x8e\x87" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CritDamage_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x9a\xb4\xe5\x87\xbb\xe4\xbc\xa4\xe5\xae\xb3" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SellPrice_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x8d\x96\xe5\x87\xba\xe4\xbb\xb7\xe6\xa0\xbc" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UnitAbilityClass_MetaData[] = {
 		{ "Category", "AutoChess|Skill" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd Ability \xe7\xb1\xbb\n" },
+		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd Ability \xe7\xb1\xbb" },
+		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PassiveAbilityClass_MetaData[] = {
 		{ "Category", "AutoChess|Skill" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe8\xa2\xab\xe5\x8a\xa8\xe6\x8a\x80\xe8\x83\xbd Ability \xe7\xb1\xbb\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe8\xa2\xab\xe5\x8a\xa8\xe6\x8a\x80\xe8\x83\xbd Ability \xe7\xb1\xbb" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillVFX_MetaData[] = {
 		{ "Category", "AutoChess|Skill" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe7\x89\xb9\xe6\x95\x88 (\xe5\x8f\xaf\xe9\x85\x8d\xe7\xbd\xae)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe7\x89\xb9\xe6\x95\x88 (\xe5\x8f\xaf\xe9\x85\x8d\xe7\xbd\xae)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillNiagaraVFX_MetaData[] = {
 		{ "Category", "AutoChess|Skill" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe7\x89\xb9\xe6\x95\x88 (Niagara \xe7\x89\x88\xe6\x9c\xac\xef\xbc\x8c\xe5\x8f\xaf\xe9\x80\x89)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe7\x89\xb9\xe6\x95\x88 (Niagara \xe7\x89\x88\xe6\x9c\xac\xef\xbc\x8c\xe5\x8f\xaf\xe9\x80\x89)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileClass_MetaData[] = {
 		{ "Category", "AutoChess|Stats" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa6\x82\xe6\x9e\x9c\xe4\xb8\xba\xe7\xa9\xba\xe5\x88\x99\xe4\xb8\xba\xe8\xbf\x91\xe6\x88\x98)\n" },
+		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa6\x82\xe6\x9e\x9c\xe4\xb8\xba\xe7\xa9\xba\xe5\x88\x99\xe4\xb8\xba\xe8\xbf\x91\xe6\x88\x98)" },
+		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileSocketName_MetaData[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe9\xaa\xa8\xe9\xaa\xbc\xe6\x8f\x92\xe6\xa7\xbd\xe5\x90\x8d\xe7\xa7\xb0 (\xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe6\x8f\x92\xe6\xa7\xbd\xe4\xbd\x8d\xe7\xbd\xae)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe9\xaa\xa8\xe9\xaa\xbc\xe6\x8f\x92\xe6\xa7\xbd\xe5\x90\x8d\xe7\xa7\xb0 (\xe5\xa6\x82\xe6\x9e\x9c\xe8\xae\xbe\xe7\xbd\xae\xef\xbc\x8c\xe4\xbc\x98\xe5\x85\x88\xe4\xbd\xbf\xe7\x94\xa8\xe6\x8f\x92\xe6\xa7\xbd\xe4\xbd\x8d\xe7\xbd\xae)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ProjectileSpawnOffset_MetaData[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x9b\xb8\xe5\xaf\xb9\xe4\xba\x8e\xe5\x8d\x95\xe4\xbd\x8d\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe6\x8f\x92\xe6\xa7\xbd\xe6\x97\xa0\xe6\x95\x88\xe5\x88\x99\xe4\xbd\xbf\xe7\x94\xa8\xe6\xad\xa4\xe5\x81\x8f\xe7\xa7\xbb)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x8f\x91\xe5\xb0\x84\xe5\x81\x8f\xe7\xa7\xbb (\xe7\x9b\xb8\xe5\xaf\xb9\xe4\xba\x8e\xe5\x8d\x95\xe4\xbd\x8d\xef\xbc\x8c\xe5\xa6\x82\xe6\x9e\x9c\xe6\x8f\x92\xe6\xa7\xbd\xe6\x97\xa0\xe6\x95\x88\xe5\x88\x99\xe4\xbd\xbf\xe7\x94\xa8\xe6\xad\xa4\xe5\x81\x8f\xe7\xa7\xbb)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillProjectileClass_MetaData[] = {
 		{ "Category", "AutoChess|Skill" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa4\xa7\xe7\x81\xab\xe7\x90\x83\xe7\xad\x89)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe7\xb1\xbb (\xe5\xa4\xa7\xe7\x81\xab\xe7\x90\x83\xe7\xad\x89)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_StartGridPos_MetaData[] = {
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\x88\x9d\xe5\xa7\x8b\xe6\xa0\xbc\xe5\xad\x90\xe4\xbd\x8d\xe7\xbd\xae (\xe7\x94\xa8\xe4\xba\x8e\xe5\x9b\x9e\xe5\x90\x88\xe9\x87\x8d\xe7\xbd\xae)\n" },
+		{ "Comment", "// \xe7\x8a\xb6\xe6\x80\x81\xe4\xb8\x8e\xe4\xbd\x8d\xe7\xbd\xae\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\x88\x9d\xe5\xa7\x8b\xe6\xa0\xbc\xe5\xad\x90\xe4\xbd\x8d\xe7\xbd\xae (\xe7\x94\xa8\xe4\xba\x8e\xe5\x9b\x9e\xe5\x90\x88\xe9\x87\x8d\xe7\xbd\xae)" },
+		{ "ToolTip", "\xe7\x8a\xb6\xe6\x80\x81\xe4\xb8\x8e\xe4\xbd\x8d\xe7\xbd\xae" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentTarget_MetaData[] = {
 		{ "Category", "AutoChess|Combat" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xbd\x93\xe5\x89\x8d\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xbd\x93\xe5\x89\x8d\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentGridPos_MetaData[] = {
 		{ "Category", "AutoChess|Grid" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xbd\x93\xe5\x89\x8d\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xbd\x93\xe5\x89\x8d\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TargetGridPos_MetaData[] = {
 		{ "Category", "AutoChess|Grid" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe7\x9b\xae\xe6\xa0\x87\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\xa7\xbb\xe5\x8a\xa8\xe4\xb8\xad)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe7\x9b\xae\xe6\xa0\x87\xe6\xa0\xbc\xe5\xad\x90\xe5\x9d\x90\xe6\xa0\x87 (\xe7\xa7\xbb\xe5\x8a\xa8\xe4\xb8\xad)" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsMoving_MetaData[] = {
 		{ "Category", "AutoChess|Grid" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x98\xaf\xe5\x90\xa6\xe6\xad\xa3\xe5\x9c\xa8\xe7\xa7\xbb\xe5\x8a\xa8\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x98\xaf\xe5\x90\xa6\xe6\xad\xa3\xe5\x9c\xa8\xe7\xa7\xbb\xe5\x8a\xa8" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttackMontage_MetaData[] = {
 		{ "Category", "AutoChess|Animation" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x94\xbb\xe5\x87\xbb\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
+		{ "Comment", "// \xe5\x8a\xa8\xe7\x94\xbb\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x94\xbb\xe5\x87\xbb\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
+		{ "ToolTip", "\xe5\x8a\xa8\xe7\x94\xbb" },
 #endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkillMontage_MetaData[] = {
 		{ "Category", "AutoChess|Animation" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x8a\x80\xe8\x83\xbd\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x8a\x80\xe8\x83\xbd\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_DeathMontage_MetaData[] = {
 		{ "Category", "AutoChess|Animation" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\xad\xbb\xe4\xba\xa1\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\xad\xbb\xe4\xba\xa1\xe8\x92\x99\xe5\xa4\xaa\xe5\xa5\x87" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_bIsDead_MetaData[] = {
 		{ "Category", "AutoChess|State" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe6\x98\xaf\xe5\x90\xa6\xe5\xb7\xb2\xe6\xad\xbb\xe4\xba\xa1\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe6\x98\xaf\xe5\x90\xa6\xe5\xb7\xb2\xe6\xad\xbb\xe4\xba\xa1" },
-#endif
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MoveSpeed_MetaData[] = {
 		{ "Category", "AutoChess|Grid" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe7\xa7\xbb\xe5\x8a\xa8\xe9\x80\x9f\xe5\xba\xa6 (Unreal Units / sec)\n" },
-#endif
 		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
-#if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe7\xa7\xbb\xe5\x8a\xa8\xe9\x80\x9f\xe5\xba\xa6 (Unreal Units / sec)" },
-#endif
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_AbilitySystemComponent;
@@ -1264,24 +1075,25 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_AttackTarget, "AttackTarget" }, // 2292515219
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_CheckCanFight, "CheckCanFight" }, // 1465676004
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity, "GetUnitVelocity" }, // 3175086555
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData, "InitFromUnitData" }, // 3038107873
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation, "Multicast_PlayAttackAnimation" }, // 3318043391
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation, "Multicast_PlayDeathAnimation" }, // 2169110577
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation, "Multicast_PlaySkillAnimation" }, // 361902134
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnDeath, "OnDeath" }, // 1321803549
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_ApplyGEToAllAllies, "ApplyGEToAllAllies" }, // 3971234418
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_AttackTarget, "AttackTarget" }, // 1415026274
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_CheckCanFight, "CheckCanFight" }, // 2751428381
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_GetUnitVelocity, "GetUnitVelocity" }, // 619248220
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_InitFromUnitData, "InitFromUnitData" }, // 1899546581
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayAttackAnimation, "Multicast_PlayAttackAnimation" }, // 3305759716
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlayDeathAnimation, "Multicast_PlayDeathAnimation" }, // 20071201
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_Multicast_PlaySkillAnimation, "Multicast_PlaySkillAnimation" }, // 1185710404
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnDeath, "OnDeath" }, // 1295005154
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_CurrentGridPos, "OnRep_CurrentGridPos" }, // 4028093311
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_TeamID, "OnRep_TeamID" }, // 3333258896
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_OnRep_UnitDataHandle, "OnRep_UnitDataHandle" }, // 39941084
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_ReceiveDamage, "ReceiveDamage" }, // 1856300659
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_RefreshUI, "RefreshUI" }, // 2255482494
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_ResetUnit, "ResetUnit" }, // 979343702
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_SnapToGrid, "SnapToGrid" }, // 1754529632
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile, "SpawnSkillProjectile" }, // 2698144236
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_ReceiveDamage, "ReceiveDamage" }, // 1779350137
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_RefreshUI, "RefreshUI" }, // 1944425935
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_ResetUnit, "ResetUnit" }, // 71141492
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_SnapToGrid, "SnapToGrid" }, // 1151974769
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile, "SpawnSkillProjectile" }, // 983654176
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_UpdateTeamColor, "UpdateTeamColor" }, // 1573143582
-		{ &Z_Construct_UFunction_AAutoChessUnitBase_UseSkill, "UseSkill" }, // 2863909705
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_UseSkill, "UseSkill" }, // 1797927339
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static const UECodeGen_Private::FImplementedInterfaceParams InterfaceParams[];
@@ -1475,10 +1287,10 @@ AAutoChessUnitBase::~AAutoChessUnitBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 2157671288U) },
+		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 1089568334U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_3454778280(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_4088821081(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

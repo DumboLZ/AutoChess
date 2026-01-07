@@ -10,6 +10,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AAutoChessUnitBase;
+class UGameplayEffect;
 #ifdef AUTOCHESS_AutoChessUnitBase_generated_h
 #error "AutoChessUnitBase.generated.h already included, missing '#pragma once' in AutoChessUnitBase.h"
 #endif
@@ -21,6 +22,7 @@ class AAutoChessUnitBase;
 	virtual void Multicast_PlaySkillAnimation_Implementation(); \
 	virtual void Multicast_PlayAttackAnimation_Implementation(); \
 	virtual void OnDeath_Implementation(); \
+	DECLARE_FUNCTION(execApplyGEToAllAllies); \
 	DECLARE_FUNCTION(execUseSkill); \
 	DECLARE_FUNCTION(execReceiveDamage); \
 	DECLARE_FUNCTION(execAttackTarget); \

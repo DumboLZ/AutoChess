@@ -1,3 +1,4 @@
+#include "Kismet/GameplayStatics.h"
 #include "AutoChessUnitBase.h"
 #include "AutoChessGameState.h"
 #include "AutoChessGameModeBase.h"
@@ -667,7 +668,28 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			AAutoChessProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 			if (Projectile)
 			{
-				Projectile->InitProjectile(Target, CurrentAttackDamage, this, bIsCrit);
+				float FinalDamage = CurrentAttackDamage;
+				
+				// 检查投射物伤害加成标签
+				if (AbilitySystemComponent && Projectile->ProjectileType.IsValid())
+				{
+					// 构造增伤标签：Buff.ProjectileDamage.类别 (例如 Buff.ProjectileDamage.Arrow)
+					FString TagString = FString::Printf(TEXT("Buff.ProjectileDamage.%s"), *Projectile->ProjectileType.GetTagName().ToString());
+					FGameplayTag DamageBuffTag = FGameplayTag::RequestGameplayTag(FName(*TagString), false);
+					
+					int32 StackCount = AbilitySystemComponent->GetTagCount(DamageBuffTag);
+					if (StackCount > 0)
+					{
+						// 配置：每层增加 1 点固定伤害
+						float BonusDamage = (float)StackCount;
+						FinalDamage += BonusDamage;
+
+						UE_LOG(LogTemp, Log, TEXT("[Combat] %s Projectile Damage Buffed! Type: %s, Stacks: %d, Bonus: +%.1f, Final Damage: %.1f"), 
+							*GetName(), *Projectile->ProjectileType.ToString(), StackCount, BonusDamage, FinalDamage);
+					}
+				}
+
+				Projectile->InitProjectile(Target, FinalDamage, this, bIsCrit);
 			}
 		}
 		else
@@ -1256,6 +1278,31 @@ void AAutoChessUnitBase::OnActiveGERemoved(const FActiveGameplayEffect& RemovedE
 		{
 			// 层数归零
 			UnitWidget->UpdateGEStack(AssetTags.GetByIndex(0), 0);
+		}
+	}
+}
+
+void AAutoChessUnitBase::ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass)
+{
+	if (!HasAuthority() || !GEClass) return;
+
+	TArray<AActor*> AllUnits;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAutoChessUnitBase::StaticClass(), AllUnits);
+
+	for (AActor* Actor : AllUnits)
+	{
+		AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(Actor);
+		if (Unit && Unit->TeamID == this->TeamID && Unit->GetAbilitySystemComponent())
+		{
+			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+			EffectContext.AddSourceObject(this);
+			
+			FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(GEClass, 1.0f, EffectContext);
+			if (SpecHandle.IsValid())
+			{
+				Unit->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+				UE_LOG(LogTemp, Log, TEXT("[Aura] Applied %s to ally %s"), *GEClass->GetName(), *Unit->GetName());
+			}
 		}
 	}
 }

@@ -8,7 +8,7 @@
 #include "Engine/DataTable.h"
 #include "AutoChessUnitBase.generated.h"
 
-class UNiagaraSystem; // Forward declaration
+class UNiagaraSystem;
 
 /**
  * 自动走棋单位基类
@@ -61,230 +61,185 @@ public:
 	// --- 数据配置 ---
 	
 	// 棋子数据配置 (DataAsset)
-	// 如果设置了此项，将优先使用其中的数据初始化棋子
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
 	class UAutoChessUnitData* UnitData;
 
-	// 棋子数据配置 (新方式：引用 DataTable Row)
+	// 棋子数据配置 (DataTable Row)
 	UPROPERTY(ReplicatedUsing = OnRep_UnitDataHandle, EditAnywhere, BlueprintReadOnly, Category = "AutoChess|Data")
 	FDataTableRowHandle UnitDataHandle;
 
 	UFUNCTION()
 	void OnRep_UnitDataHandle();
 
-	// 从 DataAsset 初始化属性
+	// 从数据初始化属性
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Data")
 	void InitFromUnitData();
 
-	// 棋子名称
+	// 基础属性
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	FText UnitName;
 
-	// 棋子描述
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	FText Description;
 
-	// 最大生命值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float MaxHealth;
 
-	// 当前生命值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float Health;
 
-	// 攻击力
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float AttackDamage;
 
-	// 攻击范围 (格子数)
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	int32 AttackRangeGrid;
 
-	// 攻击速度 (次/秒)
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float AttackSpeed;
 
-	// 最大法力值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float MaxMana;
 
-	// 当前法力值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float Mana;
 
-	// 初始法力值
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float InitialMana;
 
-	// 攻击回蓝
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float ManaRegenOnAttack;
 
-	// 受击回蓝
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float ManaRegenOnHit;
 
-	// 暴击率
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float CritRate;
 
-	// 暴击伤害
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	float CritDamage;
 
-	// 卖出价格
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Stats")
 	int32 SellPrice;
 
-	// 技能 Ability 类
+	// 技能
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> UnitAbilityClass;
 
-	// 被动技能 Ability 类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class UGameplayAbility> PassiveAbilityClass;
 
-	// 技能特效 (可配置)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	class UParticleSystem* SkillVFX;
 
-	// 技能特效 (Niagara 版本，可选)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Skill")
 	class UNiagaraSystem* SkillNiagaraVFX;
 
-	// 投射物类 (如果为空则为近战)
+	// 投射物
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
 
-	// 投射物发射骨骼插槽名称 (如果设置，优先使用插槽位置)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Combat")
 	FName ProjectileSocketName;
 
-	// 投射物发射偏移 (相对于单位，如果插槽无效则使用此偏移)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Combat")
 	FVector ProjectileSpawnOffset = FVector(50.0f, 0.0f, 50.0f);
 
-	// 技能投射物类 (大火球等)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Skill")
 	TSubclassOf<class AAutoChessSkillProjectile> SkillProjectileClass;
 
-	// 发射技能投射物 (供蓝图调用)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Skill")
 	void SpawnSkillProjectile(FVector TargetLocation);
 
-	// 初始格子位置 (用于回合重置)
+	// 状态与位置
 	UPROPERTY(Replicated)
 	FIntPoint StartGridPos;
 
-	// 重置单位状态 (复活并归位)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|State")
 	void ResetUnit();
 
-	// 死亡处理
 	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|State")
 	void OnDeath();
 
-	// 更新格子坐标 (瞬间)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	void SnapToGrid();
 
-	// 刷新 UI 显示 (血条、蓝条)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|UI")
 	void RefreshUI();
 
-	// 当前攻击目标
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Combat")
 	AAutoChessUnitBase* CurrentTarget;
 
-	// --- 格子移动相关 ---
-
-	// 当前格子坐标
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentGridPos, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	FIntPoint CurrentGridPos;
 
 	UFUNCTION()
 	void OnRep_CurrentGridPos();
 
-	// 目标格子坐标 (移动中)
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	FIntPoint TargetGridPos;
 
-	// 是否正在移动
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	bool bIsMoving;
 
-	// --- 动画系统 ---
-	
-	// 攻击蒙太奇
+	// 动画
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
 	class UAnimMontage* AttackMontage;
 
-	// 技能蒙太奇
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
 	class UAnimMontage* SkillMontage;
 
-	// 死亡蒙太奇
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Animation")
 	class UAnimMontage* DeathMontage;
 
-	// 是否已死亡
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|State")
 	bool bIsDead;
 
-	// 播放攻击动画 (多播)
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_PlayAttackAnimation();
 
-	// 播放技能动画 (多播)
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_PlaySkillAnimation();
 
-	// 播放死亡动画 (多播)
 	UFUNCTION(NetMulticast, Unreliable)
 	void Multicast_PlayDeathAnimation();
 
-	// 移动速度 (Unreal Units / sec)
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Grid")
 	float MoveSpeed;
 
-	// 获取单位当前速度 (用于动画蓝图，因为直接设置位置可能导致 GetVelocity 为 0)
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Animation")
 	FVector GetUnitVelocity() const;
 
-	// 检查是否可以战斗 (基于游戏阶段)
+	// 战斗逻辑
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
 	bool CheckCanFight();
 
-	// 尝试攻击目标
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
 	void AttackTarget(AAutoChessUnitBase* Target);
 
-	// 受到伤害
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
 	void ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit = false, bool bIsProjectile = false);
 
-	// 使用技能 (C++ 实现基础逻辑，蓝图可扩展)
 	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|Combat")
 	void UseSkill();
+
+	// 为所有友方单位施加 GE (用于光环/全局被动)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Ability")
+	void ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	// 攻击计时器
 	float AttackTimer;
 
-	// 寻找最近的敌人
 	AAutoChessUnitBase* FindNearestEnemy();
 
-	// 当前路径
 	TArray<FIntPoint> CurrentPath;
 	
-	// 执行移动逻辑
 	void ProcessGridMovement(float DeltaTime);
-	// 标签变化回调
-	virtual void OnImmuneTagChanged(const FGameplayTag Tag, int32 NewCount);
 
-	// GE 层数监听回调
+	// 监听回调
+	virtual void OnImmuneTagChanged(const FGameplayTag Tag, int32 NewCount);
 	virtual void OnActiveGEAdded(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
 	virtual void OnGEStackChanged(FActiveGameplayEffectHandle Handle, int32 NewStackCount, int32 OldStackCount);
 	virtual void OnActiveGERemoved(const FActiveGameplayEffect& RemovedEffect);
