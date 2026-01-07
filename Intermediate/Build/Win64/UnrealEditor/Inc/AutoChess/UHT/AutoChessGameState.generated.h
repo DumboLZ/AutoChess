@@ -31,6 +31,10 @@ static void FOnWinnerChanged_DelegateWrapper(const FMulticastScriptDelegate& OnW
 static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGoldUpdated, int32 NewGold, int32 PlayerIndex);
 
 
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_60_DELEGATE \
+static void FOnRevivalUpdate_DelegateWrapper(const FMulticastScriptDelegate& OnRevivalUpdate, int32 NewRevivalCount, int32 TeamIndex);
+
+
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGameState_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void Multicast_HideSpellHighlight_Implementation(int32 TeamID); \
 	virtual void Multicast_ShowSpellHighlight_Implementation(TArray<FIntPoint> const& GridPositions, int32 TeamID); \
@@ -43,6 +47,9 @@ static void FOnGoldUpdated_DelegateWrapper(const FMulticastScriptDelegate& OnGol
 	DECLARE_FUNCTION(execUnregisterUnit); \
 	DECLARE_FUNCTION(execRegisterUnit); \
 	DECLARE_FUNCTION(execOnRep_CurrentPhaseIndex); \
+	DECLARE_FUNCTION(execTryReviveUnit); \
+	DECLARE_FUNCTION(execOnRep_Team1Revivals); \
+	DECLARE_FUNCTION(execOnRep_Team0Revivals); \
 	DECLARE_FUNCTION(execOnRep_MatchWinnerTeamID); \
 	DECLARE_FUNCTION(execOnRep_Player2Wins); \
 	DECLARE_FUNCTION(execOnRep_Player1Wins); \
@@ -79,6 +86,8 @@ public: \
 		Player2Wins, \
 		MatchWinnerTeamID, \
 		GoldPerRound, \
+		Team0Revivals, \
+		Team1Revivals, \
 		CurrentPhaseIndex, \
 		CurrentRound, \
 		PhaseTimer, \

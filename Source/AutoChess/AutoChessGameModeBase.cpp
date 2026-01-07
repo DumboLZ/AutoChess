@@ -304,6 +304,7 @@ void AAutoChessGameModeBase::SwitchPhase(EAutoChessPhase NewPhase)
 			GS->bPlayer2Ready = false;
 			// WinnerTeamID 的重置交给 SwitchPhase 处理，避免提前触发 UI
 			GS->WinnerTeamID = -1; // 重置获胜者
+			GS->ResetRevivals(); // 重置复活次数
 		}
 	}
 

@@ -25,4 +25,12 @@ public:
 	// 更新法力值
 	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
 	void UpdateMana(float CurrentMana, float MaxMana);
+
+	// 更新 Buff 状态 (例如：是否有免疫标签)
+	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
+	void UpdateBuffState(FGameplayTag Tag, bool bActive);
+
+	// 更新 GE 层数
+	UFUNCTION(BlueprintImplementableEvent, Category = "AutoChess|UI")
+	void UpdateGEStack(FGameplayTag AssetTag, int32 NewStackCount);
 };

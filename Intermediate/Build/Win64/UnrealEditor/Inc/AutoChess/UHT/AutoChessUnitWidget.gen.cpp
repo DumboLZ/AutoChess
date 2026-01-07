@@ -6,12 +6,14 @@
 
 #include "UObject/GeneratedCppIncludes.h"
 #include "AutoChess/AutoChessUnitWidget.h"
+#include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeAutoChessUnitWidget() {}
 
 // Begin Cross Module References
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitWidget();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessUnitWidget_NoRegister();
+GAMEPLAYTAGS_API UScriptStruct* Z_Construct_UScriptStruct_FGameplayTag();
 UMG_API UClass* Z_Construct_UClass_UUserWidget();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
@@ -63,6 +65,117 @@ UFunction* Z_Construct_UFunction_UAutoChessUnitWidget_SetTeamColor()
 	return ReturnFunction;
 }
 // End Class UAutoChessUnitWidget Function SetTeamColor
+
+// Begin Class UAutoChessUnitWidget Function UpdateBuffState
+struct AutoChessUnitWidget_eventUpdateBuffState_Parms
+{
+	FGameplayTag Tag;
+	bool bActive;
+};
+static FName NAME_UAutoChessUnitWidget_UpdateBuffState = FName(TEXT("UpdateBuffState"));
+void UAutoChessUnitWidget::UpdateBuffState(FGameplayTag Tag, bool bActive)
+{
+	AutoChessUnitWidget_eventUpdateBuffState_Parms Parms;
+	Parms.Tag=Tag;
+	Parms.bActive=bActive ? true : false;
+	ProcessEvent(FindFunctionChecked(NAME_UAutoChessUnitWidget_UpdateBuffState),&Parms);
+}
+struct Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9b\xb4\xe6\x96\xb0 Buff \xe7\x8a\xb6\xe6\x80\x81 (\xe4\xbe\x8b\xe5\xa6\x82\xef\xbc\x9a\xe6\x98\xaf\xe5\x90\xa6\xe6\x9c\x89\xe5\x85\x8d\xe7\x96\xab\xe6\xa0\x87\xe7\xad\xbe)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitWidget.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9b\xb4\xe6\x96\xb0 Buff \xe7\x8a\xb6\xe6\x80\x81 (\xe4\xbe\x8b\xe5\xa6\x82\xef\xbc\x9a\xe6\x98\xaf\xe5\x90\xa6\xe6\x9c\x89\xe5\x85\x8d\xe7\x96\xab\xe6\xa0\x87\xe7\xad\xbe)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_Tag;
+	static void NewProp_bActive_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bActive;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_Tag = { "Tag", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitWidget_eventUpdateBuffState_Parms, Tag), Z_Construct_UScriptStruct_FGameplayTag, METADATA_PARAMS(0, nullptr) }; // 1298103297
+void Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_bActive_SetBit(void* Obj)
+{
+	((AutoChessUnitWidget_eventUpdateBuffState_Parms*)Obj)->bActive = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_bActive = { "bActive", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AutoChessUnitWidget_eventUpdateBuffState_Parms), &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_bActive_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_Tag,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::NewProp_bActive,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessUnitWidget, nullptr, "UpdateBuffState", nullptr, nullptr, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::PropPointers), sizeof(AutoChessUnitWidget_eventUpdateBuffState_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x08020800, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessUnitWidget_eventUpdateBuffState_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+// End Class UAutoChessUnitWidget Function UpdateBuffState
+
+// Begin Class UAutoChessUnitWidget Function UpdateGEStack
+struct AutoChessUnitWidget_eventUpdateGEStack_Parms
+{
+	FGameplayTag AssetTag;
+	int32 NewStackCount;
+};
+static FName NAME_UAutoChessUnitWidget_UpdateGEStack = FName(TEXT("UpdateGEStack"));
+void UAutoChessUnitWidget::UpdateGEStack(FGameplayTag AssetTag, int32 NewStackCount)
+{
+	AutoChessUnitWidget_eventUpdateGEStack_Parms Parms;
+	Parms.AssetTag=AssetTag;
+	Parms.NewStackCount=NewStackCount;
+	ProcessEvent(FindFunctionChecked(NAME_UAutoChessUnitWidget_UpdateGEStack),&Parms);
+}
+struct Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|UI" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x9b\xb4\xe6\x96\xb0 GE \xe5\xb1\x82\xe6\x95\xb0\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessUnitWidget.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x9b\xb4\xe6\x96\xb0 GE \xe5\xb1\x82\xe6\x95\xb0" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FStructPropertyParams NewProp_AssetTag;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_NewStackCount;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::NewProp_AssetTag = { "AssetTag", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitWidget_eventUpdateGEStack_Parms, AssetTag), Z_Construct_UScriptStruct_FGameplayTag, METADATA_PARAMS(0, nullptr) }; // 1298103297
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::NewProp_NewStackCount = { "NewStackCount", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitWidget_eventUpdateGEStack_Parms, NewStackCount), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::NewProp_AssetTag,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::NewProp_NewStackCount,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessUnitWidget, nullptr, "UpdateGEStack", nullptr, nullptr, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::PropPointers), sizeof(AutoChessUnitWidget_eventUpdateGEStack_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x08020800, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::Function_MetaDataParams) };
+static_assert(sizeof(AutoChessUnitWidget_eventUpdateGEStack_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+// End Class UAutoChessUnitWidget Function UpdateGEStack
 
 // Begin Class UAutoChessUnitWidget Function UpdateHealth
 struct AutoChessUnitWidget_eventUpdateHealth_Parms
@@ -201,6 +314,8 @@ struct Z_Construct_UClass_UAutoChessUnitWidget_Statics
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_UAutoChessUnitWidget_SetTeamColor, "SetTeamColor" }, // 2012989646
+		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateBuffState, "UpdateBuffState" }, // 3389978052
+		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateGEStack, "UpdateGEStack" }, // 3599945096
 		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateHealth, "UpdateHealth" }, // 1579901184
 		{ &Z_Construct_UFunction_UAutoChessUnitWidget_UpdateMana, "UpdateMana" }, // 4091366506
 	};
@@ -251,10 +366,10 @@ UAutoChessUnitWidget::~UAutoChessUnitWidget() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessUnitWidget, UAutoChessUnitWidget::StaticClass, TEXT("UAutoChessUnitWidget"), &Z_Registration_Info_UClass_UAutoChessUnitWidget, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitWidget), 3299829565U) },
+		{ Z_Construct_UClass_UAutoChessUnitWidget, UAutoChessUnitWidget::StaticClass, TEXT("UAutoChessUnitWidget"), &Z_Registration_Info_UClass_UAutoChessUnitWidget, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessUnitWidget), 3582900171U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_2878316221(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_4086826308(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitWidget_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

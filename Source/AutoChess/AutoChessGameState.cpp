@@ -14,21 +14,24 @@ AAutoChessGameState::AAutoChessGameState()
 	Player2Health = 100;
 	Player1Gold = 0;
 	Player2Gold = 0;
+	Team0Revivals = 10;
+	Team1Revivals = 10;
+	CurrentPhaseIndex = 255; // 关键：初始化为无效值，确保第一次同步 0 时触发 OnRep
 }
 
 void AAutoChessGameState::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 延迟一帧后触发初始阶段事件，确保客户端已连接
+	// 延迟 0.2 秒后触发初始阶段事件，确保客户端已连接且 UI 已绑定
 	FTimerHandle InitialPhaseTimer;
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	GetWorld()->GetTimerManager().SetTimer(InitialPhaseTimer, [this]()
 	{
 		// 触发当前阶段事件（无论是否有变化）
 		OnRep_CurrentPhaseIndex();
 		UE_LOG(LogTemp, Warning, TEXT("[GameState::BeginPlay] Initial phase event triggered. Phase=%d, Authority=%d"), 
 			CurrentPhaseIndex, HasAuthority());
-	});
+	}, 0.2f, false);
 }
 
 void AAutoChessGameState::OnRep_Player1Health()
@@ -88,6 +91,8 @@ void AAutoChessGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	
 	DOREPLIFETIME(AAutoChessGameState, GameGrid);
 	DOREPLIFETIME(AAutoChessGameState, AllUnits);
+	DOREPLIFETIME(AAutoChessGameState, Team0Revivals);
+	DOREPLIFETIME(AAutoChessGameState, Team1Revivals);
 }
 
 void AAutoChessGameState::OnRep_WinnerTeamID()
@@ -127,6 +132,16 @@ void AAutoChessGameState::OnRep_MatchWinnerTeamID()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[GameState] MatchWinnerTeamID Updated: %d (Authority=%d)"), MatchWinnerTeamID, HasAuthority());
 	OnMatchWinnerChanged.Broadcast(MatchWinnerTeamID);
+}
+
+void AAutoChessGameState::OnRep_Team0Revivals()
+{
+	OnRevivalUpdated.Broadcast(Team0Revivals, 0);
+}
+
+void AAutoChessGameState::OnRep_Team1Revivals()
+{
+	OnRevivalUpdated.Broadcast(Team1Revivals, 1);
 }
 
 void AAutoChessGameState::RegisterUnit(AAutoChessUnitBase* Unit)
@@ -348,4 +363,41 @@ bool AAutoChessGameState::FindEmptyBenchSlot(int32 TeamID, FIntPoint& OutGridPos
 	}
 
 	return false;
+}
+
+bool AAutoChessGameState::TryReviveUnit(AAutoChessUnitBase* Unit)
+{
+	if (!Unit) return false;
+
+	if (Unit->TeamID == 0)
+	{
+		if (Team0Revivals > 0)
+		{
+			Team0Revivals--;
+			if (HasAuthority()) OnRep_Team0Revivals();
+			return true;
+		}
+	}
+	else if (Unit->TeamID == 1)
+	{
+		if (Team1Revivals > 0)
+		{
+			Team1Revivals--;
+			if (HasAuthority()) OnRep_Team1Revivals();
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void AAutoChessGameState::ResetRevivals()
+{
+	Team0Revivals = 10;
+	Team1Revivals = 10;
+	if (HasAuthority())
+	{
+		OnRep_Team0Revivals();
+		OnRep_Team1Revivals();
+	}
 }

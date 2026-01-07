@@ -69,6 +69,7 @@ public: \
 		CritRate, \
 		CritDamage, \
 		SellPrice, \
+		ProjectileClass, \
 		StartGridPos, \
 		CurrentTarget, \
 		CurrentGridPos, \

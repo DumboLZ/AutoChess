@@ -106,7 +106,14 @@
             "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\userwidget.generated.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessunitwidget.generated.h",
             "d:\\epic\\ue_5.4\\engine\\source\\runtime\\umg\\public\\components\\widgetcomponent.h",
-            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\widgetcomponent.generated.h"
+            "d:\\epic\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\umg\\uht\\widgetcomponent.generated.h",
+            "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\source\\gameplayabilities\\public\\abilitysystemglobals.h",
+            "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\source\\gameplayabilities\\public\\gameplayabilitiesmodule.h",
+            "d:\\epic\\ue_5.4\\engine\\plugins\\runtime\\gameplayabilities\\intermediate\\build\\win64\\unrealeditor\\inc\\gameplayabilities\\uht\\abilitysystemglobals.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessprojectile.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessprojectile.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessskillprojectile.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessskillprojectile.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

@@ -9,6 +9,7 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+struct FGameplayTag;
 #ifdef AUTOCHESS_AutoChessUnitWidget_generated_h
 #error "AutoChessUnitWidget.generated.h already included, missing '#pragma once' in AutoChessUnitWidget.h"
 #endif

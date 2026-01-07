@@ -56,6 +56,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
 	FOnGoldUpdated OnGoldUpdated;
 
+	// 复活次数更新委托
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRevivalUpdate, int32, NewRevivalCount, int32, TeamIndex);
+
+	UPROPERTY(BlueprintAssignable, Category = "AutoChess|Events")
+	FOnRevivalUpdate OnRevivalUpdated;
+
 	AAutoChessGameState();
 
 	// 玩家1 血量
@@ -148,6 +154,29 @@ public:
 	// 每回合奖励金币
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Economy")
 	int32 GoldPerRound = 5;
+
+	// --- 复活机制 ---
+
+	// 队伍 0 剩余复活次数
+	UPROPERTY(ReplicatedUsing = OnRep_Team0Revivals, BlueprintReadOnly, Category = "AutoChess|Revival")
+	int32 Team0Revivals;
+
+	UFUNCTION()
+	void OnRep_Team0Revivals();
+
+	// 队伍 1 剩余复活次数
+	UPROPERTY(ReplicatedUsing = OnRep_Team1Revivals, BlueprintReadOnly, Category = "AutoChess|Revival")
+	int32 Team1Revivals;
+
+	UFUNCTION()
+	void OnRep_Team1Revivals();
+
+	// 尝试复活单位
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Revival")
+	bool TryReviveUnit(AAutoChessUnitBase* Unit);
+
+	// 重置复活次数
+	void ResetRevivals();
 
 	// --- 游戏流程数据 (从 GameMode 同步) ---
 

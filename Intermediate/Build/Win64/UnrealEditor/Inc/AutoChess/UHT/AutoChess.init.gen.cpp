@@ -10,6 +10,7 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnGoldUpdated__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnHealthUpdate__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnPhaseChanged__DelegateSignature();
+	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnRevivalUpdate__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AAutoChessGameState_OnWinnerChanged__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature();
 	AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature();
@@ -25,6 +26,7 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnGoldUpdated__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnHealthUpdate__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnPhaseChanged__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnRevivalUpdate__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AAutoChessGameState_OnWinnerChanged__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_AutoChess_OnCardDisplayed__DelegateSignature,
@@ -37,13 +39,13 @@ void EmptyLinkFunctionForGeneratedCodeAutoChess_init() {}
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0xF9ED89ED,
-				0x1269525D,
+				0x89D0650D,
+				0xA8B54C1E,
 				METADATA_PARAMS(0, nullptr)
 			};
 			UECodeGen_Private::ConstructUPackage(Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton, PackageParams);
 		}
 		return Z_Registration_Info_UPackage__Script_AutoChess.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xF9ED89ED, 0x1269525D));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_AutoChess(Z_Construct_UPackage__Script_AutoChess, TEXT("/Script/AutoChess"), Z_Registration_Info_UPackage__Script_AutoChess, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0x89D0650D, 0xA8B54C1E));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

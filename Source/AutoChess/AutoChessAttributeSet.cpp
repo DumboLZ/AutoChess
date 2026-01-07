@@ -5,6 +5,10 @@
 #include "AutoChessUnitBase.h"
 #include "AutoChessUnitWidget.h"
 #include "Components/WidgetComponent.h"
+#include "AbilitySystemGlobals.h"
+#include "AbilitySystemComponent.h"
+#include "AutoChessProjectile.h"
+#include "AutoChessSkillProjectile.h"
 
 UAutoChessAttributeSet::UAutoChessAttributeSet()
 {
@@ -48,16 +52,51 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 		{
 			FGameplayTag TrueDamageTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.True"), false);
 			FGameplayTag NonLethalTag = FGameplayTag::RequestGameplayTag(FName("Damage.Type.NonLethal"), false);
+			FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(FName("Effect.Immune.NextProjectile"), false);
 			
+			// 检查是否具有免疫标签
+			UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwningActor());
+			if (ImmuneTag.IsValid() && ASC && ASC->HasMatchingGameplayTag(ImmuneTag))
+			{
+				// 检查伤害来源是否为投射物 (Projectile)
+				AActor* SourceActor = Cast<AActor>(Data.EffectSpec.GetContext().GetSourceObject());
+				bool bIsProjectile = false;
+				if (SourceActor)
+				{
+					// 检查是否是基础投射物或技能投射物
+					if (SourceActor->IsA<AAutoChessProjectile>() || SourceActor->IsA<AAutoChessSkillProjectile>())
+					{
+						bIsProjectile = true;
+					}
+				}
+
+				if (bIsProjectile)
+				{
+					// 免疫伤害：恢复血量并移除标签
+					SetHealth(OldHealth);
+					if (ASC)
+					{
+						FGameplayTagContainer TagContainer;
+						TagContainer.AddTag(ImmuneTag);
+						ASC->RemoveActiveEffectsWithGrantedTags(TagContainer);
+						ASC->RemoveLooseGameplayTag(ImmuneTag);
+					}
+					
+					UE_LOG(LogTemp, Warning, TEXT("[Shield] GE Damage IMMUNED! Source: %s"), 
+						SourceActor ? *SourceActor->GetName() : TEXT("Unknown"));
+					return;
+				}
+			}
+
 			if (TrueDamageTag.IsValid())
 			{
 				// 检查 GE 的 AssetTags
-				bIsTrueDamage = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(TrueDamageTag);
+				bIsTrueDamage = Data.EffectSpec.Def->GetAssetTags().HasTag(TrueDamageTag);
 			}
 			
 			if (NonLethalTag.IsValid())
 			{
-				bIsNonLethal = Data.EffectSpec.Def->InheritableGameplayEffectTags.CombinedTags.HasTag(NonLethalTag);
+				bIsNonLethal = Data.EffectSpec.Def->GetAssetTags().HasTag(NonLethalTag);
 			}
 		}
 
@@ -101,22 +140,14 @@ void UAutoChessAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	}
 	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
 	{
-		// 如果护盾增加，更新流失速度
-		if (Data.EvaluatedData.Magnitude > 0.0f)
+		if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
 		{
-			if (AAutoChessUnitBase* Unit = Cast<AAutoChessUnitBase>(GetOwningActor()))
+			// 服务器端也需要更新 Widget（因为 OnRep 不会在 Authority 触发）
+			if (Unit->HealthBarWidgetComp)
 			{
-				// 3秒内流失完当前所有护盾
-				Unit->ShieldDecayRate = GetShield() / 3.0f;
-				UE_LOG(LogTemp, Warning, TEXT("[Shield] Shield increased to %.1f. Decay Rate set to %.1f/s"), GetShield(), Unit->ShieldDecayRate);
-				
-				// 服务器端也需要更新 Widget（因为 OnRep 不会在 Authority 触发）
-				if (Unit->HealthBarWidgetComp)
+				if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(Unit->HealthBarWidgetComp->GetUserWidgetObject()))
 				{
-					if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(Unit->HealthBarWidgetComp->GetUserWidgetObject()))
-					{
-						UnitWidget->UpdateHealth(GetHealth(), GetMaxHealth(), GetShield());
-					}
+					UnitWidget->UpdateHealth(GetHealth(), GetMaxHealth(), GetShield());
 				}
 			}
 		}

@@ -83,6 +83,7 @@ void AAutoChessUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AAutoChessUnitBase, CritRate);
 	DOREPLIFETIME(AAutoChessUnitBase, CritDamage);
 	DOREPLIFETIME(AAutoChessUnitBase, SellPrice);
+	DOREPLIFETIME(AAutoChessUnitBase, ProjectileClass);
 	DOREPLIFETIME(AAutoChessUnitBase, UnitDataHandle);
 }
 
@@ -117,30 +118,28 @@ void AAutoChessUnitBase::BeginPlay()
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &AAutoChessUnitBase::OnMaxHealthChanged);
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetManaAttribute()).AddUObject(this, &AAutoChessUnitBase::OnManaChanged);
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetMaxManaAttribute()).AddUObject(this, &AAutoChessUnitBase::OnMaxManaChanged);
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAutoChessAttributeSet::GetShieldAttribute()).AddUObject(this, &AAutoChessUnitBase::OnShieldChanged);
 
 			// 尝试从 DataAsset 初始化
 			InitFromUnitData();
 
-			// 无论是否从 DataAsset 初始化，都确保 AttributeSet 被正确赋值
+			// 注册标签变化回调 (用于 UI 显示 Buff)
+			FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(FName("Effect.Immune.NextProjectile"), false);
+			AbilitySystemComponent->RegisterGameplayTagEvent(ImmuneTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAutoChessUnitBase::OnImmuneTagChanged);
+
+			// 注册 GE 监听回调 (用于 UI 显示层数)
+			AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AAutoChessUnitBase::OnActiveGEAdded);
+			AbilitySystemComponent->OnAnyGameplayEffectRemovedDelegate().AddUObject(this, &AAutoChessUnitBase::OnActiveGERemoved);
+
+			// 无论是否从 DataAsset 初始化，都确保 AttributeSet 被正确赋值 (作为回退)
 			AttributeSet->InitHealth(MaxHealth);
 			AttributeSet->InitMaxHealth(MaxHealth);
 			AttributeSet->InitMana(InitialMana);
 			AttributeSet->InitMaxMana(MaxMana);
 			AttributeSet->InitAttackDamage(AttackDamage);
 			AttributeSet->InitAttackSpeed(AttackSpeed);
-
-			// 授予技能 (主动) - 仅服务器
-			if (HasAuthority() && UnitAbilityClass)
-			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
-			}
-
-			// 授予技能 (被动) - 仅服务器
-			if (HasAuthority() && PassiveAbilityClass)
-			{
-				FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
-				AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
-			}
+			AttributeSet->InitCritRate(CritRate);
+			AttributeSet->InitCritDamage(CritDamage);
 
 			// 授予初始 Gameplay Tags
 			if (UnitData && UnitData->InitialTags.Num() > 0)
@@ -368,6 +367,17 @@ void AAutoChessUnitBase::OnMaxManaChanged(const FOnAttributeChangeData& Data)
 	}
 }
 
+void AAutoChessUnitBase::OnShieldChanged(const FOnAttributeChangeData& Data)
+{
+	if (HealthBarWidgetComp && AttributeSet)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), Data.NewValue);
+		}
+	}
+}
+
 void AAutoChessUnitBase::OnRep_CurrentGridPos()
 {
 	SnapToGrid();
@@ -439,29 +449,7 @@ void AAutoChessUnitBase::Tick(float DeltaTime)
 		return;
 	}
 
-	// --- 护盾流失逻辑（优先执行，不受眩晕影响） ---
-	if (AttributeSet && AttributeSet->GetShield() > 0.0f && ShieldDecayRate > 0.0f)
-	{
-		float NewShield = AttributeSet->GetShield() - ShieldDecayRate * DeltaTime;
-		AttributeSet->SetShield(FMath::Max(0.0f, NewShield));
-		
-		// 服务器端也需要更新 Widget（护盾衰减不会触发 OnRep）
-		if (HealthBarWidgetComp)
-		{
-			if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
-			{
-				UnitWidget->UpdateHealth(AttributeSet->GetHealth(), AttributeSet->GetMaxHealth(), AttributeSet->GetShield());
-			}
-		}
-		
-		// 如果护盾归零，重置流失速度
-		if (NewShield <= 0.0f)
-		{
-			ShieldDecayRate = 0.0f;
-		}
-	}
-
-	// 检查眩晕状态
+	// 眩晕状态检查
 	bool bIsStunned = false;
 	if (AbilitySystemComponent)
 	{
@@ -653,6 +641,9 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 			UE_LOG(LogTemp, Warning, TEXT("[Combat] CRITICAL HIT! Damage: %f"), CurrentAttackDamage);
 		}
 
+		UE_LOG(LogTemp, Log, TEXT("[Combat] %s attacking %s. ProjectileClass: %s, Range: %d"), 
+			*GetName(), *Target->GetName(), ProjectileClass ? *ProjectileClass->GetName() : TEXT("NULL"), AttackRangeGrid);
+
 		if (ProjectileClass)
 		{
 			FVector SpawnLocation;
@@ -681,7 +672,9 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 		}
 		else
 		{
-			Target->ReceiveDamage(CurrentAttackDamage, this, bIsCrit);
+			// 如果没有物理子弹但攻击距离 > 1，也视为投射物攻击（远程攻击）
+			bool bIsRangedInstant = (AttackRangeGrid > 1);
+			Target->ReceiveDamage(CurrentAttackDamage, this, bIsCrit, bIsRangedInstant);
 		}
 
 		Multicast_PlayAttackAnimation();
@@ -713,9 +706,56 @@ void AAutoChessUnitBase::AttackTarget(AAutoChessUnitBase* Target)
 	}
 }
 
-void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit)
+void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit, bool bIsProjectile)
 {
 	if (bIsDead) return;
+
+	// 诊断日志
+	UE_LOG(LogTemp, Log, TEXT("[Combat] %s ReceiveDamage: Amount=%.1f, Projectile=%s, Server=%s"), 
+		*GetName(), DamageAmount, bIsProjectile ? TEXT("True") : TEXT("False"), HasAuthority() ? TEXT("True") : TEXT("False"));
+
+	// 检查弹道免疫技能
+	if (bIsProjectile && AbilitySystemComponent)
+	{
+		// 打印所有活跃的 GE 以供调试
+		TArray<FActiveGameplayEffectHandle> ActiveEffects = AbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery());
+		FString GEList = "";
+		for (const FActiveGameplayEffectHandle& Handle : ActiveEffects)
+		{
+			if (const FActiveGameplayEffect* ActiveGE = AbilitySystemComponent->GetActiveGameplayEffect(Handle))
+			{
+				GEList += ActiveGE->Spec.Def->GetName() + ", ";
+			}
+		}
+		UE_LOG(LogTemp, Log, TEXT("[Combat] %s Active GEs: [%s]"), *GetName(), *GEList);
+
+		// 打印所有持有的标签以供调试
+		FGameplayTagContainer OwnedTags;
+		AbilitySystemComponent->GetOwnedGameplayTags(OwnedTags);
+		UE_LOG(LogTemp, Log, TEXT("[Combat] %s Owned Tags: %s"), *GetName(), *OwnedTags.ToString());
+
+		FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(FName("Effect.Immune.NextProjectile"), false);
+		bool bHasTag = AbilitySystemComponent->HasMatchingGameplayTag(ImmuneTag);
+		
+		UE_LOG(LogTemp, Log, TEXT("[Combat] %s Checking ImmuneTag: Valid=%s, HasTag=%s"), 
+			*GetName(), ImmuneTag.IsValid() ? TEXT("True") : TEXT("False"), bHasTag ? TEXT("True") : TEXT("False"));
+
+		if (ImmuneTag.IsValid() && bHasTag)
+		{
+			// 免疫伤害并移除标签
+			// 关键：RemoveLooseGameplayTag 只能移除手动添加的标签。
+			// 对于 GE 授予的标签，我们需要移除对应的 GE。
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(ImmuneTag);
+			AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(TagContainer);
+			AbilitySystemComponent->RemoveLooseGameplayTag(ImmuneTag);
+			
+			UE_LOG(LogTemp, Warning, TEXT("[Combat] %s SUCCESS! IMMUNED projectile damage from %s!"), 
+				*GetName(), Attacker ? *Attacker->GetName() : TEXT("Unknown"));
+			
+			return;
+		}
+	}
 
 	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
@@ -760,7 +800,20 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 			
 			if (AttributeSet->GetHealth() <= 0.0f)
 			{
-				OnDeath();
+				AAutoChessGameState* GS = Cast<AAutoChessGameState>(GetWorld()->GetGameState());
+				if (GS && GS->TryReviveUnit(this))
+				{
+					// 复活：恢复满血，清空蓝量
+					AttributeSet->SetHealth(AttributeSet->GetMaxHealth());
+					AttributeSet->SetMana(0.0f);
+					
+					UE_LOG(LogTemp, Warning, TEXT("[Unit] %s Revived! Remaining Revivals: T0=%d, T1=%d"), 
+						*GetName(), GS->Team0Revivals, GS->Team1Revivals);
+				}
+				else
+				{
+					OnDeath();
+				}
 			}
 			else
 			{
@@ -793,6 +846,9 @@ void AAutoChessUnitBase::ReceiveDamage(float DamageAmount, AAutoChessUnitBase* A
 					AbilitySystemComponent->HandleGameplayEvent(HitTag, &EventData);
 				}
 			}
+
+			// 关键：手动刷新一次 UI，确保服务器端视觉反馈实时
+			RefreshUI();
 		}
 	}
 	else
@@ -884,14 +940,20 @@ void AAutoChessUnitBase::InitFromUnitData()
 {
     if (!this) return;
 
+    UE_LOG(LogTemp, Log, TEXT("[Init] %s InitFromUnitData called. Server=%s"), 
+        *GetName(), HasAuthority() ? TEXT("True") : TEXT("False"));
+
     if (UnitDataHandle.IsNull())
     {
+        UE_LOG(LogTemp, Warning, TEXT("[Init] %s UnitDataHandle is NULL!"), *GetName());
         return;
     }
 
     FAutoChessUnitRow* Row = UnitDataHandle.GetRow<FAutoChessUnitRow>(TEXT("InitFromUnitData"));
     if (Row)
     {
+        UE_LOG(LogTemp, Log, TEXT("[Init] %s Found Row. InitialTags count: %d"), 
+            *GetName(), Row->InitialTags.Num());
         UnitName = Row->UnitName;
         Description = Row->Description;
         MaxHealth = Row->MaxHealth;
@@ -913,6 +975,8 @@ void AAutoChessUnitBase::InitFromUnitData()
         SkillVFX = Row->SkillVFX;
         SkillNiagaraVFX = Row->SkillNiagaraVFX;
         ProjectileClass = Row->ProjectileClass;
+        UE_LOG(LogTemp, Log, TEXT("[Init] %s ProjectileClass set to: %s"), 
+            *GetName(), ProjectileClass ? *ProjectileClass->GetName() : TEXT("NULL"));
 
         if (GetMesh())
         {
@@ -937,6 +1001,56 @@ void AAutoChessUnitBase::InitFromUnitData()
             AttributeSet->InitAttackSpeed(AttackSpeed);
             AttributeSet->InitCritRate(CritRate);
             AttributeSet->InitCritDamage(CritDamage);
+        }
+
+        // 应用初始标签
+        if (AbilitySystemComponent)
+        {
+            AbilitySystemComponent->AddLooseGameplayTags(Row->InitialTags);
+
+            // 授予技能 (仅服务器)
+            if (HasAuthority())
+            {
+                // 主动技能
+                if (UnitAbilityClass)
+                {
+                    // 检查是否已经拥有该技能，避免重复授予
+                    bool bHasAbility = false;
+                    for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
+                    {
+                        if (Spec.Ability->GetClass() == UnitAbilityClass)
+                        {
+                            bHasAbility = true;
+                            break;
+                        }
+                    }
+                    if (!bHasAbility)
+                    {
+                        AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UnitAbilityClass, 1, 0));
+                    }
+                }
+
+                // 被动技能
+                if (PassiveAbilityClass)
+                {
+                    bool bHasPassive = false;
+                    for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
+                    {
+                        if (Spec.Ability->GetClass() == PassiveAbilityClass)
+                        {
+                            bHasPassive = true;
+                            break;
+                        }
+                    }
+                    if (!bHasPassive)
+                    {
+                        FGameplayAbilitySpecHandle PassiveSpecHandle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(PassiveAbilityClass, 1, 1));
+                        bool bActivated = AbilitySystemComponent->TryActivateAbility(PassiveSpecHandle);
+                        UE_LOG(LogTemp, Log, TEXT("[GAS] %s Passive Ability Given in Init. Activated: %s"), 
+                            *GetName(), bActivated ? TEXT("True") : TEXT("False"));
+                    }
+                }
+            }
         }
         
         UpdateTeamColor();
@@ -1056,5 +1170,70 @@ void AAutoChessUnitBase::SpawnSkillProjectile(FVector TargetLocation)
 	if (Projectile)
 	{
 		Projectile->InitSkillProjectile(this, Direction);
+	}
+}
+
+void AAutoChessUnitBase::OnImmuneTagChanged(const FGameplayTag Tag, int32 NewCount)
+{
+	if (HealthBarWidgetComp)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			UnitWidget->UpdateBuffState(Tag, NewCount > 0);
+		}
+	}
+}
+
+void AAutoChessUnitBase::OnActiveGEAdded(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+{
+	// 监听层数变化
+	Target->OnGameplayEffectStackChangeDelegate(ActiveHandle)->AddUObject(this, &AAutoChessUnitBase::OnGEStackChanged);
+
+	// 初始通知 UI
+	FGameplayTagContainer AssetTags;
+	SpecApplied.GetAllAssetTags(AssetTags);
+	
+	if (AssetTags.Num() > 0 && HealthBarWidgetComp)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			// 使用第一个 AssetTag 作为标识
+			UnitWidget->UpdateGEStack(AssetTags.GetByIndex(0), SpecApplied.GetStackCount());
+		}
+	}
+}
+
+void AAutoChessUnitBase::OnGEStackChanged(FActiveGameplayEffectHandle Handle, int32 NewStackCount, int32 OldStackCount)
+{
+	if (AbilitySystemComponent && HealthBarWidgetComp)
+	{
+		if (const FActiveGameplayEffect* ActiveGE = AbilitySystemComponent->GetActiveGameplayEffect(Handle))
+		{
+			FGameplayTagContainer AssetTags;
+			ActiveGE->Spec.GetAllAssetTags(AssetTags);
+
+			if (AssetTags.Num() > 0)
+			{
+				if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+				{
+					UnitWidget->UpdateGEStack(AssetTags.GetByIndex(0), NewStackCount);
+				}
+			}
+		}
+	}
+}
+
+void AAutoChessUnitBase::OnActiveGERemoved(const FActiveGameplayEffect& RemovedEffect)
+{
+	FGameplayTagContainer AssetTags;
+	RemovedEffect.Spec.GetAllAssetTags(AssetTags);
+
+	if (AssetTags.Num() > 0 && HealthBarWidgetComp)
+	{
+		if (UAutoChessUnitWidget* UnitWidget = Cast<UAutoChessUnitWidget>(HealthBarWidgetComp->GetUserWidgetObject()))
+		{
+			// 层数归零
+			UnitWidget->UpdateGEStack(AssetTags.GetByIndex(0), 0);
+		}
 	}
 }

@@ -101,7 +101,8 @@ void AAutoChessProjectile::TriggerHit()
 	// 造成伤害
 	if (TargetUnit)
 	{
-		TargetUnit->ReceiveDamage(Damage, InstigatorUnit, bIsCrit);
+		UE_LOG(LogTemp, Log, TEXT("[Projectile] %s hitting %s. Damage=%.1f"), *GetName(), *TargetUnit->GetName(), Damage);
+		TargetUnit->ReceiveDamage(Damage, InstigatorUnit, bIsCrit, true);
 	}
 
 	// 播放特效等（可以在蓝图中扩展 OnDeath）

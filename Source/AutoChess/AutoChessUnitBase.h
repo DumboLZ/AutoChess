@@ -45,6 +45,7 @@ public:
 	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
 	virtual void OnManaChanged(const FOnAttributeChangeData& Data);
 	virtual void OnMaxManaChanged(const FOnAttributeChangeData& Data);
+	virtual void OnShieldChanged(const FOnAttributeChangeData& Data);
 
 	// 队伍ID (0: 玩家1, 1: 玩家2)
 	UPROPERTY(ReplicatedUsing = OnRep_TeamID, EditAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
@@ -152,7 +153,7 @@ public:
 	class UNiagaraSystem* SkillNiagaraVFX;
 
 	// 投射物类 (如果为空则为近战)
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "AutoChess|Stats")
 	TSubclassOf<class AAutoChessProjectile> ProjectileClass;
 
 	// 投射物发射骨骼插槽名称 (如果设置，优先使用插槽位置)
@@ -260,19 +261,11 @@ public:
 
 	// 受到伤害
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
-	void ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit = false);
+	void ReceiveDamage(float DamageAmount, AAutoChessUnitBase* Attacker, bool bIsCrit = false, bool bIsProjectile = false);
 
 	// 使用技能 (C++ 实现基础逻辑，蓝图可扩展)
 	UFUNCTION(BlueprintNativeEvent, Category = "AutoChess|Combat")
 	void UseSkill();
-	// 护盾流失速度 (每秒)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AutoChess|Attributes")
-	float ShieldDecayRate = 0.0f;
-
-
-
-
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -288,4 +281,11 @@ protected:
 	
 	// 执行移动逻辑
 	void ProcessGridMovement(float DeltaTime);
+	// 标签变化回调
+	virtual void OnImmuneTagChanged(const FGameplayTag Tag, int32 NewCount);
+
+	// GE 层数监听回调
+	virtual void OnActiveGEAdded(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
+	virtual void OnGEStackChanged(FActiveGameplayEffectHandle Handle, int32 NewStackCount, int32 OldStackCount);
+	virtual void OnActiveGERemoved(const FActiveGameplayEffect& RemovedEffect);
 };
