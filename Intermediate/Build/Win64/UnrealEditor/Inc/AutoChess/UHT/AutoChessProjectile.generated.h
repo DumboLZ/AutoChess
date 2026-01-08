@@ -17,12 +17,19 @@ struct FHitResult;
 #endif
 #define AUTOCHESS_AutoChessProjectile_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_17_GENERATED_BODY \
+	friend struct Z_Construct_UScriptStruct_FWeightedCardEntry_Statics; \
+	AUTOCHESS_API static class UScriptStruct* StaticStruct();
+
+
+template<> AUTOCHESS_API UScriptStruct* StaticStruct<struct FWeightedCardEntry>();
+
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_RPC_WRAPPERS_NO_PURE_DECLS \
 	DECLARE_FUNCTION(execOnOverlapBegin); \
 	DECLARE_FUNCTION(execOnRep_TargetUnit);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessProjectile(); \
 	friend struct Z_Construct_UClass_AAutoChessProjectile_Statics; \
@@ -35,11 +42,12 @@ public: \
 		NETFIELD_REP_START=(uint16)((int32)Super::ENetFields_Private::NETFIELD_REP_END + (int32)1), \
 		TargetUnit=NETFIELD_REP_START, \
 		InstigatorUnit, \
-		NETFIELD_REP_END=InstigatorUnit	}; \
+		TeamID, \
+		NETFIELD_REP_END=TeamID	}; \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessProjectile(AAutoChessProjectile&&); \
@@ -51,13 +59,13 @@ public: \
 	NO_API virtual ~AAutoChessProjectile();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_13_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_26_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_16_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_29_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

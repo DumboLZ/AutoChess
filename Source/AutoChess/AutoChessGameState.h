@@ -178,6 +178,9 @@ public:
 	// 重置复活次数
 	void ResetRevivals();
 
+	// 清空复活次数 (归零)
+	void ClearRevivals();
+
 	// --- 游戏流程数据 (从 GameMode 同步) ---
 
 	// 当前游戏阶段 (需要包含 AutoChessGameModeBase.h 或移动 Enum 定义)

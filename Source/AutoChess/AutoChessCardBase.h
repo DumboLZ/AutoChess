@@ -125,9 +125,16 @@ public:
 	// 当卡牌被打出时调用 (蓝图实现具体效果)
 	// Controller: 谁打出的
 	// Target: 目标 (可能是单位、地块或空)
+	// 当卡牌被打出时调用 (蓝图实现具体效果)
+	// Controller: 谁打出的
+	// Target: 目标 (可能是单位、地块或空)
 	UFUNCTION(BlueprintNativeEvent, Category = "Card Effect")
 	void OnPlayed(APlayerController* Controller, AActor* Target);
 	virtual void OnPlayed_Implementation(APlayerController* Controller, AActor* Target);
+
+	// 从场边发射投射物 (辅助函数，静态可直接调用)
+	UFUNCTION(BlueprintCallable, Category = "Card Effect")
+	static void SpawnProjectileFromSide(AActor* Target, TSubclassOf<class AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, float SideOffsetDistance = 1500.0f);
 
 	// 支持网络复制
 	virtual bool IsSupportedForNetworking() const override { return true; }

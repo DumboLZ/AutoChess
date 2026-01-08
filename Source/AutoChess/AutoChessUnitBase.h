@@ -226,6 +226,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Ability")
 	void ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass);
 
+	// 发射投射物攻击目标 (技能用)
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
+	void SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<class AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit = false);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

@@ -11,6 +11,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeAutoChessCardBase() {}
 
 // Begin Cross Module References
+AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessProjectile_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
@@ -251,11 +252,11 @@ struct Z_Construct_UFunction_UAutoChessCardBase_OnPlayed_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
 		{ "Category", "Card Effect" },
 #if !UE_BUILD_SHIPPING
-		{ "Comment", "// \xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\n// Controller: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\n// Target: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n// \xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\n// Controller: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\n// Target: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n" },
+		{ "Comment", "// \xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\n// Controller: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\n// Target: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n// \xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\n// Controller: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\n// Target: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n// \xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\n// Controller: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\n// Target: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n" },
 #endif
 		{ "ModuleRelativePath", "AutoChessCardBase.h" },
 #if !UE_BUILD_SHIPPING
-		{ "ToolTip", "\xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\nController: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\nTarget: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n\xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\nController: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\nTarget: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)" },
+		{ "ToolTip", "\xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\nController: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\nTarget: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n\xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\nController: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\nTarget: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)\n\xe5\xbd\x93\xe5\x8d\xa1\xe7\x89\x8c\xe8\xa2\xab\xe6\x89\x93\xe5\x87\xba\xe6\x97\xb6\xe8\xb0\x83\xe7\x94\xa8 (\xe8\x93\x9d\xe5\x9b\xbe\xe5\xae\x9e\xe7\x8e\xb0\xe5\x85\xb7\xe4\xbd\x93\xe6\x95\x88\xe6\x9e\x9c)\nController: \xe8\xb0\x81\xe6\x89\x93\xe5\x87\xba\xe7\x9a\x84\nTarget: \xe7\x9b\xae\xe6\xa0\x87 (\xe5\x8f\xaf\xe8\x83\xbd\xe6\x98\xaf\xe5\x8d\x95\xe4\xbd\x8d\xe3\x80\x81\xe5\x9c\xb0\xe5\x9d\x97\xe6\x88\x96\xe7\xa9\xba)" },
 #endif
 	};
 #endif // WITH_METADATA
@@ -351,6 +352,76 @@ DEFINE_FUNCTION(UAutoChessCardBase::execOnRep_CostModifier)
 }
 // End Class UAutoChessCardBase Function OnRep_CostModifier
 
+// Begin Class UAutoChessCardBase Function SpawnProjectileFromSide
+struct Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics
+{
+	struct AutoChessCardBase_eventSpawnProjectileFromSide_Parms
+	{
+		AActor* Target;
+		TSubclassOf<AAutoChessProjectile> ProjectileClass;
+		float Damage;
+		int32 CasterTeamID;
+		float SideOffsetDistance;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "Card Effect" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe4\xbb\x8e\xe5\x9c\xba\xe8\xbe\xb9\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe9\x9d\x99\xe6\x80\x81\xe5\x8f\xaf\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xb0\x83\xe7\x94\xa8)\n" },
+#endif
+		{ "CPP_Default_SideOffsetDistance", "1500.000000" },
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe4\xbb\x8e\xe5\x9c\xba\xe8\xbe\xb9\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe9\x9d\x99\xe6\x80\x81\xe5\x8f\xaf\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xb0\x83\xe7\x94\xa8)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_ProjectileClass;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_Damage;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_CasterTeamID;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_SideOffsetDistance;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Target = { "Target", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, Target), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000000080, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Damage = { "Damage", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, Damage), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_CasterTeamID = { "CasterTeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, CasterTeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_SideOffsetDistance = { "SideOffsetDistance", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, SideOffsetDistance), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Target,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_ProjectileClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Damage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_CasterTeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_SideOffsetDistance,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessCardBase, nullptr, "SpawnProjectileFromSide", nullptr, nullptr, Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::AutoChessCardBase_eventSpawnProjectileFromSide_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04022401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::AutoChessCardBase_eventSpawnProjectileFromSide_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UAutoChessCardBase::execSpawnProjectileFromSide)
+{
+	P_GET_OBJECT(AActor,Z_Param_Target);
+	P_GET_OBJECT(UClass,Z_Param_ProjectileClass);
+	P_GET_PROPERTY(FFloatProperty,Z_Param_Damage);
+	P_GET_PROPERTY(FIntProperty,Z_Param_CasterTeamID);
+	P_GET_PROPERTY(FFloatProperty,Z_Param_SideOffsetDistance);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	UAutoChessCardBase::SpawnProjectileFromSide(Z_Param_Target,Z_Param_ProjectileClass,Z_Param_Damage,Z_Param_CasterTeamID,Z_Param_SideOffsetDistance);
+	P_NATIVE_END;
+}
+// End Class UAutoChessCardBase Function SpawnProjectileFromSide
+
 // Begin Class UAutoChessCardBase
 void UAutoChessCardBase::StaticRegisterNativesUAutoChessCardBase()
 {
@@ -361,6 +432,7 @@ void UAutoChessCardBase::StaticRegisterNativesUAutoChessCardBase()
 		{ "OnPlayed", &UAutoChessCardBase::execOnPlayed },
 		{ "OnRep_Cost", &UAutoChessCardBase::execOnRep_Cost },
 		{ "OnRep_CostModifier", &UAutoChessCardBase::execOnRep_CostModifier },
+		{ "SpawnProjectileFromSide", &UAutoChessCardBase::execSpawnProjectileFromSide },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 }
@@ -582,9 +654,10 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
 		{ &Z_Construct_UFunction_UAutoChessCardBase_GetFinalCost, "GetFinalCost" }, // 2182352056
 		{ &Z_Construct_UFunction_UAutoChessCardBase_ModifyCost, "ModifyCost" }, // 3632031566
-		{ &Z_Construct_UFunction_UAutoChessCardBase_OnPlayed, "OnPlayed" }, // 917038345
+		{ &Z_Construct_UFunction_UAutoChessCardBase_OnPlayed, "OnPlayed" }, // 3742680090
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnRep_Cost, "OnRep_Cost" }, // 4270703214
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnRep_CostModifier, "OnRep_CostModifier" }, // 2818930653
+		{ &Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide, "SpawnProjectileFromSide" }, // 3022791654
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -699,10 +772,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3184413060U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 2520153227U) },
+		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 3282985005U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_4114993609(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1868938367(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo));

@@ -5,6 +5,8 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
+#include "AutoChessProjectile.h"
+#include "AutoChessUnitBase.h"
 #include "Net/UnrealNetwork.h"
 
 UAutoChessCardBase::UAutoChessCardBase()
@@ -191,4 +193,53 @@ void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UAutoChessCardBase, Cost);
 	DOREPLIFETIME(UAutoChessCardBase, CostModifier);
 	DOREPLIFETIME(UAutoChessCardBase, Icon);
+}
+
+void UAutoChessCardBase::SpawnProjectileFromSide(AActor* Target, TSubclassOf<AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, float SideOffsetDistance)
+{
+	if (!Target || !ProjectileClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CardBase] SpawnProjectileFromSide Failed: Invalid Target or Class"));
+		return;
+	}
+
+	UWorld* World = Target->GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	AAutoChessUnitBase* TargetUnit = Cast<AAutoChessUnitBase>(Target);
+	if (!TargetUnit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CardBase] SpawnProjectileFromSide Failed: Target is not a Unit"));
+		return;
+	}
+
+	// 计算生成位置
+	FVector TargetLoc = Target->GetActorLocation();
+	
+	// 根据队伍ID决定方向：Team 0 在 Y 负侧 (-1)，Team 1 在 Y 正侧 (1)
+	float SideDir = (CasterTeamID == 0) ? -1.0f : 1.0f;
+	
+	// 偏移位置：Y轴偏移 (Z轴保持一致，与目标等高)
+	FVector SpawnOffset(0.0f, SideDir * SideOffsetDistance, 0.0f);
+	FVector SpawnLocation = TargetLoc + SpawnOffset;
+	
+	// 强制 X 坐标为 250 (棋盘中心)
+	SpawnLocation.X = 250.0f;
+
+	// 朝向目标
+	FRotator SpawnRotation = (TargetLoc - SpawnLocation).Rotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	AAutoChessProjectile* Projectile = World->SpawnActor<AAutoChessProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	if (Projectile)
+	{
+		// Instigator 设为 nullptr，因为是卡牌效果
+		Projectile->InitProjectile(TargetUnit, Damage, nullptr, false, CasterTeamID);
+		UE_LOG(LogTemp, Log, TEXT("[CardBase] Spawned Projectile %s targeting %s"), *Projectile->GetName(), *TargetUnit->GetName());
+	}
 }

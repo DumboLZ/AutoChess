@@ -11,6 +11,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
+class AAutoChessProjectile;
 class APlayerController;
 #ifdef AUTOCHESS_AutoChessCardBase_generated_h
 #error "AutoChessCardBase.generated.h already included, missing '#pragma once' in AutoChessCardBase.h"
@@ -22,6 +23,7 @@ AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDele
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execSpawnProjectileFromSide); \
 	DECLARE_FUNCTION(execOnPlayed); \
 	DECLARE_FUNCTION(execModifyCost); \
 	DECLARE_FUNCTION(execGetFinalCost); \

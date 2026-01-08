@@ -14,8 +14,8 @@ AAutoChessGameState::AAutoChessGameState()
 	Player2Health = 100;
 	Player1Gold = 0;
 	Player2Gold = 0;
-	Team0Revivals = 10;
-	Team1Revivals = 10;
+	Team0Revivals = -1; // 初始化为 -1，确保 ResetRevivals(10) 能触发 OnRep
+	Team1Revivals = -1;
 	CurrentPhaseIndex = 255; // 关键：初始化为无效值，确保第一次同步 0 时触发 OnRep
 }
 
@@ -395,6 +395,17 @@ void AAutoChessGameState::ResetRevivals()
 {
 	Team0Revivals = 10;
 	Team1Revivals = 10;
+	if (HasAuthority())
+	{
+		OnRep_Team0Revivals();
+		OnRep_Team1Revivals();
+	}
+}
+
+void AAutoChessGameState::ClearRevivals()
+{
+	Team0Revivals = 0;
+	Team1Revivals = 0;
 	if (HasAuthority())
 	{
 		OnRep_Team0Revivals();

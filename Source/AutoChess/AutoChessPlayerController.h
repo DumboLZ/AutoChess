@@ -54,6 +54,8 @@ class AUTOCHESS_API AAutoChessPlayerController : public APlayerController, publi
 {
 	GENERATED_BODY()
 	
+	friend class AAutoChessProjectile;
+
 public:
 	AAutoChessPlayerController();
 

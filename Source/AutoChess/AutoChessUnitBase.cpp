@@ -1306,3 +1306,33 @@ void AAutoChessUnitBase::ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass
 		}
 	}
 }
+
+void AAutoChessUnitBase::SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit)
+{
+	if (!Target || !InProjectileClass || !GetWorld())
+	{
+		return;
+	}
+
+	// 计算生成位置
+	FVector SpawnLocation = GetActorLocation() + ProjectileSpawnOffset;
+	if (GetMesh()->DoesSocketExist(ProjectileSocketName))
+	{
+		SpawnLocation = GetMesh()->GetSocketLocation(ProjectileSocketName);
+	}
+
+	// 计算朝向
+	FRotator SpawnRotation = (Target->GetActorLocation() - SpawnLocation).Rotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	SpawnParams.Owner = this;
+
+	AAutoChessProjectile* Projectile = GetWorld()->SpawnActor<AAutoChessProjectile>(InProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	if (Projectile)
+	{
+		// 初始化投射物，传入 TeamID
+		Projectile->InitProjectile(Target, Damage, this, bIsCrit, TeamID);
+	}
+}

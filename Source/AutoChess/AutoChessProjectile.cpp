@@ -3,6 +3,10 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "AutoChessUnitBase.h"
+#include "AutoChessUnitBase.h"
+#include "AutoChessCardBase.h"
+#include "AutoChessPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 AAutoChessProjectile::AAutoChessProjectile()
@@ -71,12 +75,19 @@ void AAutoChessProjectile::Tick(float DeltaTime)
 	}
 }
 
-void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit)
+void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit, int32 InTeamID)
 {
 	TargetUnit = InTarget;
 	Damage = InDamage;
 	InstigatorUnit = InInstigatorUnit;
 	bIsCrit = bInIsCrit;
+	TeamID = InTeamID;
+
+	// 如果传入了 InstigatorUnit 且 TeamID 为 -1，尝试自动获取
+	if (TeamID == -1 && InstigatorUnit)
+	{
+		TeamID = InstigatorUnit->TeamID;
+	}
 
 	if (MovementComp && TargetUnit)
 	{
@@ -101,6 +112,71 @@ void AAutoChessProjectile::TriggerHit()
 	// 造成伤害
 	if (TargetUnit)
 	{
+		// 检查是否触发“命中友方生成卡牌”逻辑
+		if (bGenerateCardOnHitFriendly && TargetUnit->TeamID == TeamID)
+		{
+			if (HasAuthority() && CardPool.Num() > 0)
+			{
+				// 计算总权重
+				float TotalWeight = 0.0f;
+				for (const auto& Entry : CardPool)
+				{
+					TotalWeight += Entry.Weight;
+				}
+
+				// 随机选择
+				float RandomValue = FMath::FRandRange(0.0f, TotalWeight);
+				float CurrentWeight = 0.0f;
+				TSubclassOf<UAutoChessCardBase> CardClass = nullptr;
+
+				for (const auto& Entry : CardPool)
+				{
+					CurrentWeight += Entry.Weight;
+					if (RandomValue <= CurrentWeight)
+					{
+						CardClass = Entry.CardClass;
+						break;
+					}
+				}
+
+				if (CardClass)
+				{
+					// 查找所属玩家控制器
+					AAutoChessPlayerController* TargetPC = nullptr;
+					
+					// 遍历所有玩家控制器寻找匹配的 TeamID
+					// 注意：这里假设 TeamID 对应 PlayerController 的 TeamID
+					for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+					{
+						AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(Iterator->Get());
+						if (PC && PC->TeamID == TeamID)
+						{
+							TargetPC = PC;
+							break;
+						}
+					}
+
+					if (TargetPC)
+					{
+						// 创建卡牌实例并添加到手牌
+						UAutoChessCardBase* NewCard = NewObject<UAutoChessCardBase>(TargetPC, CardClass);
+						if (NewCard)
+						{
+							TargetPC->HandCards.Add(NewCard);
+							UE_LOG(LogTemp, Log, TEXT("[Projectile] Generated Card %s for Player %d"), *NewCard->GetName(), TeamID);
+							
+							// 手动触发 OnRep 以更新服务器端 UI (如果是 Host)
+							TargetPC->OnRep_HandCards();
+						}
+					}
+				}
+			}
+			
+			// 命中友方生成卡牌后，不造成伤害，直接销毁
+			Destroy();
+			return;
+		}
+
 		UE_LOG(LogTemp, Log, TEXT("[Projectile] %s hitting %s. Damage=%.1f"), *GetName(), *TargetUnit->GetName(), Damage);
 		TargetUnit->ReceiveDamage(Damage, InstigatorUnit, bIsCrit, true);
 	}
@@ -117,6 +193,7 @@ void AAutoChessProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 
 	DOREPLIFETIME(AAutoChessProjectile, TargetUnit);
 	DOREPLIFETIME(AAutoChessProjectile, InstigatorUnit);
+	DOREPLIFETIME(AAutoChessProjectile, TeamID);
 }
 
 void AAutoChessProjectile::OnRep_TargetUnit()
