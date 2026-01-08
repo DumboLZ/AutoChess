@@ -641,6 +641,76 @@ DEFINE_FUNCTION(AAutoChessUnitBase::execSnapToGrid)
 }
 // End Class AAutoChessUnitBase Function SnapToGrid
 
+// Begin Class AAutoChessUnitBase Function SpawnProjectileAtTarget
+struct Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics
+{
+	struct AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms
+	{
+		AAutoChessUnitBase* Target;
+		TSubclassOf<AAutoChessProjectile> InProjectileClass;
+		float Damage;
+		bool bIsCrit;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "AutoChess|Combat" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87 (\xe6\x8a\x80\xe8\x83\xbd\xe7\x94\xa8)\n" },
+#endif
+		{ "CPP_Default_bIsCrit", "false" },
+		{ "ModuleRelativePath", "AutoChessUnitBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe6\x94\xbb\xe5\x87\xbb\xe7\x9b\xae\xe6\xa0\x87 (\xe6\x8a\x80\xe8\x83\xbd\xe7\x94\xa8)" },
+#endif
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
+	static const UECodeGen_Private::FClassPropertyParams NewProp_InProjectileClass;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_Damage;
+	static void NewProp_bIsCrit_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsCrit;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_Target = { "Target", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms, Target), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_InProjectileClass = { "InProjectileClass", nullptr, (EPropertyFlags)0x0014000000000080, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms, InProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_Damage = { "Damage", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms, Damage), METADATA_PARAMS(0, nullptr) };
+void Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_bIsCrit_SetBit(void* Obj)
+{
+	((AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms*)Obj)->bIsCrit = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_bIsCrit = { "bIsCrit", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms), &Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_bIsCrit_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_Target,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_InProjectileClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_Damage,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::NewProp_bIsCrit,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_AAutoChessUnitBase, nullptr, "SpawnProjectileAtTarget", nullptr, nullptr, Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::PropPointers), sizeof(Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::Function_MetaDataParams), Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::AutoChessUnitBase_eventSpawnProjectileAtTarget_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(AAutoChessUnitBase::execSpawnProjectileAtTarget)
+{
+	P_GET_OBJECT(AAutoChessUnitBase,Z_Param_Target);
+	P_GET_OBJECT(UClass,Z_Param_InProjectileClass);
+	P_GET_PROPERTY(FFloatProperty,Z_Param_Damage);
+	P_GET_UBOOL(Z_Param_bIsCrit);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->SpawnProjectileAtTarget(Z_Param_Target,Z_Param_InProjectileClass,Z_Param_Damage,Z_Param_bIsCrit);
+	P_NATIVE_END;
+}
+// End Class AAutoChessUnitBase Function SpawnProjectileAtTarget
+
 // Begin Class AAutoChessUnitBase Function SpawnSkillProjectile
 struct Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile_Statics
 {
@@ -776,6 +846,7 @@ void AAutoChessUnitBase::StaticRegisterNativesAAutoChessUnitBase()
 		{ "RefreshUI", &AAutoChessUnitBase::execRefreshUI },
 		{ "ResetUnit", &AAutoChessUnitBase::execResetUnit },
 		{ "SnapToGrid", &AAutoChessUnitBase::execSnapToGrid },
+		{ "SpawnProjectileAtTarget", &AAutoChessUnitBase::execSpawnProjectileAtTarget },
 		{ "SpawnSkillProjectile", &AAutoChessUnitBase::execSpawnSkillProjectile },
 		{ "UpdateTeamColor", &AAutoChessUnitBase::execUpdateTeamColor },
 		{ "UseSkill", &AAutoChessUnitBase::execUseSkill },
@@ -1091,6 +1162,7 @@ struct Z_Construct_UClass_AAutoChessUnitBase_Statics
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_RefreshUI, "RefreshUI" }, // 1944425935
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_ResetUnit, "ResetUnit" }, // 71141492
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_SnapToGrid, "SnapToGrid" }, // 1151974769
+		{ &Z_Construct_UFunction_AAutoChessUnitBase_SpawnProjectileAtTarget, "SpawnProjectileAtTarget" }, // 2887958236
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_SpawnSkillProjectile, "SpawnSkillProjectile" }, // 983654176
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_UpdateTeamColor, "UpdateTeamColor" }, // 1573143582
 		{ &Z_Construct_UFunction_AAutoChessUnitBase_UseSkill, "UseSkill" }, // 1797927339
@@ -1287,10 +1359,10 @@ AAutoChessUnitBase::~AAutoChessUnitBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 1089568334U) },
+		{ Z_Construct_UClass_AAutoChessUnitBase, AAutoChessUnitBase::StaticClass, TEXT("AAutoChessUnitBase"), &Z_Registration_Info_UClass_AAutoChessUnitBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessUnitBase), 2403014975U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_4088821081(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_1704378298(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

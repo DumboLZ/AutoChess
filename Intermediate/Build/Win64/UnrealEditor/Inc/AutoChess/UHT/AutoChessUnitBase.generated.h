@@ -9,6 +9,7 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class AAutoChessProjectile;
 class AAutoChessUnitBase;
 class UGameplayEffect;
 #ifdef AUTOCHESS_AutoChessUnitBase_generated_h
@@ -22,6 +23,7 @@ class UGameplayEffect;
 	virtual void Multicast_PlaySkillAnimation_Implementation(); \
 	virtual void Multicast_PlayAttackAnimation_Implementation(); \
 	virtual void OnDeath_Implementation(); \
+	DECLARE_FUNCTION(execSpawnProjectileAtTarget); \
 	DECLARE_FUNCTION(execApplyGEToAllAllies); \
 	DECLARE_FUNCTION(execUseSkill); \
 	DECLARE_FUNCTION(execReceiveDamage); \
