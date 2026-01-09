@@ -19,6 +19,7 @@ AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
 AUTOCHESS_API UEnum* Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature();
 AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FProjectileEffectInfo();
+AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FWeightedCardEntry();
 COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 COREUOBJECT_API UClass* Z_Construct_UClass_UObject();
 COREUOBJECT_API UClass* Z_Construct_UClass_UObject_NoRegister();
@@ -140,6 +141,83 @@ void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDelegate& OnCardCo
 	OnCardCostChanged.ProcessMulticastDelegate<UObject>(&Parms);
 }
 // End Delegate FOnCardCostChanged
+
+// Begin Class UAutoChessCardBase Function CastRandomCardsOnTarget
+struct Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics
+{
+	struct AutoChessCardBase_eventCastRandomCardsOnTarget_Parms
+	{
+		UObject* WorldContextObject;
+		AActor* Target;
+		int32 CardCount;
+		TArray<FWeightedCardEntry> CardPool;
+		int32 CasterTeamID;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "AutoCreateRefTerm", "CardPool" },
+		{ "Category", "Card Effect" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\xaf\xb9\xe7\x9b\xae\xe6\xa0\x87\xe5\x8d\x95\xe4\xbd\x8d\xe9\x9a\x8f\xe6\x9c\xba\xe6\x89\x93\xe5\x87\xba\xe5\xa4\x9a\xe5\xbc\xa0\xe5\x8d\xa1\xe7\x89\x8c (\xe4\xbb\x8e\xe5\x8a\xa0\xe6\x9d\x83\xe5\x8d\xa1\xe7\x89\x8c\xe6\xb1\xa0\xe4\xb8\xad\xe6\x8a\xbd\xe5\x8f\x96)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\xaf\xb9\xe7\x9b\xae\xe6\xa0\x87\xe5\x8d\x95\xe4\xbd\x8d\xe9\x9a\x8f\xe6\x9c\xba\xe6\x89\x93\xe5\x87\xba\xe5\xa4\x9a\xe5\xbc\xa0\xe5\x8d\xa1\xe7\x89\x8c (\xe4\xbb\x8e\xe5\x8a\xa0\xe6\x9d\x83\xe5\x8d\xa1\xe7\x89\x8c\xe6\xb1\xa0\xe4\xb8\xad\xe6\x8a\xbd\xe5\x8f\x96)" },
+#endif
+		{ "WorldContext", "WorldContextObject" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CardPool_MetaData[] = {
+		{ "NativeConst", "" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_WorldContextObject;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_CardCount;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_CardPool_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_CardPool;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_CasterTeamID;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_WorldContextObject = { "WorldContextObject", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventCastRandomCardsOnTarget_Parms, WorldContextObject), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_Target = { "Target", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventCastRandomCardsOnTarget_Parms, Target), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardCount = { "CardCount", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventCastRandomCardsOnTarget_Parms, CardCount), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardPool_Inner = { "CardPool", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FWeightedCardEntry, METADATA_PARAMS(0, nullptr) }; // 3912207657
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardPool = { "CardPool", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventCastRandomCardsOnTarget_Parms, CardPool), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CardPool_MetaData), NewProp_CardPool_MetaData) }; // 3912207657
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CasterTeamID = { "CasterTeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventCastRandomCardsOnTarget_Parms, CasterTeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_WorldContextObject,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_Target,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardCount,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardPool_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CardPool,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::NewProp_CasterTeamID,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessCardBase, nullptr, "CastRandomCardsOnTarget", nullptr, nullptr, Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::AutoChessCardBase_eventCastRandomCardsOnTarget_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04422401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::AutoChessCardBase_eventCastRandomCardsOnTarget_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UAutoChessCardBase::execCastRandomCardsOnTarget)
+{
+	P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
+	P_GET_OBJECT(AActor,Z_Param_Target);
+	P_GET_PROPERTY(FIntProperty,Z_Param_CardCount);
+	P_GET_TARRAY_REF(FWeightedCardEntry,Z_Param_Out_CardPool);
+	P_GET_PROPERTY(FIntProperty,Z_Param_CasterTeamID);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	UAutoChessCardBase::CastRandomCardsOnTarget(Z_Param_WorldContextObject,Z_Param_Target,Z_Param_CardCount,Z_Param_Out_CardPool,Z_Param_CasterTeamID);
+	P_NATIVE_END;
+}
+// End Class UAutoChessCardBase Function CastRandomCardsOnTarget
 
 // Begin Class UAutoChessCardBase Function GetFinalCost
 struct Z_Construct_UFunction_UAutoChessCardBase_GetFinalCost_Statics
@@ -524,6 +602,7 @@ void UAutoChessCardBase::StaticRegisterNativesUAutoChessCardBase()
 {
 	UClass* Class = UAutoChessCardBase::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "CastRandomCardsOnTarget", &UAutoChessCardBase::execCastRandomCardsOnTarget },
 		{ "GetFinalCost", &UAutoChessCardBase::execGetFinalCost },
 		{ "ModifyCost", &UAutoChessCardBase::execModifyCost },
 		{ "OnPlayed", &UAutoChessCardBase::execOnPlayed },
@@ -750,6 +829,7 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
+		{ &Z_Construct_UFunction_UAutoChessCardBase_CastRandomCardsOnTarget, "CastRandomCardsOnTarget" }, // 2174767054
 		{ &Z_Construct_UFunction_UAutoChessCardBase_GetFinalCost, "GetFinalCost" }, // 2182352056
 		{ &Z_Construct_UFunction_UAutoChessCardBase_ModifyCost, "ModifyCost" }, // 3632031566
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnPlayed, "OnPlayed" }, // 3742680090
@@ -871,10 +951,10 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1537978006U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 3769253491U) },
+		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 232598166U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1196255402(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_3208518585(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo));

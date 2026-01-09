@@ -55,6 +55,7 @@ class AUTOCHESS_API AAutoChessPlayerController : public APlayerController, publi
 	GENERATED_BODY()
 	
 	friend class AAutoChessProjectile;
+	friend class UAutoChessCardBase;
 
 public:
 	AAutoChessPlayerController();

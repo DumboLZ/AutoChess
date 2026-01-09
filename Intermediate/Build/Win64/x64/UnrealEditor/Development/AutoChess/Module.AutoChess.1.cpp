@@ -5,3 +5,4 @@
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessGameplayAbility.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessGameState.gen.cpp"
 #include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessGhost.gen.cpp"
+#include "D:/Project/ue/AutoChess/AutoChess/Intermediate/Build/Win64/UnrealEditor/Inc/AutoChess/UHT/AutoChessGrid.gen.cpp"

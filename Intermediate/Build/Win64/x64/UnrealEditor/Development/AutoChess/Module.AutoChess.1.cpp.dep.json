@@ -81,7 +81,10 @@
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgamestate.generated.h",
             "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessghost.gen.cpp",
             "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessghost.h",
-            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessghost.generated.h"
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessghost.generated.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgrid.gen.cpp",
+            "d:\\project\\ue\\autochess\\autochess\\source\\autochess\\autochessgrid.h",
+            "d:\\project\\ue\\autochess\\autochess\\intermediate\\build\\win64\\unrealeditor\\inc\\autochess\\uht\\autochessgrid.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

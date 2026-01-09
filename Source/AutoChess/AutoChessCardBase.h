@@ -146,6 +146,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Card Effect", meta = (WorldContext = "WorldContextObject"))
 	static class AAutoChessUnitBase* SpawnUnitFromRowName(UObject* WorldContextObject, FName UnitRowName, FIntPoint GridPos, int32 TeamID);
 
+	// 对目标单位随机打出多张卡牌 (从加权卡牌池中抽取)
+	UFUNCTION(BlueprintCallable, Category = "Card Effect", meta = (WorldContext = "WorldContextObject", AutoCreateRefTerm = "CardPool"))
+	static void CastRandomCardsOnTarget(UObject* WorldContextObject, AActor* Target, int32 CardCount, const TArray<FWeightedCardEntry>& CardPool, int32 CasterTeamID);
+
 	// 支持网络复制
 	virtual bool IsSupportedForNetworking() const override { return true; }
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

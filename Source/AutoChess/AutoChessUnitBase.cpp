@@ -1245,6 +1245,45 @@ void AAutoChessUnitBase::OnActiveGEAdded(UAbilitySystemComponent* Target, const 
 			UnitWidget->UpdateGEStack(AssetTags.GetByIndex(0), SpecApplied.GetStackCount());
 		}
 	}
+
+	// 自动激活由 GE 授予的 GA（服务器端）
+	if (HasAuthority() && AbilitySystemComponent)
+	{
+		// 记录当前已有的 Ability Handles
+		TSet<FGameplayAbilitySpecHandle> ExistingHandles;
+		for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
+		{
+			ExistingHandles.Add(Spec.Handle);
+		}
+
+		// 延迟一帧等待 GE 完全应用并授予 Abilities
+		FTimerHandle DelayHandle;
+		GetWorld()->GetTimerManager().SetTimerForNextTick([this, ExistingHandles]()
+		{
+			if (IsValid(this) && AbilitySystemComponent)
+			{
+				// 遍历所有 Ability Specs，找出新授予的
+				for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
+				{
+					// 只激活新授予的 Ability（之前不存在的）
+					if (Spec.Ability && !ExistingHandles.Contains(Spec.Handle))
+					{
+						// 尝试激活
+						if (AbilitySystemComponent->TryActivateAbility(Spec.Handle))
+						{
+							UE_LOG(LogTemp, Warning, TEXT("[Auto-Activate NEW GA] %s activated: %s"), 
+								*GetName(), *Spec.Ability->GetName());
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("[Auto-Activate NEW GA] %s failed to activate: %s (may need conditions)"), 
+								*GetName(), *Spec.Ability->GetName());
+						}
+					}
+				}
+			}
+		});
+	}
 }
 
 void AAutoChessUnitBase::OnGEStackChanged(FActiveGameplayEffectHandle Handle, int32 NewStackCount, int32 OldStackCount)

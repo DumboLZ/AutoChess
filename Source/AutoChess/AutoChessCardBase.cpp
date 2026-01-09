@@ -258,3 +258,117 @@ AAutoChessUnitBase* UAutoChessCardBase::SpawnUnitFromRowName(UObject* WorldConte
 
 	return nullptr;
 }
+
+void UAutoChessCardBase::CastRandomCardsOnTarget(UObject* WorldContextObject, AActor* Target, int32 CardCount, const TArray<FWeightedCardEntry>& CardPool, int32 CasterTeamID)
+{
+	if (!WorldContextObject || !Target || CardCount <= 0 || CardPool.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Invalid parameters"));
+		return;
+	}
+
+	UWorld* World = WorldContextObject->GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Invalid World"));
+		return;
+	}
+
+	// 计算总权重
+	float TotalWeight = 0.0f;
+	for (const FWeightedCardEntry& Entry : CardPool)
+	{
+		TotalWeight += Entry.Weight;
+	}
+
+	if (TotalWeight <= 0.0f)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Total weight is 0"));
+		return;
+	}
+
+	// 获取 PlayerController（用于执行卡牌）
+	AAutoChessPlayerController* CasterPC = nullptr;
+	for (FConstPlayerControllerIterator Iterator = World->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		if (AAutoChessPlayerController* PC = Cast<AAutoChessPlayerController>(Iterator->Get()))
+		{
+			if (PC->TeamID == CasterTeamID)
+			{
+				CasterPC = PC;
+				break;
+			}
+		}
+	}
+
+	if (!CasterPC)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Could not find PlayerController for Team %d"), CasterTeamID);
+		return;
+	}
+
+	// 获取目标的格子坐标（如果目标是单位）
+	FIntPoint TargetGridPos(-1, -1);
+	if (AAutoChessUnitBase* TargetUnit = Cast<AAutoChessUnitBase>(Target))
+	{
+		TargetGridPos = TargetUnit->CurrentGridPos;
+	}
+
+	// 随机抽取并打出卡牌
+	for (int32 i = 0; i < CardCount; i++)
+	{
+		// 权重随机选择
+		float RandomValue = FMath::FRandRange(0.0f, TotalWeight);
+		float CurrentWeight = 0.0f;
+		TSubclassOf<UAutoChessCardBase> SelectedCardClass = nullptr;
+
+		for (const FWeightedCardEntry& Entry : CardPool)
+		{
+			CurrentWeight += Entry.Weight;
+			if (RandomValue <= CurrentWeight && Entry.CardClass)
+			{
+				SelectedCardClass = Entry.CardClass;
+				break;
+			}
+		}
+
+		if (!SelectedCardClass)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Failed to select card %d/%d"), i + 1, CardCount);
+			continue;
+		}
+
+		// 创建卡牌实例
+		UAutoChessCardBase* CardInstance = NewObject<UAutoChessCardBase>(CasterPC, SelectedCardClass);
+		if (!CardInstance)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Failed to create card instance"));
+			continue;
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Created card: %s (Cost: %d, TargetType: %d)"), 
+			*CardInstance->CardName.ToString(), CardInstance->Cost, (int32)CardInstance->TargetType);
+
+		// 临时添加到手牌（PlayCard 需要卡牌在手牌中）
+		CasterPC->HandCards.Add(CardInstance);
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Added to hand, HandCards count: %d"), CasterPC->HandCards.Num());
+
+		// 通过 PlayerController 的 PlayCard 函数打出卡牌
+		bool bSuccess = CasterPC->PlayCard(CardInstance, Target, TargetGridPos);
+
+		UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] PlayCard result: %s"), bSuccess ? TEXT("SUCCESS") : TEXT("FAILED"));
+
+		// 如果打出失败，从手牌中移除
+		if (!bSuccess)
+		{
+			CasterPC->HandCards.Remove(CardInstance);
+			UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Failed to play card %d/%d: %s"), 
+				i + 1, CardCount, *SelectedCardClass->GetName());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[CastRandomCards] Successfully cast card %d/%d: %s on %s"), 
+				i + 1, CardCount, *SelectedCardClass->GetName(), *Target->GetName());
+		}
+	}
+}

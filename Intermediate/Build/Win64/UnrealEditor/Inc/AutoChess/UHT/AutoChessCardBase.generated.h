@@ -16,6 +16,7 @@ class AAutoChessUnitBase;
 class APlayerController;
 class UObject;
 struct FProjectileEffectInfo;
+struct FWeightedCardEntry;
 #ifdef AUTOCHESS_AutoChessCardBase_generated_h
 #error "AutoChessCardBase.generated.h already included, missing '#pragma once' in AutoChessCardBase.h"
 #endif
@@ -26,6 +27,7 @@ AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDele
 
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execCastRandomCardsOnTarget); \
 	DECLARE_FUNCTION(execSpawnUnitFromRowName); \
 	DECLARE_FUNCTION(execSpawnProjectileFromSide); \
 	DECLARE_FUNCTION(execOnPlayed); \
