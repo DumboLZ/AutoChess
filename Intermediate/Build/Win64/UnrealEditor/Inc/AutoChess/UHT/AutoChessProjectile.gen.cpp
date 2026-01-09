@@ -16,6 +16,7 @@ AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessProjectile();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessProjectile_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_AAutoChessUnitBase_NoRegister();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
+AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FProjectileEffectInfo();
 AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FWeightedCardEntry();
 COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 ENGINE_API UClass* Z_Construct_UClass_AActor();
@@ -25,6 +26,7 @@ ENGINE_API UClass* Z_Construct_UClass_UPrimitiveComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UProjectileMovementComponent_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
 ENGINE_API UScriptStruct* Z_Construct_UScriptStruct_FHitResult();
+GAMEPLAYABILITIES_API UClass* Z_Construct_UClass_UGameplayEffect_NoRegister();
 GAMEPLAYTAGS_API UScriptStruct* Z_Construct_UScriptStruct_FGameplayTag();
 UPackage* Z_Construct_UPackage__Script_AutoChess();
 // End Cross Module References
@@ -103,6 +105,81 @@ UScriptStruct* Z_Construct_UScriptStruct_FWeightedCardEntry()
 	return Z_Registration_Info_UScriptStruct_WeightedCardEntry.InnerSingleton;
 }
 // End ScriptStruct FWeightedCardEntry
+
+// Begin ScriptStruct FProjectileEffectInfo
+static FStructRegistrationInfo Z_Registration_Info_UScriptStruct_ProjectileEffectInfo;
+class UScriptStruct* FProjectileEffectInfo::StaticStruct()
+{
+	if (!Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.OuterSingleton)
+	{
+		Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.OuterSingleton = GetStaticStruct(Z_Construct_UScriptStruct_FProjectileEffectInfo, (UObject*)Z_Construct_UPackage__Script_AutoChess(), TEXT("ProjectileEffectInfo"));
+	}
+	return Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.OuterSingleton;
+}
+template<> AUTOCHESS_API UScriptStruct* StaticStruct<FProjectileEffectInfo>()
+{
+	return FProjectileEffectInfo::StaticStruct();
+}
+struct Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[] = {
+		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x91\xbd\xe4\xb8\xad\xe6\x95\x88\xe6\x9e\x9c\xe9\x85\x8d\xe7\xbd\xae\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9\xe5\x91\xbd\xe4\xb8\xad\xe6\x95\x88\xe6\x9e\x9c\xe9\x85\x8d\xe7\xbd\xae" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_EffectClass_MetaData[] = {
+		{ "Category", "ProjectileEffectInfo" },
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_StackCount_MetaData[] = {
+		{ "Category", "ProjectileEffectInfo" },
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FClassPropertyParams NewProp_EffectClass;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_StackCount;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static void* NewStructOps()
+	{
+		return (UScriptStruct::ICppStructOps*)new UScriptStruct::TCppStructOps<FProjectileEffectInfo>();
+	}
+	static const UECodeGen_Private::FStructParams StructParams;
+};
+const UECodeGen_Private::FClassPropertyParams Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::NewProp_EffectClass = { "EffectClass", nullptr, (EPropertyFlags)0x0014000000000005, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FProjectileEffectInfo, EffectClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayEffect_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EffectClass_MetaData), NewProp_EffectClass_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::NewProp_StackCount = { "StackCount", nullptr, (EPropertyFlags)0x0010000000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FProjectileEffectInfo, StackCount), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_StackCount_MetaData), NewProp_StackCount_MetaData) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::NewProp_EffectClass,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::NewProp_StackCount,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FStructParams Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::StructParams = {
+	(UObject* (*)())Z_Construct_UPackage__Script_AutoChess,
+	nullptr,
+	&NewStructOps,
+	"ProjectileEffectInfo",
+	Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::PropPointers,
+	UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::PropPointers),
+	sizeof(FProjectileEffectInfo),
+	alignof(FProjectileEffectInfo),
+	RF_Public|RF_Transient|RF_MarkAsNative,
+	EStructFlags(0x00000001),
+	METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::Struct_MetaDataParams), Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::Struct_MetaDataParams)
+};
+UScriptStruct* Z_Construct_UScriptStruct_FProjectileEffectInfo()
+{
+	if (!Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.InnerSingleton)
+	{
+		UECodeGen_Private::ConstructUScriptStruct(Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.InnerSingleton, Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::StructParams);
+	}
+	return Z_Registration_Info_UScriptStruct_ProjectileEffectInfo.InnerSingleton;
+}
+// End ScriptStruct FProjectileEffectInfo
 
 // Begin Class AAutoChessProjectile Function OnOverlapBegin
 struct Z_Construct_UFunction_AAutoChessProjectile_OnOverlapBegin_Statics
@@ -334,6 +411,26 @@ struct Z_Construct_UClass_AAutoChessProjectile_Statics
 		{ "ToolTip", "\xe5\x8d\xa1\xe7\x89\x8c\xe6\xb1\xa0 (\xe5\x91\xbd\xe4\xb8\xad\xe5\x8f\x8b\xe6\x96\xb9\xe6\x97\xb6\xe6\x8c\x89\xe6\x9d\x83\xe9\x87\x8d\xe6\x8a\xbd\xe5\x8f\x96\xe4\xb8\x80\xe5\xbc\xa0)" },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_EffectsOnHitEnemy_MetaData[] = {
+		{ "Category", "AutoChess|Effect" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x91\xbd\xe4\xb8\xad\xe6\x95\x8c\xe6\x96\xb9\xe6\x97\xb6\xe6\x96\xbd\xe5\x8a\xa0\xe7\x9a\x84 Gameplay Effects\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x91\xbd\xe4\xb8\xad\xe6\x95\x8c\xe6\x96\xb9\xe6\x97\xb6\xe6\x96\xbd\xe5\x8a\xa0\xe7\x9a\x84 Gameplay Effects" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_EffectsOnHitFriendly_MetaData[] = {
+		{ "Category", "AutoChess|Effect" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x91\xbd\xe4\xb8\xad\xe5\x8f\x8b\xe6\x96\xb9\xe6\x97\xb6\xe6\x96\xbd\xe5\x8a\xa0\xe7\x9a\x84 Gameplay Effects\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessProjectile.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x91\xbd\xe4\xb8\xad\xe5\x8f\x8b\xe6\x96\xb9\xe6\x97\xb6\xe6\x96\xbd\xe5\x8a\xa0\xe7\x9a\x84 Gameplay Effects" },
+#endif
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CapsuleComp;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MeshComp;
@@ -346,6 +443,10 @@ struct Z_Construct_UClass_AAutoChessProjectile_Statics
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bGenerateCardOnHitFriendly;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_CardPool_Inner;
 	static const UECodeGen_Private::FArrayPropertyParams NewProp_CardPool;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_EffectsOnHitEnemy_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_EffectsOnHitEnemy;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_EffectsOnHitFriendly_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_EffectsOnHitFriendly;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
@@ -372,6 +473,10 @@ void Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_bGenerateCardOnHit
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_bGenerateCardOnHitFriendly = { "bGenerateCardOnHitFriendly", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(AAutoChessProjectile), &Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_bGenerateCardOnHitFriendly_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bGenerateCardOnHitFriendly_MetaData), NewProp_bGenerateCardOnHitFriendly_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CardPool_Inner = { "CardPool", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FWeightedCardEntry, METADATA_PARAMS(0, nullptr) }; // 3912207657
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CardPool = { "CardPool", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, CardPool), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CardPool_MetaData), NewProp_CardPool_MetaData) }; // 3912207657
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitEnemy_Inner = { "EffectsOnHitEnemy", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FProjectileEffectInfo, METADATA_PARAMS(0, nullptr) }; // 2455639867
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitEnemy = { "EffectsOnHitEnemy", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, EffectsOnHitEnemy), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EffectsOnHitEnemy_MetaData), NewProp_EffectsOnHitEnemy_MetaData) }; // 2455639867
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitFriendly_Inner = { "EffectsOnHitFriendly", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FProjectileEffectInfo, METADATA_PARAMS(0, nullptr) }; // 2455639867
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitFriendly = { "EffectsOnHitFriendly", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AAutoChessProjectile, EffectsOnHitFriendly), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EffectsOnHitFriendly_MetaData), NewProp_EffectsOnHitFriendly_MetaData) }; // 2455639867
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChessProjectile_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CapsuleComp,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_MeshComp,
@@ -383,6 +488,10 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AAutoChes
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_bGenerateCardOnHitFriendly,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CardPool_Inner,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_CardPool,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitEnemy_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitEnemy,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitFriendly_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AAutoChessProjectile_Statics::NewProp_EffectsOnHitFriendly,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAutoChessProjectile_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_AAutoChessProjectile_Statics::DependentSingletons[])() = {
@@ -437,12 +546,13 @@ struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess
 {
 	static constexpr FStructRegisterCompiledInInfo ScriptStructInfo[] = {
 		{ FWeightedCardEntry::StaticStruct, Z_Construct_UScriptStruct_FWeightedCardEntry_Statics::NewStructOps, TEXT("WeightedCardEntry"), &Z_Registration_Info_UScriptStruct_WeightedCardEntry, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FWeightedCardEntry), 3912207657U) },
+		{ FProjectileEffectInfo::StaticStruct, Z_Construct_UScriptStruct_FProjectileEffectInfo_Statics::NewStructOps, TEXT("ProjectileEffectInfo"), &Z_Registration_Info_UScriptStruct_ProjectileEffectInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FProjectileEffectInfo), 2455639867U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAutoChessProjectile, AAutoChessProjectile::StaticClass, TEXT("AAutoChessProjectile"), &Z_Registration_Info_UClass_AAutoChessProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessProjectile), 1276549105U) },
+		{ Z_Construct_UClass_AAutoChessProjectile, AAutoChessProjectile::StaticClass, TEXT("AAutoChessProjectile"), &Z_Registration_Info_UClass_AAutoChessProjectile, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAutoChessProjectile), 1152647095U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_3361586258(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_2126867448(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ClassInfo),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessProjectile_h_Statics::ScriptStructInfo),
 	nullptr, 0);

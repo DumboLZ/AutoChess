@@ -75,13 +75,23 @@ void AAutoChessProjectile::Tick(float DeltaTime)
 	}
 }
 
-void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit, int32 InTeamID)
+void AAutoChessProjectile::InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit, int32 InTeamID, const TArray<FProjectileEffectInfo>& InEffectsOnHitEnemy, const TArray<FProjectileEffectInfo>& InEffectsOnHitFriendly)
 {
 	TargetUnit = InTarget;
 	Damage = InDamage;
 	InstigatorUnit = InInstigatorUnit;
 	bIsCrit = bInIsCrit;
 	TeamID = InTeamID;
+
+	// 如果传入了 GE，则覆盖默认值
+	if (InEffectsOnHitEnemy.Num() > 0)
+	{
+		EffectsOnHitEnemy = InEffectsOnHitEnemy;
+	}
+	if (InEffectsOnHitFriendly.Num() > 0)
+	{
+		EffectsOnHitFriendly = InEffectsOnHitFriendly;
+	}
 
 	// 如果传入了 InstigatorUnit 且 TeamID 为 -1，尝试自动获取
 	if (TeamID == -1 && InstigatorUnit)
@@ -112,6 +122,32 @@ void AAutoChessProjectile::TriggerHit()
 	// 造成伤害
 	if (TargetUnit)
 	{
+		// 命中友方施加 GE
+		if (HasAuthority() && EffectsOnHitFriendly.Num() > 0 && TargetUnit->TeamID == TeamID && TargetUnit->GetAbilitySystemComponent())
+		{
+			UAbilitySystemComponent* TargetASC = TargetUnit->GetAbilitySystemComponent();
+			
+			for (const FProjectileEffectInfo& EffectInfo : EffectsOnHitFriendly)
+			{
+				if (!EffectInfo.EffectClass) continue;
+
+				FGameplayEffectContextHandle Context = TargetASC->MakeEffectContext();
+				Context.AddInstigator(InstigatorUnit, this);
+				
+				FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(EffectInfo.EffectClass, 1.0f, Context);
+				if (SpecHandle.IsValid())
+				{
+					// 循环应用 StackCount 次
+					int32 Count = FMath::Max(1, FMath::RoundToInt(EffectInfo.StackCount));
+					for (int32 i = 0; i < Count; i++)
+					{
+						TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+					}
+					UE_LOG(LogTemp, Log, TEXT("[Projectile] Applied Friendly Effect %s (x%d) to %s"), *EffectInfo.EffectClass->GetName(), Count, *TargetUnit->GetName());
+				}
+			}
+		}
+
 		// 检查是否触发“命中友方生成卡牌”逻辑
 		if (bGenerateCardOnHitFriendly && TargetUnit->TeamID == TeamID)
 		{
@@ -175,6 +211,33 @@ void AAutoChessProjectile::TriggerHit()
 			// 命中友方生成卡牌后，不造成伤害，直接销毁
 			Destroy();
 			return;
+		}
+
+
+		// 命中敌方施加 GE
+		if (HasAuthority() && EffectsOnHitEnemy.Num() > 0 && TargetUnit->TeamID != TeamID && TargetUnit->GetAbilitySystemComponent())
+		{
+			UAbilitySystemComponent* TargetASC = TargetUnit->GetAbilitySystemComponent();
+			
+			for (const FProjectileEffectInfo& EffectInfo : EffectsOnHitEnemy)
+			{
+				if (!EffectInfo.EffectClass) continue;
+
+				FGameplayEffectContextHandle Context = TargetASC->MakeEffectContext();
+				Context.AddInstigator(InstigatorUnit, this);
+				
+				FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(EffectInfo.EffectClass, 1.0f, Context);
+				if (SpecHandle.IsValid())
+				{
+					// 循环应用 StackCount 次
+					int32 Count = FMath::Max(1, FMath::RoundToInt(EffectInfo.StackCount));
+					for (int32 i = 0; i < Count; i++)
+					{
+						TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+					}
+					UE_LOG(LogTemp, Log, TEXT("[Projectile] Applied Enemy Effect %s (x%d) to %s"), *EffectInfo.EffectClass->GetName(), Count, *TargetUnit->GetName());
+				}
+			}
 		}
 
 		UE_LOG(LogTemp, Log, TEXT("[Projectile] %s hitting %s. Damage=%.1f"), *GetName(), *TargetUnit->GetName(), Damage);

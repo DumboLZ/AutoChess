@@ -6,7 +6,11 @@
 #include "GameplayEffectTypes.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataTable.h"
+#include "AutoChessProjectile.h" // 为了使用 FProjectileEffectInfo
 #include "AutoChessUnitBase.generated.h"
+
+// ... (existing code)
+
 
 class UNiagaraSystem;
 
@@ -227,8 +231,9 @@ public:
 	void ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass);
 
 	// 发射投射物攻击目标 (技能用)
-	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat")
-	void SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<class AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit = false);
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Combat", meta = (AutoCreateRefTerm = "EffectsOnHitEnemy, EffectsOnHitFriendly"))
+	void SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<class AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit, const TArray<FProjectileEffectInfo>& EffectsOnHitEnemy, const TArray<FProjectileEffectInfo>& EffectsOnHitFriendly);
+
 
 protected:
 	virtual void BeginPlay() override;

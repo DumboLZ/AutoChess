@@ -1307,7 +1307,7 @@ void AAutoChessUnitBase::ApplyGEToAllAllies(TSubclassOf<UGameplayEffect> GEClass
 	}
 }
 
-void AAutoChessUnitBase::SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit)
+void AAutoChessUnitBase::SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSubclassOf<AAutoChessProjectile> InProjectileClass, float Damage, bool bIsCrit, const TArray<FProjectileEffectInfo>& EffectsOnHitEnemy, const TArray<FProjectileEffectInfo>& EffectsOnHitFriendly)
 {
 	if (!Target || !InProjectileClass || !GetWorld())
 	{
@@ -1333,6 +1333,6 @@ void AAutoChessUnitBase::SpawnProjectileAtTarget(AAutoChessUnitBase* Target, TSu
 	if (Projectile)
 	{
 		// 初始化投射物，传入 TeamID
-		Projectile->InitProjectile(Target, Damage, this, bIsCrit, TeamID);
+		Projectile->InitProjectile(Target, Damage, this, bIsCrit, TeamID, EffectsOnHitEnemy, EffectsOnHitFriendly);
 	}
 }

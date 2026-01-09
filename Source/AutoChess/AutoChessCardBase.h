@@ -3,7 +3,11 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayTagContainer.h"
+#include "AutoChessProjectile.h" // 为了使用 FProjectileEffectInfo
 #include "AutoChessCardBase.generated.h"
+
+// ... (existing code)
+
 
 class AAutoChessUnitBase;
 class AAutoChessPlayerController;
@@ -15,7 +19,8 @@ enum class EAutoChessCardTargetType : uint8
 	Enemy		UMETA(DisplayName = "Enemy Unit"),
 	Ally		UMETA(DisplayName = "Ally Unit"),
 	Self		UMETA(DisplayName = "Self (Player)"),
-	AnyUnit		UMETA(DisplayName = "Any Unit")
+	AnyUnit		UMETA(DisplayName = "Any Unit"),
+	EmptyTile	UMETA(DisplayName = "Empty Tile")
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCardCostChanged, int32, NewFinalCost);
@@ -132,9 +137,14 @@ public:
 	void OnPlayed(APlayerController* Controller, AActor* Target);
 	virtual void OnPlayed_Implementation(APlayerController* Controller, AActor* Target);
 
+
 	// 从场边发射投射物 (辅助函数，静态可直接调用)
-	UFUNCTION(BlueprintCallable, Category = "Card Effect")
-	static void SpawnProjectileFromSide(AActor* Target, TSubclassOf<class AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, float SideOffsetDistance = 1500.0f);
+	UFUNCTION(BlueprintCallable, Category = "Card Effect", meta = (AutoCreateRefTerm = "EffectsOnHitEnemy, EffectsOnHitFriendly"))
+	static void SpawnProjectileFromSide(AActor* Target, TSubclassOf<class AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, const TArray<FProjectileEffectInfo>& EffectsOnHitEnemy, const TArray<FProjectileEffectInfo>& EffectsOnHitFriendly, float SideOffsetDistance);
+
+	// 在指定格子生成单位 (辅助函数，调用 GameMode 的生成逻辑)
+	UFUNCTION(BlueprintCallable, Category = "Card Effect", meta = (WorldContext = "WorldContextObject"))
+	static class AAutoChessUnitBase* SpawnUnitFromRowName(UObject* WorldContextObject, FName UnitRowName, FIntPoint GridPos, int32 TeamID);
 
 	// 支持网络复制
 	virtual bool IsSupportedForNetworking() const override { return true; }

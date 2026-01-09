@@ -292,6 +292,12 @@ bool AAutoChessGrid::FindPath(FIntPoint StartGridPos, FIntPoint EndGridPos, TArr
 					}
 				}
 
+				// Check Temporary Occupation
+				if (IsTileTemporarilyOccupied(NeighborPos) && NeighborPos != EndGridPos)
+				{
+					bIsBlocked = true;
+				}
+
 				if (bIsBlocked) continue;
 
 				// Cost is 10 per step
@@ -385,4 +391,26 @@ TArray<AAutoChessUnitBase*> AAutoChessGrid::GetUnitsInRadius(int32 CenterX, int3
 		}
 	}
 	return FoundUnits;
+}
+
+void AAutoChessGrid::SetTileTemporarilyOccupied(FIntPoint GridPos, bool bOccupied)
+{
+	if (bOccupied)
+	{
+		TemporarilyOccupiedTiles.Add(GridPos);
+	}
+	else
+	{
+		TemporarilyOccupiedTiles.Remove(GridPos);
+	}
+}
+
+bool AAutoChessGrid::IsTileTemporarilyOccupied(FIntPoint GridPos) const
+{
+	return TemporarilyOccupiedTiles.Contains(GridPos);
+}
+
+void AAutoChessGrid::ClearAllTemporaryOccupations()
+{
+	TemporarilyOccupiedTiles.Empty();
 }

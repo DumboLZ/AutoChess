@@ -6,6 +6,7 @@
 
 #include "UObject/GeneratedCppIncludes.h"
 #include "AutoChess/AutoChessCardBase.h"
+#include "AutoChess/AutoChessProjectile.h"
 #include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeAutoChessCardBase() {}
@@ -17,8 +18,10 @@ AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase();
 AUTOCHESS_API UClass* Z_Construct_UClass_UAutoChessCardBase_NoRegister();
 AUTOCHESS_API UEnum* Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType();
 AUTOCHESS_API UFunction* Z_Construct_UDelegateFunction_AutoChess_OnCardCostChanged__DelegateSignature();
+AUTOCHESS_API UScriptStruct* Z_Construct_UScriptStruct_FProjectileEffectInfo();
 COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 COREUOBJECT_API UClass* Z_Construct_UClass_UObject();
+COREUOBJECT_API UClass* Z_Construct_UClass_UObject_NoRegister();
 COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FIntPoint();
 ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_APlayerController_NoRegister();
@@ -51,6 +54,8 @@ struct Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType_Statics
 		{ "AnyUnit.DisplayName", "Any Unit" },
 		{ "AnyUnit.Name", "EAutoChessCardTargetType::AnyUnit" },
 		{ "BlueprintType", "true" },
+		{ "EmptyTile.DisplayName", "Empty Tile" },
+		{ "EmptyTile.Name", "EAutoChessCardTargetType::EmptyTile" },
 		{ "Enemy.DisplayName", "Enemy Unit" },
 		{ "Enemy.Name", "EAutoChessCardTargetType::Enemy" },
 		{ "ModuleRelativePath", "AutoChessCardBase.h" },
@@ -66,6 +71,7 @@ struct Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType_Statics
 		{ "EAutoChessCardTargetType::Ally", (int64)EAutoChessCardTargetType::Ally },
 		{ "EAutoChessCardTargetType::Self", (int64)EAutoChessCardTargetType::Self },
 		{ "EAutoChessCardTargetType::AnyUnit", (int64)EAutoChessCardTargetType::AnyUnit },
+		{ "EAutoChessCardTargetType::EmptyTile", (int64)EAutoChessCardTargetType::EmptyTile },
 	};
 	static const UECodeGen_Private::FEnumParams EnumParams;
 };
@@ -361,25 +367,37 @@ struct Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics
 		TSubclassOf<AAutoChessProjectile> ProjectileClass;
 		float Damage;
 		int32 CasterTeamID;
+		TArray<FProjectileEffectInfo> EffectsOnHitEnemy;
+		TArray<FProjectileEffectInfo> EffectsOnHitFriendly;
 		float SideOffsetDistance;
 	};
 #if WITH_METADATA
 	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "AutoCreateRefTerm", "EffectsOnHitEnemy, EffectsOnHitFriendly" },
 		{ "Category", "Card Effect" },
 #if !UE_BUILD_SHIPPING
 		{ "Comment", "// \xe4\xbb\x8e\xe5\x9c\xba\xe8\xbe\xb9\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe9\x9d\x99\xe6\x80\x81\xe5\x8f\xaf\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xb0\x83\xe7\x94\xa8)\n" },
 #endif
-		{ "CPP_Default_SideOffsetDistance", "1500.000000" },
 		{ "ModuleRelativePath", "AutoChessCardBase.h" },
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "\xe4\xbb\x8e\xe5\x9c\xba\xe8\xbe\xb9\xe5\x8f\x91\xe5\xb0\x84\xe6\x8a\x95\xe5\xb0\x84\xe7\x89\xa9 (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe9\x9d\x99\xe6\x80\x81\xe5\x8f\xaf\xe7\x9b\xb4\xe6\x8e\xa5\xe8\xb0\x83\xe7\x94\xa8)" },
 #endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_EffectsOnHitEnemy_MetaData[] = {
+		{ "NativeConst", "" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_EffectsOnHitFriendly_MetaData[] = {
+		{ "NativeConst", "" },
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_Target;
 	static const UECodeGen_Private::FClassPropertyParams NewProp_ProjectileClass;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_Damage;
 	static const UECodeGen_Private::FIntPropertyParams NewProp_CasterTeamID;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_EffectsOnHitEnemy_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_EffectsOnHitEnemy;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_EffectsOnHitFriendly_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_EffectsOnHitFriendly;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_SideOffsetDistance;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static const UECodeGen_Private::FFunctionParams FuncParams;
@@ -388,16 +406,24 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessC
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_ProjectileClass = { "ProjectileClass", nullptr, (EPropertyFlags)0x0014000000000080, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, ProjectileClass), Z_Construct_UClass_UClass, Z_Construct_UClass_AAutoChessProjectile_NoRegister, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Damage = { "Damage", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, Damage), METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_CasterTeamID = { "CasterTeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, CasterTeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitEnemy_Inner = { "EffectsOnHitEnemy", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FProjectileEffectInfo, METADATA_PARAMS(0, nullptr) }; // 2455639867
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitEnemy = { "EffectsOnHitEnemy", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, EffectsOnHitEnemy), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EffectsOnHitEnemy_MetaData), NewProp_EffectsOnHitEnemy_MetaData) }; // 2455639867
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitFriendly_Inner = { "EffectsOnHitFriendly", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FProjectileEffectInfo, METADATA_PARAMS(0, nullptr) }; // 2455639867
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitFriendly = { "EffectsOnHitFriendly", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, EffectsOnHitFriendly), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EffectsOnHitFriendly_MetaData), NewProp_EffectsOnHitFriendly_MetaData) }; // 2455639867
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_SideOffsetDistance = { "SideOffsetDistance", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnProjectileFromSide_Parms, SideOffsetDistance), METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Target,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_ProjectileClass,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_Damage,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_CasterTeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitEnemy_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitEnemy,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitFriendly_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_EffectsOnHitFriendly,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::NewProp_SideOffsetDistance,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers) < 2048);
-const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessCardBase, nullptr, "SpawnProjectileFromSide", nullptr, nullptr, Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::AutoChessCardBase_eventSpawnProjectileFromSide_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04022401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams) };
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessCardBase, nullptr, "SpawnProjectileFromSide", nullptr, nullptr, Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::AutoChessCardBase_eventSpawnProjectileFromSide_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04422401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::Function_MetaDataParams) };
 static_assert(sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide_Statics::AutoChessCardBase_eventSpawnProjectileFromSide_Parms) < MAX_uint16);
 UFunction* Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide()
 {
@@ -414,13 +440,84 @@ DEFINE_FUNCTION(UAutoChessCardBase::execSpawnProjectileFromSide)
 	P_GET_OBJECT(UClass,Z_Param_ProjectileClass);
 	P_GET_PROPERTY(FFloatProperty,Z_Param_Damage);
 	P_GET_PROPERTY(FIntProperty,Z_Param_CasterTeamID);
+	P_GET_TARRAY_REF(FProjectileEffectInfo,Z_Param_Out_EffectsOnHitEnemy);
+	P_GET_TARRAY_REF(FProjectileEffectInfo,Z_Param_Out_EffectsOnHitFriendly);
 	P_GET_PROPERTY(FFloatProperty,Z_Param_SideOffsetDistance);
 	P_FINISH;
 	P_NATIVE_BEGIN;
-	UAutoChessCardBase::SpawnProjectileFromSide(Z_Param_Target,Z_Param_ProjectileClass,Z_Param_Damage,Z_Param_CasterTeamID,Z_Param_SideOffsetDistance);
+	UAutoChessCardBase::SpawnProjectileFromSide(Z_Param_Target,Z_Param_ProjectileClass,Z_Param_Damage,Z_Param_CasterTeamID,Z_Param_Out_EffectsOnHitEnemy,Z_Param_Out_EffectsOnHitFriendly,Z_Param_SideOffsetDistance);
 	P_NATIVE_END;
 }
 // End Class UAutoChessCardBase Function SpawnProjectileFromSide
+
+// Begin Class UAutoChessCardBase Function SpawnUnitFromRowName
+struct Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics
+{
+	struct AutoChessCardBase_eventSpawnUnitFromRowName_Parms
+	{
+		UObject* WorldContextObject;
+		FName UnitRowName;
+		FIntPoint GridPos;
+		int32 TeamID;
+		AAutoChessUnitBase* ReturnValue;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "Category", "Card Effect" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// \xe5\x9c\xa8\xe6\x8c\x87\xe5\xae\x9a\xe6\xa0\xbc\xe5\xad\x90\xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe8\xb0\x83\xe7\x94\xa8 GameMode \xe7\x9a\x84\xe7\x94\x9f\xe6\x88\x90\xe9\x80\xbb\xe8\xbe\x91)\n" },
+#endif
+		{ "ModuleRelativePath", "AutoChessCardBase.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "\xe5\x9c\xa8\xe6\x8c\x87\xe5\xae\x9a\xe6\xa0\xbc\xe5\xad\x90\xe7\x94\x9f\xe6\x88\x90\xe5\x8d\x95\xe4\xbd\x8d (\xe8\xbe\x85\xe5\x8a\xa9\xe5\x87\xbd\xe6\x95\xb0\xef\xbc\x8c\xe8\xb0\x83\xe7\x94\xa8 GameMode \xe7\x9a\x84\xe7\x94\x9f\xe6\x88\x90\xe9\x80\xbb\xe8\xbe\x91)" },
+#endif
+		{ "WorldContext", "WorldContextObject" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_WorldContextObject;
+	static const UECodeGen_Private::FNamePropertyParams NewProp_UnitRowName;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_GridPos;
+	static const UECodeGen_Private::FIntPropertyParams NewProp_TeamID;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_ReturnValue;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_WorldContextObject = { "WorldContextObject", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnUnitFromRowName_Parms, WorldContextObject), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FNamePropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_UnitRowName = { "UnitRowName", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnUnitFromRowName_Parms, UnitRowName), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_GridPos = { "GridPos", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnUnitFromRowName_Parms, GridPos), Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_TeamID = { "TeamID", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnUnitFromRowName_Parms, TeamID), METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AutoChessCardBase_eventSpawnUnitFromRowName_Parms, ReturnValue), Z_Construct_UClass_AAutoChessUnitBase_NoRegister, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_WorldContextObject,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_UnitRowName,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_GridPos,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_TeamID,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::NewProp_ReturnValue,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UAutoChessCardBase, nullptr, "SpawnUnitFromRowName", nullptr, nullptr, Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::PropPointers), sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::AutoChessCardBase_eventSpawnUnitFromRowName_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04822401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::Function_MetaDataParams), Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::AutoChessCardBase_eventSpawnUnitFromRowName_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UAutoChessCardBase::execSpawnUnitFromRowName)
+{
+	P_GET_OBJECT(UObject,Z_Param_WorldContextObject);
+	P_GET_PROPERTY(FNameProperty,Z_Param_UnitRowName);
+	P_GET_STRUCT(FIntPoint,Z_Param_GridPos);
+	P_GET_PROPERTY(FIntProperty,Z_Param_TeamID);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	*(AAutoChessUnitBase**)Z_Param__Result=UAutoChessCardBase::SpawnUnitFromRowName(Z_Param_WorldContextObject,Z_Param_UnitRowName,Z_Param_GridPos,Z_Param_TeamID);
+	P_NATIVE_END;
+}
+// End Class UAutoChessCardBase Function SpawnUnitFromRowName
 
 // Begin Class UAutoChessCardBase
 void UAutoChessCardBase::StaticRegisterNativesUAutoChessCardBase()
@@ -433,6 +530,7 @@ void UAutoChessCardBase::StaticRegisterNativesUAutoChessCardBase()
 		{ "OnRep_Cost", &UAutoChessCardBase::execOnRep_Cost },
 		{ "OnRep_CostModifier", &UAutoChessCardBase::execOnRep_CostModifier },
 		{ "SpawnProjectileFromSide", &UAutoChessCardBase::execSpawnProjectileFromSide },
+		{ "SpawnUnitFromRowName", &UAutoChessCardBase::execSpawnUnitFromRowName },
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 }
@@ -657,7 +755,8 @@ struct Z_Construct_UClass_UAutoChessCardBase_Statics
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnPlayed, "OnPlayed" }, // 3742680090
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnRep_Cost, "OnRep_Cost" }, // 4270703214
 		{ &Z_Construct_UFunction_UAutoChessCardBase_OnRep_CostModifier, "OnRep_CostModifier" }, // 2818930653
-		{ &Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide, "SpawnProjectileFromSide" }, // 3022791654
+		{ &Z_Construct_UFunction_UAutoChessCardBase_SpawnProjectileFromSide, "SpawnProjectileFromSide" }, // 1655981194
+		{ &Z_Construct_UFunction_UAutoChessCardBase_SpawnUnitFromRowName, "SpawnUnitFromRowName" }, // 4100449576
 	};
 	static_assert(UE_ARRAY_COUNT(FuncInfo) < 2048);
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -680,7 +779,7 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UAutoChessCard
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_Rarity = { "Rarity", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, Rarity), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_Rarity_MetaData), NewProp_Rarity_MetaData) };
 const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_CardAbilityClass = { "CardAbilityClass", nullptr, (EPropertyFlags)0x0014000000010015, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, CardAbilityClass), Z_Construct_UClass_UClass, Z_Construct_UClass_UGameplayAbility_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CardAbilityClass_MetaData), NewProp_CardAbilityClass_MetaData) };
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_TargetType_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
-const UECodeGen_Private::FEnumPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_TargetType = { "TargetType", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, TargetType), Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TargetType_MetaData), NewProp_TargetType_MetaData) }; // 3184413060
+const UECodeGen_Private::FEnumPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_TargetType = { "TargetType", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, TargetType), Z_Construct_UEnum_AutoChess_EAutoChessCardTargetType, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TargetType_MetaData), NewProp_TargetType_MetaData) }; // 1537978006
 const UECodeGen_Private::FIntPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_AOERadius = { "AOERadius", nullptr, (EPropertyFlags)0x0010000000010015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, AOERadius), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AOERadius_MetaData), NewProp_AOERadius_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles_Inner = { "HighlightedTiles", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FIntPoint, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_UAutoChessCardBase_Statics::NewProp_HighlightedTiles = { "HighlightedTiles", nullptr, (EPropertyFlags)0x0010000000000014, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UAutoChessCardBase, HighlightedTiles), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HighlightedTiles_MetaData), NewProp_HighlightedTiles_MetaData) };
@@ -769,13 +868,13 @@ UAutoChessCardBase::~UAutoChessCardBase() {}
 struct Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics
 {
 	static constexpr FEnumRegisterCompiledInInfo EnumInfo[] = {
-		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3184413060U) },
+		{ EAutoChessCardTargetType_StaticEnum, TEXT("EAutoChessCardTargetType"), &Z_Registration_Info_UEnum_EAutoChessCardTargetType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 1537978006U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 3282985005U) },
+		{ Z_Construct_UClass_UAutoChessCardBase, UAutoChessCardBase::StaticClass, TEXT("UAutoChessCardBase"), &Z_Registration_Info_UClass_UAutoChessCardBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UAutoChessCardBase), 3769253491U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1868938367(TEXT("/Script/AutoChess"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_1196255402(TEXT("/Script/AutoChess"),
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_Statics::EnumInfo));

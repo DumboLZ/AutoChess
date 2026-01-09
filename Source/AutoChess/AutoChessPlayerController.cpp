@@ -1026,6 +1026,16 @@ void AAutoChessPlayerController::UpdateDragHighlight(UAutoChessCardBase* Card, c
 					{
 						HighlightActor->UpdateHighlights(GS->GameGrid, HighlightPoints);
 					}
+
+					// 如果卡牌类型是 EmptyTile，标记临时占用
+					if (Card->TargetType == EAutoChessCardTargetType::EmptyTile)
+					{
+						for (const FIntPoint& Point : HighlightPoints)
+						{
+							GS->GameGrid->SetTileTemporarilyOccupied(Point, true);
+						}
+					}
+					
 					return;
 				}
 			}
@@ -1152,6 +1162,8 @@ bool AAutoChessPlayerController::PlayCard(UAutoChessCardBase* Card, AActor* Targ
 				if (GS->GameGrid)
 				{
 					HighlightActor->UpdateHighlights(GS->GameGrid, TArray<FIntPoint>());
+					// 清除临时占用
+					GS->GameGrid->ClearAllTemporaryOccupations();
 				}
 			}
 		}
@@ -1268,6 +1280,15 @@ void AAutoChessPlayerController::Client_HideCardDisplay_Implementation()
 	if (HighlightActor)
 	{
 		HighlightActor->ClearHighlights();
+	}
+
+	// 清除临时占用
+	if (AAutoChessGameState* GS = GetWorld()->GetGameState<AAutoChessGameState>())
+	{
+		if (GS->GameGrid)
+		{
+			GS->GameGrid->ClearAllTemporaryOccupations();
+		}
 	}
 }
 

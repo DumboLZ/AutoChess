@@ -16,6 +16,9 @@ class AAutoChessUnitBase;
 #define AUTOCHESS_AutoChessGrid_generated_h
 
 #define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessGrid_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execClearAllTemporaryOccupations); \
+	DECLARE_FUNCTION(execIsTileTemporarilyOccupied); \
+	DECLARE_FUNCTION(execSetTileTemporarilyOccupied); \
 	DECLARE_FUNCTION(execGetUnitsInRadius); \
 	DECLARE_FUNCTION(execFindPath); \
 	DECLARE_FUNCTION(execIsValidGridPosition); \

@@ -12,12 +12,13 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AAutoChessProjectile;
 class AAutoChessUnitBase;
 class UGameplayEffect;
+struct FProjectileEffectInfo;
 #ifdef AUTOCHESS_AutoChessUnitBase_generated_h
 #error "AutoChessUnitBase.generated.h already included, missing '#pragma once' in AutoChessUnitBase.h"
 #endif
 #define AUTOCHESS_AutoChessUnitBase_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_RPC_WRAPPERS_NO_PURE_DECLS \
 	virtual void UseSkill_Implementation(); \
 	virtual void Multicast_PlayDeathAnimation_Implementation(); \
 	virtual void Multicast_PlaySkillAnimation_Implementation(); \
@@ -45,8 +46,8 @@ class UGameplayEffect;
 	DECLARE_FUNCTION(execOnRep_TeamID);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAAutoChessUnitBase(); \
 	friend struct Z_Construct_UClass_AAutoChessUnitBase_Statics; \
@@ -85,7 +86,7 @@ public: \
 	NO_API virtual void ValidateGeneratedRepEnums(const TArray<struct FRepRecord>& ClassReps) const override;
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	AAutoChessUnitBase(AAutoChessUnitBase&&); \
@@ -97,14 +98,14 @@ public: \
 	NO_API virtual ~AAutoChessUnitBase();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_17_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_21_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_20_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessUnitBase_h_24_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

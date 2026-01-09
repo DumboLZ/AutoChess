@@ -12,17 +12,21 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
 class AAutoChessProjectile;
+class AAutoChessUnitBase;
 class APlayerController;
+class UObject;
+struct FProjectileEffectInfo;
 #ifdef AUTOCHESS_AutoChessCardBase_generated_h
 #error "AutoChessCardBase.generated.h already included, missing '#pragma once' in AutoChessCardBase.h"
 #endif
 #define AUTOCHESS_AutoChessCardBase_generated_h
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_21_DELEGATE \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_26_DELEGATE \
 AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDelegate& OnCardCostChanged, int32 NewFinalCost);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execSpawnUnitFromRowName); \
 	DECLARE_FUNCTION(execSpawnProjectileFromSide); \
 	DECLARE_FUNCTION(execOnPlayed); \
 	DECLARE_FUNCTION(execModifyCost); \
@@ -31,8 +35,8 @@ AUTOCHESS_API void FOnCardCostChanged_DelegateWrapper(const FMulticastScriptDele
 	DECLARE_FUNCTION(execOnRep_Cost);
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_CALLBACK_WRAPPERS
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_INCLASS_NO_PURE_DECLS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_CALLBACK_WRAPPERS
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUAutoChessCardBase(); \
 	friend struct Z_Construct_UClass_UAutoChessCardBase_Statics; \
@@ -54,7 +58,7 @@ private: \
 public:
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_ENHANCED_CONSTRUCTORS \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	UAutoChessCardBase(UAutoChessCardBase&&); \
@@ -66,14 +70,14 @@ public: \
 	NO_API virtual ~UAutoChessCardBase();
 
 
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_27_PROLOG
-#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_GENERATED_BODY \
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_32_PROLOG
+#define FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_CALLBACK_WRAPPERS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_INCLASS_NO_PURE_DECLS \
-	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_30_ENHANCED_CONSTRUCTORS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_RPC_WRAPPERS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_CALLBACK_WRAPPERS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_INCLASS_NO_PURE_DECLS \
+	FID_Project_ue_AutoChess_AutoChess_Source_AutoChess_AutoChessCardBase_h_35_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -89,7 +93,8 @@ template<> AUTOCHESS_API UClass* StaticClass<class UAutoChessCardBase>();
 	op(EAutoChessCardTargetType::Enemy) \
 	op(EAutoChessCardTargetType::Ally) \
 	op(EAutoChessCardTargetType::Self) \
-	op(EAutoChessCardTargetType::AnyUnit) 
+	op(EAutoChessCardTargetType::AnyUnit) \
+	op(EAutoChessCardTargetType::EmptyTile) 
 
 enum class EAutoChessCardTargetType : uint8;
 template<> struct TIsUEnumClass<EAutoChessCardTargetType> { enum { Value = true }; };

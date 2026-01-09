@@ -23,6 +23,19 @@ struct FWeightedCardEntry
 	float Weight = 1.0f;
 };
 
+// 投射物命中效果配置
+USTRUCT(BlueprintType)
+struct FProjectileEffectInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> EffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float StackCount = 1.0f;
+};
+
 UCLASS()
 class AUTOCHESS_API AAutoChessProjectile : public AActor
 {
@@ -38,7 +51,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// 初始化投射物
-	void InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit = false, int32 InTeamID = -1);
+	void InitProjectile(AAutoChessUnitBase* InTarget, float InDamage, AAutoChessUnitBase* InInstigatorUnit, bool bInIsCrit = false, int32 InTeamID = -1, const TArray<FProjectileEffectInfo>& InEffectsOnHitEnemy = TArray<FProjectileEffectInfo>(), const TArray<FProjectileEffectInfo>& InEffectsOnHitFriendly = TArray<FProjectileEffectInfo>());
 
 	// 触发命中逻辑
 	void TriggerHit();
@@ -93,4 +106,12 @@ public:
 	// 卡牌池 (命中友方时按权重抽取一张)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|CardGen", meta=(EditCondition="bGenerateCardOnHitFriendly"))
 	TArray<FWeightedCardEntry> CardPool;
+
+	// 命中敌方时施加的 Gameplay Effects
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Effect")
+	TArray<FProjectileEffectInfo> EffectsOnHitEnemy;
+
+	// 命中友方时施加的 Gameplay Effects
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AutoChess|Effect")
+	TArray<FProjectileEffectInfo> EffectsOnHitFriendly;
 };

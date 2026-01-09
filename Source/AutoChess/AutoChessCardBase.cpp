@@ -195,7 +195,7 @@ void UAutoChessCardBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(UAutoChessCardBase, Icon);
 }
 
-void UAutoChessCardBase::SpawnProjectileFromSide(AActor* Target, TSubclassOf<AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, float SideOffsetDistance)
+void UAutoChessCardBase::SpawnProjectileFromSide(AActor* Target, TSubclassOf<AAutoChessProjectile> ProjectileClass, float Damage, int32 CasterTeamID, const TArray<FProjectileEffectInfo>& EffectsOnHitEnemy, const TArray<FProjectileEffectInfo>& EffectsOnHitFriendly, float SideOffsetDistance)
 {
 	if (!Target || !ProjectileClass)
 	{
@@ -239,7 +239,22 @@ void UAutoChessCardBase::SpawnProjectileFromSide(AActor* Target, TSubclassOf<AAu
 	if (Projectile)
 	{
 		// Instigator 设为 nullptr，因为是卡牌效果
-		Projectile->InitProjectile(TargetUnit, Damage, nullptr, false, CasterTeamID);
+		Projectile->InitProjectile(TargetUnit, Damage, nullptr, false, CasterTeamID, EffectsOnHitEnemy, EffectsOnHitFriendly);
 		UE_LOG(LogTemp, Log, TEXT("[CardBase] Spawned Projectile %s targeting %s"), *Projectile->GetName(), *TargetUnit->GetName());
 	}
+}
+
+AAutoChessUnitBase* UAutoChessCardBase::SpawnUnitFromRowName(UObject* WorldContextObject, FName UnitRowName, FIntPoint GridPos, int32 TeamID)
+{
+	if (!WorldContextObject) return nullptr;
+
+	UWorld* World = WorldContextObject->GetWorld();
+	if (!World) return nullptr;
+
+	if (AAutoChessGameModeBase* GM = Cast<AAutoChessGameModeBase>(World->GetAuthGameMode()))
+	{
+		return GM->SpawnUnit(UnitRowName, TeamID, GridPos);
+	}
+
+	return nullptr;
 }

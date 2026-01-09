@@ -124,8 +124,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
 	TArray<class AAutoChessUnitBase*> GetUnitsInRadius(int32 CenterX, int32 CenterY, int32 Radius);
 
+	// 临时占用格子（用于卡牌高亮时防止寻路）
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	void SetTileTemporarilyOccupied(FIntPoint GridPos, bool bOccupied);
+
+	// 检查格子是否被临时占用
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	bool IsTileTemporarilyOccupied(FIntPoint GridPos) const;
+
+	// 清除所有临时占用
+	UFUNCTION(BlueprintCallable, Category = "AutoChess|Grid")
+	void ClearAllTemporaryOccupations();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	// 临时占用的格子集合（用于卡牌高亮时阻止寻路）
+	TSet<FIntPoint> TemporarilyOccupiedTiles;
 
 };
